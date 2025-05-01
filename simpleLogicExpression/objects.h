@@ -1,0 +1,108 @@
+#include <string>
+#include <iostream>
+#pragma once
+
+
+/**
+ * Перечисление типов токенов логического выражения.
+ *
+ * Содержит возможные типы токенов: переменные, операции и специальные значения.
+ */
+enum TokenType {
+    Variable,    /// Переменная
+    Not,         /// Отрицание (!)
+    And,         /// Конъюнкция (&)
+    Or,          /// Дизъюнкция (|)
+    Implication, /// Импликация (>)
+    Equivalence, /// Эквивалентность (~)
+    Any          /// Специальный тип для других не используемых токенов
+};
+
+/**
+ * Класс для представления токена логического выражения.
+ *
+ * Содержит тип токена, его строковое значение и позицию в исходной строке.
+ */
+class Token {
+public:
+    TokenType type;     ///< Тип токена
+    std::string value;  ///< Строковое значение токена
+    int position;       ///< Позиция токена в исходной строке
+
+    /**
+     * Конструктор класса Token.
+     * @param t Тип токена
+     * @param v Строковое значение
+     * @param pos Позиция в строке
+     */
+    Token(TokenType t, const std::string& v, int pos) : type(t), value(v), position(pos) {}
+};
+
+/**
+ * Класс для узла дерева выражения.
+ *
+ * Представляет узел в бинарном дереве логического выражения.
+ */
+class ExpressionNode {
+public:
+    TokenType type;             /// Тип операции/переменной
+    std::string value;          /// Значение переменной
+    ExpressionNode* left;       /// Указатель на левое поддерево
+    ExpressionNode* right;      /// Указатель на правое поддерево
+
+    /**
+     * Конструктор класса ExpressionNode.
+     * @param t Тип узла
+     * @param v Значение переменной (по умолчанию пустая строка)
+     */
+    ExpressionNode(TokenType t, const std::string& v = "") : type(t), value(v), left(nullptr), right(nullptr) {}
+
+    /// Деструктор (рекурсивно удаляет поддеревья)
+    ~ExpressionNode() {
+        delete left;
+        delete right;
+    }
+};
+
+/**
+ * Класс для обработки ошибок программы.
+ *
+ * Содержит тип ошибки, позицию и описание.
+ */
+class Error {
+public:
+    /**
+     * Перечисление типов ошибок.
+     */
+    enum ErrorType {
+        noError,              /// Нет ошибки
+        inputFile,            /// Ошибка входного файла
+        outputFile,           /// Ошибка выходного файла
+        invalidSeparator,     /// Некорректные разделители
+        missingOperation,     /// Пропущена операция
+        insufficientOperands, /// Недостаточно операндов
+        invalidVariableName,  /// Некорректное имя переменной
+        invalidVariableChar,  /// Некорректный символ в имени переменной
+        unsupportedOperation /// Неподдерживаемая операция
+    };
+
+    ErrorType type;          /// Тип ошибки
+    int position;            /// Позиция ошибки
+    std::string description; /// Описание ошибки
+
+    /**
+     * Конструктор класса Error.
+     * @param t Тип ошибки
+     * @param pos Позиция ошибки (по умолчанию -1)
+     */
+    Error(ErrorType t, int pos = -1) : type(t), position(pos) {
+        /* Инициализация description в зависимости от типа ошибки */
+    }
+
+    /**
+     * Выводит сообщение об ошибке в стандартный вывод.
+     */
+    void message() const {
+        std::cout << description.c_str() << std::endl;
+    }
+};
