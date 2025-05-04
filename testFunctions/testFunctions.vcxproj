@@ -166,6 +166,7 @@
     </ClCompile>
     <ClCompile Include="test_buildExpressionTree.cpp" />
     <ClCompile Include="test_copyNode.cpp" />
+    <ClCompile Include="test_transformImplicationAndEquivalence.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
