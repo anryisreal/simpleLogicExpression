@@ -10,96 +10,107 @@ namespace testbuildExpressionTree
     TEST_CLASS(testbuildExpressionTree)
     {
     public:
+        /**
+         * Рекурсивно сравнивает два дерева выражений
+         * @param expected Ожидаемое дерево
+         * @param actual Фактическое дерево
+         * @param path Текущий путь в дереве (для диагностики)
+         * @return true если деревья идентичны, false в противном случае
+         */
+        bool compareExpressionTrees(const ExpressionNode* expected, const ExpressionNode* actual, const std::string& path = "root") const
+        {
+            if (expected == nullptr && actual == nullptr) return true;
+            if (expected == nullptr) {
+                Logger::WriteMessage(("Ошибка в узле: " + path + " - ожидался nullptr").c_str());
+                return false;
+            }
+            if (actual == nullptr) {
+                Logger::WriteMessage(("Ошибка в узле: " + path + " - неожиданный nullptr").c_str());
+                return false;
+            }
+
+            if (expected->type != actual->type) {
+                Logger::WriteMessage(("Ошибка в узле: " + path + " - тип узла не совпадает").c_str());
+                return false;
+            }
+
+            if (expected->value != actual->value) {
+                Logger::WriteMessage(("Ошибка в узле: " + path + " - значение не совпадает").c_str());
+                return false;
+            }
+
+            return compareExpressionTrees(expected->left, actual->left, path + "-left") &&
+                compareExpressionTrees(expected->right, actual->right, path + "-right");
+        }
+
+        /**
+         * Проверяет наличие ошибки определенного типа в списке
+         * @param errorList Список ошибок
+         * @param type Тип ошибки для проверки
+         * @param position Позиция ошибки (если нужно проверить)
+         * @return true если ошибка найдена, false в противном случае
+         */
+        bool hasError(const std::set<Error>& errorList, Error::ErrorType type, int position = -1) const
+        {
+            for (const auto& error : errorList) {
+                if (error.type == type && (position == -1 || error.position == position)) {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         /**
          * @brief Тест 1: Проверка обработки пустого списка токенов
-         *
-         * Функция должна добавить ошибку missingOperation при пустом списке токенов
          */
-        TEST_METHOD(EmptyTokenList)
+        TEST_METHOD(Test1_EmptyTokenList)
         {
             std::vector<Token> tokens;
             std::set<Error> errorList;
 
-            // Вызываем функцию с пустым списком токенов
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
-            // Проверяем, что функция вернула nullptr
             Assert::IsNull(result);
-
-            // Проверяем, что в списке ошибок есть ошибка missingOperation
-            bool hasError = false;
-            for (const auto& error : errorList) {
-                if (error.type == Error::missingOperation) {
-                    hasError = true;
-                    break;
-                }
-            }
-            Assert::IsTrue(hasError, L"Ошибка missingOperation не добавлена в список ошибок");
+            Assert::IsTrue(hasError(errorList, Error::missingOperation));
         }
 
         /**
          * @brief Тест 2: Проверка обработки одного токена (переменная)
-         *
-         * Функция должна корректно создать дерево с одной переменной
          */
-        TEST_METHOD(SingleVariableToken)
+        TEST_METHOD(Test2_SingleVariableToken)
         {
             std::vector<Token> tokens = { Token(TokenType::Variable, "a", 0) };
             std::set<Error> errorList;
 
-            // Вызываем функцию с одним токеном-переменной
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
+            ExpressionNode* expected = new ExpressionNode(TokenType::Variable, "a");
 
-            // Проверяем, что функция вернула не nullptr
             Assert::IsNotNull(result);
-
-            // Проверяем, что тип узла - переменная
-            Assert::AreEqual(static_cast<int>(TokenType::Variable), static_cast<int>(result->type));
-
-            // Проверяем, что значение переменной правильное
-            Assert::AreEqual(std::string("a"), result->value);
-
-            // Проверяем, что список ошибок пуст
+            Assert::IsTrue(compareExpressionTrees(expected, result));
             Assert::IsTrue(errorList.empty());
 
-            // Освобождаем память
             delete result;
+            delete expected;
         }
 
         /**
          * @brief Тест 3: Проверка обработки одного токена (оператор)
-         *
-         * Функция должна добавить ошибку insufficientOperands при одном токене-операторе
          */
-        TEST_METHOD(SingleOperatorToken)
+        TEST_METHOD(Test3_SingleOperatorToken)
         {
             std::vector<Token> tokens = { Token(TokenType::Not, "!", 0) };
             std::set<Error> errorList;
 
-            // Вызываем функцию с одним токеном-оператором
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
-            // Проверяем, что функция вернула nullptr
             Assert::IsNull(result);
-
-            // Проверяем, что в списке ошибок есть ошибка insufficientOperands
-            bool hasError = false;
-            for (const auto& error : errorList) {
-                if (error.type == Error::insufficientOperands) {
-                    hasError = true;
-                    break;
-                }
-            }
-            Assert::IsTrue(hasError, L"Ошибка insufficientOperands не добавлена в список ошибок");
+            Assert::IsTrue(hasError(errorList, Error::insufficientOperands));
         }
 
         /**
          * @brief Тест 4: Проверка обработки простого отрицания
-         *
-         * Функция должна корректно создать дерево с отрицанием переменной
          */
-        TEST_METHOD(SimpleNegation)
+        TEST_METHOD(Test4_SimpleNegation)
         {
             std::vector<Token> tokens = {
                 Token(TokenType::Variable, "a", 0),
@@ -107,35 +118,23 @@ namespace testbuildExpressionTree
             };
             std::set<Error> errorList;
 
-            // Вызываем функцию с токенами для простого отрицания
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
-            // Проверяем, что функция вернула не nullptr
+            ExpressionNode* expected = new ExpressionNode(TokenType::Not);
+            expected->left = new ExpressionNode(TokenType::Variable, "a");
+
             Assert::IsNotNull(result);
-
-            // Проверяем, что тип узла - отрицание
-            Assert::AreEqual(static_cast<int>(TokenType::Not), static_cast<int>(result->type));
-
-            // Проверяем, что у отрицания есть операнд
-            Assert::IsNotNull(result->left);
-
-            // Проверяем, что операнд - переменная "a"
-            Assert::AreEqual(static_cast<int>(TokenType::Variable), static_cast<int>(result->left->type));
-            Assert::AreEqual(std::string("a"), result->left->value);
-
-            // Проверяем, что список ошибок пуст
+            Assert::IsTrue(compareExpressionTrees(expected, result));
             Assert::IsTrue(errorList.empty());
 
-            // Освобождаем память
             delete result;
+            delete expected;
         }
 
         /**
          * @brief Тест 5: Проверка обработки простой конъюнкции
-         *
-         * Функция должна корректно создать дерево с конъюнкцией двух переменных
          */
-        TEST_METHOD(SimpleConjunction)
+        TEST_METHOD(Test5_SimpleConjunction)
         {
             std::vector<Token> tokens = {
                 Token(TokenType::Variable, "a", 0),
@@ -144,40 +143,24 @@ namespace testbuildExpressionTree
             };
             std::set<Error> errorList;
 
-            // Вызываем функцию с токенами для простой конъюнкции
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
-            // Проверяем, что функция вернула не nullptr
+            ExpressionNode* expected = new ExpressionNode(TokenType::And);
+            expected->left = new ExpressionNode(TokenType::Variable, "a");
+            expected->right = new ExpressionNode(TokenType::Variable, "b");
+
             Assert::IsNotNull(result);
-
-            // Проверяем, что тип узла - конъюнкция
-            Assert::AreEqual(static_cast<int>(TokenType::And), static_cast<int>(result->type));
-
-            // Проверяем, что у конъюнкции есть левый и правый операнды
-            Assert::IsNotNull(result->left);
-            Assert::IsNotNull(result->right);
-
-            // Проверяем, что левый операнд - переменная "a"
-            Assert::AreEqual(static_cast<int>(TokenType::Variable), static_cast<int>(result->left->type));
-            Assert::AreEqual(std::string("a"), result->left->value);
-
-            // Проверяем, что правый операнд - переменная "b"
-            Assert::AreEqual(static_cast<int>(TokenType::Variable), static_cast<int>(result->right->type));
-            Assert::AreEqual(std::string("b"), result->right->value);
-
-            // Проверяем, что список ошибок пуст
+            Assert::IsTrue(compareExpressionTrees(expected, result));
             Assert::IsTrue(errorList.empty());
 
-            // Освобождаем память
             delete result;
+            delete expected;
         }
 
         /**
          * @brief Тест 6: Проверка обработки отрицания перед скобкой
-         *
-         * Функция должна корректно создать дерево с отрицанием выражения в скобках
          */
-        TEST_METHOD(NegationBeforeBracket)
+        TEST_METHOD(Test6_NegationBeforeBracket)
         {
             std::vector<Token> tokens = {
                 Token(TokenType::Variable, "a", 0),
@@ -187,46 +170,25 @@ namespace testbuildExpressionTree
             };
             std::set<Error> errorList;
 
-            // Вызываем функцию с токенами для отрицания перед скобкой
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
-            // Проверяем, что функция вернула не nullptr
+            ExpressionNode* expected = new ExpressionNode(TokenType::Not);
+            expected->left = new ExpressionNode(TokenType::And);
+            expected->left->left = new ExpressionNode(TokenType::Variable, "a");
+            expected->left->right = new ExpressionNode(TokenType::Variable, "b");
+
             Assert::IsNotNull(result);
-
-            // Проверяем, что тип узла - отрицание
-            Assert::AreEqual(static_cast<int>(TokenType::Not), static_cast<int>(result->type));
-
-            // Проверяем, что у отрицания есть операнд
-            Assert::IsNotNull(result->left);
-
-            // Проверяем, что операнд - конъюнкция
-            Assert::AreEqual(static_cast<int>(TokenType::And), static_cast<int>(result->left->type));
-
-            // Проверяем, что у конъюнкции есть левый и правый операнды
-            Assert::IsNotNull(result->left->left);
-            Assert::IsNotNull(result->left->right);
-
-            // Проверяем, что левый операнд конъюнкции - переменная "a"
-            Assert::AreEqual(static_cast<int>(TokenType::Variable), static_cast<int>(result->left->left->type));
-            Assert::AreEqual(std::string("a"), result->left->left->value);
-
-            // Проверяем, что правый операнд конъюнкции - переменная "b"
-            Assert::AreEqual(static_cast<int>(TokenType::Variable), static_cast<int>(result->left->right->type));
-            Assert::AreEqual(std::string("b"), result->left->right->value);
-
-            // Проверяем, что список ошибок пуст
+            Assert::IsTrue(compareExpressionTrees(expected, result));
             Assert::IsTrue(errorList.empty());
 
-            // Освобождаем память
             delete result;
+            delete expected;
         }
 
         /**
          * @brief Тест 7: Проверка обработки комплексного выражения
-         *
-         * Функция должна корректно создать дерево для комплексного выражения
          */
-        TEST_METHOD(ComplexExpression)
+        TEST_METHOD(Test7_ComplexExpression)
         {
             std::vector<Token> tokens = {
                 Token(TokenType::Variable, "a", 0),
@@ -239,38 +201,28 @@ namespace testbuildExpressionTree
             };
             std::set<Error> errorList;
 
-            // Вызываем функцию с токенами для комплексного выражения
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
-            // Проверяем, что функция вернула не nullptr
+            ExpressionNode* expected = new ExpressionNode(TokenType::Or);
+            expected->left = new ExpressionNode(TokenType::And);
+            expected->left->left = new ExpressionNode(TokenType::Variable, "a");
+            expected->left->right = new ExpressionNode(TokenType::Variable, "b");
+            expected->right = new ExpressionNode(TokenType::And);
+            expected->right->left = new ExpressionNode(TokenType::Variable, "c");
+            expected->right->right = new ExpressionNode(TokenType::Variable, "d");
+
             Assert::IsNotNull(result);
-
-            // Проверяем, что тип узла - дизъюнкция
-            Assert::AreEqual(static_cast<int>(TokenType::Or), static_cast<int>(result->type));
-
-            // Проверяем, что у дизъюнкции есть левый и правый операнды
-            Assert::IsNotNull(result->left);
-            Assert::IsNotNull(result->right);
-
-            // Проверяем, что левый операнд - конъюнкция
-            Assert::AreEqual(static_cast<int>(TokenType::And), static_cast<int>(result->left->type));
-
-            // Проверяем, что правый операнд - конъюнкция
-            Assert::AreEqual(static_cast<int>(TokenType::And), static_cast<int>(result->right->type));
-
-            // Проверяем, что список ошибок пуст
+            Assert::IsTrue(compareExpressionTrees(expected, result));
             Assert::IsTrue(errorList.empty());
 
-            // Освобождаем память
             delete result;
+            delete expected;
         }
 
         /**
          * @brief Тест 8: Проверка обработки некорректного токена
-         *
-         * Функция должна добавить ошибку invalidVariableName при некорректном имени переменной
          */
-        TEST_METHOD(InvalidToken)
+        TEST_METHOD(Test8_InvalidToken)
         {
             std::vector<Token> tokens = {
                 Token(TokenType::Variable, "1a", 0),
@@ -279,29 +231,16 @@ namespace testbuildExpressionTree
             };
             std::set<Error> errorList;
 
-            // Вызываем функцию с токенами, содержащими некорректное имя переменной
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
-            // Проверяем, что функция вернула nullptr
             Assert::IsNull(result);
-
-            // Проверяем, что в списке ошибок есть ошибка invalidVariableName
-            bool hasError = false;
-            for (const auto& error : errorList) {
-                if (error.type == Error::invalidVariableName && error.position == 0) {
-                    hasError = true;
-                    break;
-                }
-            }
-            Assert::IsTrue(hasError, L"Ошибка invalidVariableName не добавлена в список ошибок");
+            Assert::IsTrue(hasError(errorList, Error::invalidVariableName, 0));
         }
 
         /**
          * @brief Тест 9: Проверка обработки импликации
-         *
-         * Функция должна корректно создать дерево с импликацией двух переменных
          */
-        TEST_METHOD(Implication)
+        TEST_METHOD(Test9_Implication)
         {
             std::vector<Token> tokens = {
                 Token(TokenType::Variable, "a", 0),
@@ -310,40 +249,24 @@ namespace testbuildExpressionTree
             };
             std::set<Error> errorList;
 
-            // Вызываем функцию с токенами для импликации
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
-            // Проверяем, что функция вернула не nullptr
+            ExpressionNode* expected = new ExpressionNode(TokenType::Implication);
+            expected->left = new ExpressionNode(TokenType::Variable, "a");
+            expected->right = new ExpressionNode(TokenType::Variable, "b");
+
             Assert::IsNotNull(result);
-
-            // Проверяем, что тип узла - импликация
-            Assert::AreEqual(static_cast<int>(TokenType::Implication), static_cast<int>(result->type));
-
-            // Проверяем, что у импликации есть левый и правый операнды
-            Assert::IsNotNull(result->left);
-            Assert::IsNotNull(result->right);
-
-            // Проверяем, что левый операнд - переменная "a"
-            Assert::AreEqual(static_cast<int>(TokenType::Variable), static_cast<int>(result->left->type));
-            Assert::AreEqual(std::string("a"), result->left->value);
-
-            // Проверяем, что правый операнд - переменная "b"
-            Assert::AreEqual(static_cast<int>(TokenType::Variable), static_cast<int>(result->right->type));
-            Assert::AreEqual(std::string("b"), result->right->value);
-
-            // Проверяем, что список ошибок пуст
+            Assert::IsTrue(compareExpressionTrees(expected, result));
             Assert::IsTrue(errorList.empty());
 
-            // Освобождаем память
             delete result;
+            delete expected;
         }
 
         /**
          * @brief Тест 10: Проверка обработки эквивалентности
-         *
-         * Функция должна корректно создать дерево с эквивалентностью двух переменных
          */
-        TEST_METHOD(Equivalence)
+        TEST_METHOD(Test10_Equivalence)
         {
             std::vector<Token> tokens = {
                 Token(TokenType::Variable, "a", 0),
@@ -352,40 +275,24 @@ namespace testbuildExpressionTree
             };
             std::set<Error> errorList;
 
-            // Вызываем функцию с токенами для эквивалентности
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
-            // Проверяем, что функция вернула не nullptr
+            ExpressionNode* expected = new ExpressionNode(TokenType::Equivalence);
+            expected->left = new ExpressionNode(TokenType::Variable, "a");
+            expected->right = new ExpressionNode(TokenType::Variable, "b");
+
             Assert::IsNotNull(result);
-
-            // Проверяем, что тип узла - эквивалентность
-            Assert::AreEqual(static_cast<int>(TokenType::Equivalence), static_cast<int>(result->type));
-
-            // Проверяем, что у эквивалентности есть левый и правый операнды
-            Assert::IsNotNull(result->left);
-            Assert::IsNotNull(result->right);
-
-            // Проверяем, что левый операнд - переменная "a"
-            Assert::AreEqual(static_cast<int>(TokenType::Variable), static_cast<int>(result->left->type));
-            Assert::AreEqual(std::string("a"), result->left->value);
-
-            // Проверяем, что правый операнд - переменная "b"
-            Assert::AreEqual(static_cast<int>(TokenType::Variable), static_cast<int>(result->right->type));
-            Assert::AreEqual(std::string("b"), result->right->value);
-
-            // Проверяем, что список ошибок пуст
+            Assert::IsTrue(compareExpressionTrees(expected, result));
             Assert::IsTrue(errorList.empty());
 
-            // Освобождаем память
             delete result;
+            delete expected;
         }
 
         /**
          * @brief Тест 11: Проверка обработки множественных операций
-         *
-         * Функция должна корректно создать дерево для выражения с несколькими операциями
          */
-        TEST_METHOD(MultipleOperations)
+        TEST_METHOD(Test11_MultipleOperations)
         {
             std::vector<Token> tokens = {
                 Token(TokenType::Variable, "b", 0),
@@ -397,39 +304,27 @@ namespace testbuildExpressionTree
             };
             std::set<Error> errorList;
 
-            // Вызываем функцию с токенами для множественных операций
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
-            // Проверяем, что функция вернула не nullptr
+            ExpressionNode* expected = new ExpressionNode(TokenType::Or);
+            expected->left = new ExpressionNode(TokenType::And);
+            expected->left->left = new ExpressionNode(TokenType::Not);
+            expected->left->left->left = new ExpressionNode(TokenType::Variable, "b");
+            expected->left->right = new ExpressionNode(TokenType::Variable, "c");
+            expected->right = new ExpressionNode(TokenType::Variable, "d");
+
             Assert::IsNotNull(result);
-
-            // Проверяем, что тип узла - дизъюнкция
-            Assert::AreEqual(static_cast<int>(TokenType::Or), static_cast<int>(result->type));
-
-            // Проверяем, что у дизъюнкции есть левый и правый операнды
-            Assert::IsNotNull(result->left);
-            Assert::IsNotNull(result->right);
-
-            // Проверяем, что левый операнд - конъюнкция
-            Assert::AreEqual(static_cast<int>(TokenType::And), static_cast<int>(result->left->type));
-
-            // Проверяем, что правый операнд - переменная "d"
-            Assert::AreEqual(static_cast<int>(TokenType::Variable), static_cast<int>(result->right->type));
-            Assert::AreEqual(std::string("d"), result->right->value);
-
-            // Проверяем, что список ошибок пуст
+            Assert::IsTrue(compareExpressionTrees(expected, result));
             Assert::IsTrue(errorList.empty());
 
-            // Освобождаем память
             delete result;
+            delete expected;
         }
 
         /**
          * @brief Тест 12: Проверка обработки ошибки в середине выражения
-         *
-         * Функция должна добавить ошибку unsupportedOperation при неподдерживаемой операции
          */
-        TEST_METHOD(ErrorInMiddleOfExpression)
+        TEST_METHOD(Test12_ErrorInMiddleOfExpression)
         {
             std::vector<Token> tokens = {
                 Token(TokenType::Variable, "a", 0),
@@ -440,29 +335,16 @@ namespace testbuildExpressionTree
             };
             std::set<Error> errorList;
 
-            // Вызываем функцию с токенами, содержащими неподдерживаемую операцию
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
-            // Проверяем, что функция вернула nullptr
             Assert::IsNull(result);
-
-            // Проверяем, что в списке ошибок есть ошибка unsupportedOperation
-            bool hasError = false;
-            for (const auto& error : errorList) {
-                if (error.type == Error::unsupportedOperation && error.position == 2) {
-                    hasError = true;
-                    break;
-                }
-            }
-            Assert::IsTrue(hasError, L"Ошибка unsupportedOperation не добавлена в список ошибок");
+            Assert::IsTrue(hasError(errorList, Error::unsupportedOperation, 2));
         }
 
         /**
          * @brief Тест 13: Проверка обработки отрицания над сложным выражением
-         *
-         * Функция должна корректно создать дерево с отрицанием сложного выражения
          */
-        TEST_METHOD(NegationOverComplexExpression)
+        TEST_METHOD(Test13_NegationOverComplexExpression)
         {
             std::vector<Token> tokens = {
                 Token(TokenType::Variable, "b", 0),
@@ -475,34 +357,28 @@ namespace testbuildExpressionTree
             };
             std::set<Error> errorList;
 
-            // Вызываем функцию с токенами для отрицания над сложным выражением
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
-            // Проверяем, что функция вернула не nullptr
+            ExpressionNode* expected = new ExpressionNode(TokenType::Not);
+            expected->left = new ExpressionNode(TokenType::Or);
+            expected->left->left = new ExpressionNode(TokenType::And);
+            expected->left->left->left = new ExpressionNode(TokenType::Not);
+            expected->left->left->left->left = new ExpressionNode(TokenType::Variable, "b");
+            expected->left->left->right = new ExpressionNode(TokenType::Variable, "c");
+            expected->left->right = new ExpressionNode(TokenType::Variable, "d");
+
             Assert::IsNotNull(result);
-
-            // Проверяем, что тип узла - отрицание
-            Assert::AreEqual(static_cast<int>(TokenType::Not), static_cast<int>(result->type));
-
-            // Проверяем, что у отрицания есть операнд
-            Assert::IsNotNull(result->left);
-
-            // Проверяем, что операнд - дизъюнкция
-            Assert::AreEqual(static_cast<int>(TokenType::Or), static_cast<int>(result->left->type));
-
-            // Проверяем, что список ошибок пуст
+            Assert::IsTrue(compareExpressionTrees(expected, result));
             Assert::IsTrue(errorList.empty());
 
-            // Освобождаем память
             delete result;
+            delete expected;
         }
 
         /**
          * @brief Тест 14: Проверка обработки двойного отрицания
-         *
-         * Функция должна корректно создать дерево с двойным отрицанием переменной
          */
-        TEST_METHOD(DoubleNegation)
+        TEST_METHOD(Test14_DoubleNegation)
         {
             std::vector<Token> tokens = {
                 Token(TokenType::Variable, "a", 0),
@@ -511,41 +387,24 @@ namespace testbuildExpressionTree
             };
             std::set<Error> errorList;
 
-            // Вызываем функцию с токенами для двойного отрицания
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
-            // Проверяем, что функция вернула не nullptr
+            ExpressionNode* expected = new ExpressionNode(TokenType::Not);
+            expected->left = new ExpressionNode(TokenType::Not);
+            expected->left->left = new ExpressionNode(TokenType::Variable, "a");
+
             Assert::IsNotNull(result);
-
-            // Проверяем, что тип узла - отрицание
-            Assert::AreEqual(static_cast<int>(TokenType::Not), static_cast<int>(result->type));
-
-            // Проверяем, что у отрицания есть операнд
-            Assert::IsNotNull(result->left);
-
-            // Проверяем, что операнд - отрицание
-            Assert::AreEqual(static_cast<int>(TokenType::Not), static_cast<int>(result->left->type));
-
-            // Проверяем, что у вложенного отрицания есть операнд
-            Assert::IsNotNull(result->left->left);
-
-            // Проверяем, что операнд вложенного отрицания - переменная "a"
-            Assert::AreEqual(static_cast<int>(TokenType::Variable), static_cast<int>(result->left->left->type));
-            Assert::AreEqual(std::string("a"), result->left->left->value);
-
-            // Проверяем, что список ошибок пуст
+            Assert::IsTrue(compareExpressionTrees(expected, result));
             Assert::IsTrue(errorList.empty());
 
-            // Освобождаем память
             delete result;
+            delete expected;
         }
 
         /**
          * @brief Тест 15: Проверка обработки вложенных отрицаний
-         *
-         * Функция должна корректно создать дерево с вложенными отрицаниями
          */
-        TEST_METHOD(NestedNegations)
+        TEST_METHOD(Test15_NestedNegations)
         {
             std::vector<Token> tokens = {
                 Token(TokenType::Variable, "a", 0),
@@ -561,28 +420,32 @@ namespace testbuildExpressionTree
             };
             std::set<Error> errorList;
 
-            // Вызываем функцию с токенами для вложенных отрицаний
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
-            // Проверяем, что функция вернула не nullptr
+            // Создаем ожидаемое дерево
+            ExpressionNode* expected = new ExpressionNode(TokenType::Not);
+            expected->left = new ExpressionNode(TokenType::Or);
+            expected->left->left = new ExpressionNode(TokenType::Not);
+            expected->left->left->left = new ExpressionNode(TokenType::Implication);
+            expected->left->left->left->left = new ExpressionNode(TokenType::Variable, "a");
+            expected->left->left->left->right = new ExpressionNode(TokenType::Variable, "b");
+            expected->left->right = new ExpressionNode(TokenType::Not);
+            expected->left->right->left = new ExpressionNode(TokenType::And);
+            expected->left->right->left->left = new ExpressionNode(TokenType::Variable, "c");
+            expected->left->right->left->right = new ExpressionNode(TokenType::Variable, "d");
+
             Assert::IsNotNull(result);
-
-            // Проверяем, что тип узла - отрицание
-            Assert::AreEqual(static_cast<int>(TokenType::Not), static_cast<int>(result->type));
-
-            // Проверяем, что список ошибок пуст
+            Assert::IsTrue(compareExpressionTrees(expected, result));
             Assert::IsTrue(errorList.empty());
 
-            // Освобождаем память
             delete result;
+            delete expected;
         }
 
         /**
          * @brief Тест 16: Проверка обработки переменной с запрещенными символами
-         *
-         * Функция должна добавить ошибку invalidVariableChar при переменной с запрещенными символами
          */
-        TEST_METHOD(VariableWithForbiddenChars)
+        TEST_METHOD(Test16_VariableWithForbiddenChars)
         {
             std::vector<Token> tokens = {
                 Token(TokenType::Variable, "a_!", 0),
@@ -591,29 +454,16 @@ namespace testbuildExpressionTree
             };
             std::set<Error> errorList;
 
-            // Вызываем функцию с токенами, содержащими переменную с запрещенными символами
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
-            // Проверяем, что функция вернула nullptr
             Assert::IsNull(result);
-
-            // Проверяем, что в списке ошибок есть ошибка invalidVariableChar
-            bool hasError = false;
-            for (const auto& error : errorList) {
-                if (error.type == Error::invalidVariableChar && error.position == 0) {
-                    hasError = true;
-                    break;
-                }
-            }
-            Assert::IsTrue(hasError, L"Ошибка invalidVariableChar не добавлена в список ошибок");
+            Assert::IsTrue(hasError(errorList, Error::invalidVariableChar, 0));
         }
 
         /**
          * @brief Тест 17: Проверка обработки только бинарных операций
-         *
-         * Функция должна добавить ошибку insufficientOperands для каждой бинарной операции
          */
-        TEST_METHOD(OnlyBinaryOperations)
+        TEST_METHOD(Test17_OnlyBinaryOperations)
         {
             std::vector<Token> tokens = {
                 Token(TokenType::And, "&", 0),
@@ -622,28 +472,18 @@ namespace testbuildExpressionTree
             };
             std::set<Error> errorList;
 
-            // Вызываем функцию с токенами, содержащими только бинарные операции
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
-            // Проверяем, что функция вернула nullptr
             Assert::IsNull(result);
-
-            // Проверяем, что в списке ошибок есть ошибки insufficientOperands для каждой операции
-            int errorCount = 0;
-            for (const auto& error : errorList) {
-                if (error.type == Error::insufficientOperands) {
-                    errorCount++;
-                }
-            }
-            Assert::AreEqual(3, errorCount, L"Неверное количество ошибок insufficientOperands");
+            Assert::IsTrue(hasError(errorList, Error::insufficientOperands, 0));
+            Assert::IsTrue(hasError(errorList, Error::insufficientOperands, 1));
+            Assert::IsTrue(hasError(errorList, Error::insufficientOperands, 2));
         }
 
         /**
          * @brief Тест 18: Проверка обработки нескольких типов ошибок
-         *
-         * Функция должна добавить ошибки разных типов при наличии нескольких проблем
          */
-        TEST_METHOD(MultipleErrorTypes)
+        TEST_METHOD(Test18_MultipleErrorTypes)
         {
             std::vector<Token> tokens = {
                 Token(TokenType::Variable, "a_!", 0),
@@ -651,31 +491,11 @@ namespace testbuildExpressionTree
             };
             std::set<Error> errorList;
 
-            // Вызываем функцию с токенами, содержащими несколько типов ошибок
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
-            // Проверяем, что функция вернула nullptr
             Assert::IsNull(result);
-
-            // Проверяем, что в списке ошибок есть ошибка invalidVariableChar
-            bool hasInvalidCharError = false;
-            for (const auto& error : errorList) {
-                if (error.type == Error::invalidVariableChar && error.position == 0) {
-                    hasInvalidCharError = true;
-                    break;
-                }
-            }
-            Assert::IsTrue(hasInvalidCharError, L"Ошибка invalidVariableChar не добавлена в список ошибок");
-
-            // Проверяем, что в списке ошибок есть ошибка insufficientOperands
-            bool hasInsufficientOperandsError = false;
-            for (const auto& error : errorList) {
-                if (error.type == Error::insufficientOperands && error.position == 1) {
-                    hasInsufficientOperandsError = true;
-                    break;
-                }
-            }
-            Assert::IsTrue(hasInsufficientOperandsError, L"Ошибка insufficientOperands не добавлена в список ошибок");
+            Assert::IsTrue(hasError(errorList, Error::invalidVariableChar, 0));
+            Assert::IsTrue(hasError(errorList, Error::insufficientOperands, 1));
         }
     };
 }
