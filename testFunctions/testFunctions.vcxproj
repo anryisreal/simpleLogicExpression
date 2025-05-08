@@ -166,6 +166,7 @@
     </ClCompile>
     <ClCompile Include="test_buildExpressionTree.cpp" />
     <ClCompile Include="test_copyNode.cpp" />
+    <ClCompile Include="test_expressionTreeToInfix.cpp" />
     <ClCompile Include="test_removeDoubleNot.cpp" />
     <ClCompile Include="test_simplifyExpression.cpp" />
     <ClCompile Include="test_transformImplicationAndEquivalence.cpp" />
