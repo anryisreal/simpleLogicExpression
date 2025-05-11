@@ -18,7 +18,9 @@ int main() {
 	return 0;
 }
 
-
+/**
+* Функци для чтения из файла
+*/
 std::string readFile(const std::string& filePath) {
 
     std::ifstream file(filePath);	// Создаем поток для чтения из файла
@@ -35,8 +37,20 @@ std::string readFile(const std::string& filePath) {
 	return content;
 }
 
+/**
+* Функция для записи в файл
+*/
 void writeFile(const std::string& filePath, const std::string& content) {
 
+    std::ofstream file(filePath);  // Создаем поток для записи в файл
+
+    // Выброс исключения, если файл не открылся
+    if (!file.is_open()) {
+        throw Error(Error::outputFile);
+    }
+
+    file << content;               // Запись в файл
+    file.close();                  // Закрытие файла
 }
 
 std::vector<Token> tokenize(const std::string& expression, std::set<Error>& errorList) {
