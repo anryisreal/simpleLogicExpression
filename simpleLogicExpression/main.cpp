@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include "objects.h"
 #include "functions.h"
@@ -19,7 +20,17 @@ int main() {
 
 
 std::string readFile(const std::string& filePath) {
-	std::string content = "";
+
+    std::ifstream file(filePath);	// Создаем поток для чтения из файла
+
+	// Выброс исключения, если файл не открылся
+    if (!file.is_open()) {
+        throw Error(Error::inputFile);
+    }
+    
+    std::string content;			// Считываемая строка из файла
+    std::getline(file, content);	// Считывание строки
+    file.close();					// Закрытие файла
 
 	return content;
 }
