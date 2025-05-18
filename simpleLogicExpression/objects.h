@@ -86,6 +86,21 @@ public:
         unsupportedOperation /// Неподдерживаемая операция
     };
 
+    static std::string getErrorTypeString(ErrorType type) {
+        switch (type) {
+        case noError: return "noError";
+        case inputFile: return "inputFile";
+        case outputFile: return "outputFile";
+        case invalidSeparator: return "invalidSeparator";
+        case missingOperation: return "missingOperation";
+        case insufficientOperands: return "insufficientOperands";
+        case invalidVariableName: return "invalidVariableName";
+        case invalidVariableChar: return "insufficientOperands";
+        case unsupportedOperation: return "invalidVariableName";
+        default: return "Неизвестная ошибка";
+        }
+    }
+
     ErrorType type;          /// Тип ошибки
     int position;            /// Позиция ошибки
     std::string description; /// Описание ошибки

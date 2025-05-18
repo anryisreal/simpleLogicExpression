@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CppUnitTest.h"
+#include <algorithm>
 #include "../simpleLogicExpression/functions.h"
 #include "../simpleLogicExpression/objects.h"
 
@@ -11,7 +12,7 @@ namespace testbuildExpressionTree
     {
     public:
         /**
-         * Рекурсивно сравнивает два дерева выражений
+         * @brief Рекурсивно сравнивает два дерева выражений
          * @param expected Ожидаемое дерево
          * @param actual Фактическое дерево
          * @param path Текущий путь в дереве (для диагностики)
@@ -44,19 +45,43 @@ namespace testbuildExpressionTree
         }
 
         /**
-         * Проверяет наличие ошибки определенного типа в списке
-         * @param errorList Список ошибок
-         * @param type Тип ошибки для проверки
-         * @param position Позиция ошибки (если нужно проверить)
-         * @return true если ошибка найдена, false в противном случае
+         * @brief Сравнивает два множества ошибок и выводит различия
+         * @param expected Ожидаемое множество ошибок
+         * @param actual Фактическое множество ошибок
+         * @return true если множества идентичны, false в противном случае
          */
-        bool hasError(const std::set<Error>& errorList, Error::ErrorType type, int position = -1) const
+        bool compareErrorSets(const std::set<Error>& expected, const std::set<Error>& actual) const
         {
-            for (const auto& error : errorList) {
-                if (error.type == type && (position == -1 || error.position == position)) {
-                    return true;
+            if (expected == actual) {
+                return true;
+            }
+
+            std::string message = "Ошибки не совпадают:\n";
+
+            // Находим ошибки, которые ожидались, но отсутствуют в actual
+            std::vector<Error> missingErrors;
+            std::set_difference(expected.begin(), expected.end(), actual.begin(), actual.end(), std::back_inserter(missingErrors));
+
+            if (!missingErrors.empty()) {
+                message += "Отсутствующие ошибки:\n";
+                for (const auto& error : missingErrors) {
+                    message += "  - " + Error::getErrorTypeString(error.type) +
+                        " на позиции " + std::to_string(error.position) + "\n";
                 }
             }
+
+            // Находим ошибки, которые не ожидались, но присутствуют в actual
+            std::vector<Error> unexpectedErrors;
+            std::set_difference(actual.begin(), actual.end(), expected.begin(), expected.end(), std::back_inserter(unexpectedErrors));
+
+            if (!unexpectedErrors.empty()) {
+                message += "Неожиданные ошибки:\n";
+                for (const auto& error : unexpectedErrors) {
+                    message += "  + " + Error::getErrorTypeString(error.type) + " на позиции " + std::to_string(error.position) + "\n";
+                }
+            }
+
+            Logger::WriteMessage(message.c_str());
             return false;
         }
 
@@ -70,8 +95,12 @@ namespace testbuildExpressionTree
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
+            std::set<Error> expectedErrors = {
+                {Error::missingOperation, -1}
+            };
+
             Assert::IsNull(result);
-            Assert::IsTrue(hasError(errorList, Error::missingOperation));
+            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
         }
 
         /**
@@ -103,8 +132,12 @@ namespace testbuildExpressionTree
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
+            std::set<Error> expectedErrors = {
+                {Error::insufficientOperands, 0}
+            };
+
             Assert::IsNull(result);
-            Assert::IsTrue(hasError(errorList, Error::insufficientOperands));
+            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
         }
 
         /**
@@ -233,8 +266,12 @@ namespace testbuildExpressionTree
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
+            std::set<Error> expectedErrors = {
+                {Error::invalidVariableName, 0}
+            };
+
             Assert::IsNull(result);
-            Assert::IsTrue(hasError(errorList, Error::invalidVariableName, 0));
+            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
         }
 
         /**
@@ -337,8 +374,12 @@ namespace testbuildExpressionTree
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
+            std::set<Error> expectedErrors = {
+                {Error::unsupportedOperation, 2}
+            };
+
             Assert::IsNull(result);
-            Assert::IsTrue(hasError(errorList, Error::unsupportedOperation, 2));
+            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
         }
 
         /**
@@ -456,8 +497,12 @@ namespace testbuildExpressionTree
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
+            std::set<Error> expectedErrors = {
+                {Error::invalidVariableChar, 0}
+            };
+
             Assert::IsNull(result);
-            Assert::IsTrue(hasError(errorList, Error::invalidVariableChar, 0));
+            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
         }
 
         /**
@@ -474,10 +519,14 @@ namespace testbuildExpressionTree
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
+            std::set<Error> expectedErrors = {
+                {Error::insufficientOperands, 0},
+                {Error::insufficientOperands, 1},
+                {Error::insufficientOperands, 2}
+            };
+
             Assert::IsNull(result);
-            Assert::IsTrue(hasError(errorList, Error::insufficientOperands, 0));
-            Assert::IsTrue(hasError(errorList, Error::insufficientOperands, 1));
-            Assert::IsTrue(hasError(errorList, Error::insufficientOperands, 2));
+            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
         }
 
         /**
@@ -493,9 +542,13 @@ namespace testbuildExpressionTree
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
+            std::set<Error> expectedErrors = {
+                {Error::invalidVariableChar, 0},
+                {Error::insufficientOperands, 1}
+            };
+
             Assert::IsNull(result);
-            Assert::IsTrue(hasError(errorList, Error::invalidVariableChar, 0));
-            Assert::IsTrue(hasError(errorList, Error::insufficientOperands, 1));
+            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
         }
     };
 }

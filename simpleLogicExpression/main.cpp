@@ -1,8 +1,20 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <map>
 #include "objects.h"
 #include "functions.h"
+
+/**
+* Соответствие между строкой и типом операции
+*/
+const std::map<std::string, TokenType> stringToTokenType = {
+    {"!", TokenType::Not},
+    {"&", TokenType::And},
+    {"|", TokenType::Or},
+    {">", TokenType::Implication},
+    {"~", TokenType::Equivalence}
+};
 
 /**
  * Главная функция программы.
@@ -54,7 +66,37 @@ void writeFile(const std::string& filePath, const std::string& content) {
 }
 
 std::vector<Token> tokenize(const std::string& expression, std::set<Error>& errorList) {
-	std::vector<Token> tokens;
+    std::vector<Token> tokens;
+    std::istringstream iss(expression);
+    std::string item;
+    int position = 0;
+
+    while (iss >> item) {
+        auto it = stringToTokenType.find(item);
+        if (it != stringToTokenType.end()) {
+            // Это операция
+            tokens.emplace_back(it->second, item, position);
+        }
+        else if (!item.empty() && isLatinLetter(item[0])) {
+            // Это переменная, проверяем все символы
+            for (size_t i = 1; i < item.length(); ++i) {
+                if (!isLatinLetterOrDigit(item[i])) {
+                    throw Error(Error::invalidVariableChar, position);
+                }
+            }
+            tokens.emplace_back(TokenType::Variable, item, position);
+        }
+        else {
+            // Некорректный токен
+            if (!item.empty() && !isLatinLetter(item[0])) {
+                throw Error(Error::invalidVariableName, position);
+            }
+            else {
+                throw Error(Error::unsupportedOperation, position);
+            }
+        }
+        position += item.length() + 1; // +1 для пробела
+    }
 
 	return tokens;
 }

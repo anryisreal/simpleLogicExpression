@@ -19,34 +19,45 @@ namespace testcopyNode
          */
         bool compareNodesRecursive(const ExpressionNode* original, const ExpressionNode* copied, const std::string& path = "node")
         {
+            // Проверка на равенство указателей
+            if (original == copied) {
+                if (original != nullptr) {
+                    Logger::WriteMessage(("Ошибка в узле: " + path + " (указатели на оригинал и копию совпадают)").c_str());
+                }
+                return false;
+            }
+
+            // Проверка на nullptr
             if (original == nullptr && copied == nullptr) {
                 return true;
             }
 
             if (original == nullptr) {
-                Logger::WriteMessage(("Некорректно в данном узле: " + path + " (original is null, but copied is not)").c_str());
+                Logger::WriteMessage(("Ошибка в узле: " + path + " (оригинал null, но копия не null)").c_str());
                 return false;
             }
 
             if (copied == nullptr) {
-                Logger::WriteMessage(("Некорректно в данном узле: " + path + " (copied is null, but original is not)").c_str());
+                Logger::WriteMessage(("Ошибка в узле: " + path + " (копия null, но оригинал не null)").c_str());
                 return false;
             }
 
+            // Проверка содержимого узлов
             if (original->type != copied->type) {
-                Logger::WriteMessage(("Некорректно в данном узле: " + path + " (type mismatch)").c_str());
+                Logger::WriteMessage(("Ошибка в узле: " + path + " (тип не совпадает: оригинал " + std::to_string(static_cast<int>(original->type)) + ", копия " + std::to_string(static_cast<int>(copied->type)) + ")").c_str());
                 return false;
             }
 
             if (original->value != copied->value) {
-                Logger::WriteMessage(("Некорректно в данном узле: " + path + " (value mismatch)").c_str());
+                Logger::WriteMessage(("Ошибка в узле: " + path + " (значение не совпадает: оригинал '" + original->value + "', копия '" + copied->value + "')").c_str());
                 return false;
             }
 
-            bool leftMatch = compareNodesRecursive(original->left, copied->left, path + "-left");
-            bool rightMatch = compareNodesRecursive(original->right, copied->right, path + "-right");
+            // Проверка поддеревьев
+            bool leftValid = compareNodesRecursive(original->left, copied->left, path + "-left");
+            bool rightValid = compareNodesRecursive(original->right, copied->right, path + "-right");
 
-            return leftMatch && rightMatch;
+            return leftValid && rightValid;
         }
 
         /**
