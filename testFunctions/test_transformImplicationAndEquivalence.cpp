@@ -1,4 +1,4 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "CppUnitTest.h"
 #include "../simpleLogicExpression/functions.h"
 #include "../simpleLogicExpression/objects.h"
@@ -11,42 +11,42 @@ namespace testTransformImplicationAndEquivalence
     {
     public:
         /**
-         * –ÂÍÛÒË‚ÌÓ Ò‡‚ÌË‚‡ÂÚ ‰‚‡ ‰ÂÂ‚‡ ‚˚‡ÊÂÌËÈ
-         * @param expected ŒÊË‰‡ÂÏÓÂ ‰ÂÂ‚Ó
-         * @param actual ‘‡ÍÚË˜ÂÒÍÓÂ ‰ÂÂ‚Ó
-         * @param path “ÂÍÛ˘ËÈ ÔÛÚ¸ ‚ ‰ÂÂ‚Â (‰Îˇ ‰Ë‡„ÌÓÒÚËÍË)
-         * @return true ÂÒÎË ‰ÂÂ‚¸ˇ Ë‰ÂÌÚË˜Ì˚, false ‚ ÔÓÚË‚ÌÓÏ ÒÎÛ˜‡Â
+         * –†–µ–∫—É—Ä—Å–∏–≤–Ω–æ —Å—Ä–∞–≤–Ω–∏–≤–∞–µ—Ç –¥–≤–∞ –¥–µ—Ä–µ–≤–∞ –≤—ã—Ä–∞–∂–µ–Ω–∏–π
+         * @param expected –û–∂–∏–¥–∞–µ–º–æ–µ –¥–µ—Ä–µ–≤–æ
+         * @param actual –§–∞–∫—Ç–∏—á–µ—Å–∫–æ–µ –¥–µ—Ä–µ–≤–æ
+         * @param path –¢–µ–∫—É—â–∏–π –ø—É—Ç—å –≤ –¥–µ—Ä–µ–≤–µ (–¥–ª—è –¥–∏–∞–≥–Ω–æ—Å—Ç–∏–∫–∏)
+         * @return true –µ—Å–ª–∏ –¥–µ—Ä–µ–≤—å—è –∏–¥–µ–Ω—Ç–∏—á–Ω—ã, false –≤ –ø—Ä–æ—Ç–∏–≤–Ω–æ–º —Å–ª—É—á–∞–µ
          */
         bool compareExpressionTrees(const ExpressionNode* expected, const ExpressionNode* actual, const std::string& path = "root") const
         {
-            // Œ·‡ ÛÁÎ‡ nullptr - ÒÓ‚Ô‡‰‡˛Ú
+            // –û–±–∞ —É–∑–ª–∞ nullptr - —Å–æ–≤–ø–∞–¥–∞—é—Ç
             if (expected == nullptr && actual == nullptr) {
                 return true;
             }
 
-            // “ÓÎ¸ÍÓ Ó‰ËÌ ËÁ ÛÁÎÓ‚ nullptr - ÌÂ ÒÓ‚Ô‡‰‡˛Ú
+            // –¢–æ–ª—å–∫–æ –æ–¥–∏–Ω –∏–∑ —É–∑–ª–æ–≤ nullptr - –Ω–µ —Å–æ–≤–ø–∞–¥–∞—é—Ç
             if (expected == nullptr) {
-                Logger::WriteMessage(("Œ¯Ë·Í‡ ‚ ÛÁÎÂ: " + path + " - ÓÊË‰‡ÎÒˇ nullptr").c_str());
+                Logger::WriteMessage(("–û—à–∏–±–∫–∞ –≤ —É–∑–ª–µ: " + path + " - –æ–∂–∏–¥–∞–ª—Å—è nullptr").c_str());
                 return false;
             }
             if (actual == nullptr) {
-                Logger::WriteMessage(("Œ¯Ë·Í‡ ‚ ÛÁÎÂ: " + path + " - ÌÂÓÊË‰‡ÌÌ˚È nullptr").c_str());
+                Logger::WriteMessage(("–û—à–∏–±–∫–∞ –≤ —É–∑–ª–µ: " + path + " - –Ω–µ–æ–∂–∏–¥–∞–Ω–Ω—ã–π nullptr").c_str());
                 return false;
             }
 
-            // œÓ‚ÂÍ‡ ÚËÔ‡ ÛÁÎ‡
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ç–∏–ø–∞ —É–∑–ª–∞
             if (expected->type != actual->type) {
-                Logger::WriteMessage(("Œ¯Ë·Í‡ ‚ ÛÁÎÂ: " + path + " - ÚËÔ ÛÁÎ‡ ÌÂ ÒÓ‚Ô‡‰‡ÂÚ. ŒÊË‰‡ÎÒˇ: " + tokenTypeToString(expected->type) + ", ÔÓÎÛ˜ÂÌ: " + tokenTypeToString(actual->type)).c_str());
+                Logger::WriteMessage(("–û—à–∏–±–∫–∞ –≤ —É–∑–ª–µ: " + path + " - —Ç–∏–ø —É–∑–ª–∞ –Ω–µ —Å–æ–≤–ø–∞–¥–∞–µ—Ç. –û–∂–∏–¥–∞–ª—Å—è: " + tokenTypeToString(expected->type) + ", –ø–æ–ª—É—á–µ–Ω: " + tokenTypeToString(actual->type)).c_str());
                 return false;
             }
 
-            // œÓ‚ÂÍ‡ ÁÌ‡˜ÂÌËˇ ÔÂÂÏÂÌÌÓÈ (ÂÒÎË ÂÒÚ¸)
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ –∑–Ω–∞—á–µ–Ω–∏—è –ø–µ—Ä–µ–º–µ–Ω–Ω–æ–π (–µ—Å–ª–∏ –µ—Å—Ç—å)
             if (expected->value != actual->value) {
-                Logger::WriteMessage(("Œ¯Ë·Í‡ ‚ ÛÁÎÂ: " + path + " - ÁÌ‡˜ÂÌËÂ ÌÂ ÒÓ‚Ô‡‰‡ÂÚ. ŒÊË‰‡ÎÓÒ¸: '" + expected->value + "', ÔÓÎÛ˜ÂÌÓ: '" + actual->value + "'").c_str());
+                Logger::WriteMessage(("–û—à–∏–±–∫–∞ –≤ —É–∑–ª–µ: " + path + " - –∑–Ω–∞—á–µ–Ω–∏–µ –Ω–µ —Å–æ–≤–ø–∞–¥–∞–µ—Ç. –û–∂–∏–¥–∞–ª–æ—Å—å: '" + expected->value + "', –ø–æ–ª—É—á–µ–Ω–æ: '" + actual->value + "'").c_str());
                 return false;
             }
 
-            // –ÂÍÛÒË‚Ì‡ˇ ÔÓ‚ÂÍ‡ ÎÂ‚Ó„Ó Ë Ô‡‚Ó„Ó ÔÓ‰‰ÂÂ‚¸Â‚
+            // –†–µ–∫—É—Ä—Å–∏–≤–Ω–∞—è –ø—Ä–æ–≤–µ—Ä–∫–∞ –ª–µ–≤–æ–≥–æ –∏ –ø—Ä–∞–≤–æ–≥–æ –ø–æ–¥–¥–µ—Ä–µ–≤—å–µ–≤
             bool leftMatch = compareExpressionTrees(expected->left, actual->left, path + "-left");
             bool rightMatch = compareExpressionTrees(expected->right, actual->right, path + "-right");
 
@@ -54,9 +54,9 @@ namespace testTransformImplicationAndEquivalence
         }
 
         /**
-         * @brief œÂÓ·‡ÁÛÂÚ TokenType ‚ ÒÚÓÍÛ ‰Îˇ ÒÓÓ·˘ÂÌËÈ Ó· Ó¯Ë·Í‡ı
-         * @param type “ËÔ ÚÓÍÂÌ‡
-         * @return —ÚÓÍÓ‚ÓÂ ÔÂ‰ÒÚ‡‚ÎÂÌËÂ ÚËÔ‡
+         * @brief –ü—Ä–µ–æ–±—Ä–∞–∑—É–µ—Ç TokenType –≤ —Å—Ç—Ä–æ–∫—É –¥–ª—è —Å–æ–æ–±—â–µ–Ω–∏–π –æ–± –æ—à–∏–±–∫–∞—Ö
+         * @param type –¢–∏–ø —Ç–æ–∫–µ–Ω–∞
+         * @return –°—Ç—Ä–æ–∫–æ–≤–æ–µ –ø—Ä–µ–¥—Å—Ç–∞–≤–ª–µ–Ω–∏–µ —Ç–∏–ø–∞
          */
         std::string tokenTypeToString(TokenType type) const
         {
@@ -73,220 +73,220 @@ namespace testTransformImplicationAndEquivalence
         }
 
         /**
-         * @brief “ÂÒÚ 1: œÓÒÚÓÂ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ËÏÔÎËÍ‡ˆËË
+         * @brief –¢–µ—Å—Ç 1: –ü—Ä–æ—Å—Ç–æ–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ –∏–º–ø–ª–∏–∫–∞—Ü–∏–∏
          *
-         * œÓ‚ÂˇÂÚ, ˜ÚÓ ËÏÔÎËÍ‡ˆËˇ A > B ÍÓÂÍÚÌÓ ÔÂÓ·‡ÁÛÂÚÒˇ ‚ !A | B
+         * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç, —á—Ç–æ –∏–º–ø–ª–∏–∫–∞—Ü–∏—è A > B –∫–æ—Ä—Ä–µ–∫—Ç–Ω–æ –ø—Ä–µ–æ–±—Ä–∞–∑—É–µ—Ç—Å—è –≤ !A | B
          */
         TEST_METHOD(Test1_SimpleImplicationTransform)
         {
-            // œÓ‰„ÓÚÓ‚Í‡ ‚ıÓ‰Ì˚ı ‰‡ÌÌ˚ı
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
             ExpressionNode* input = new ExpressionNode(Implication);
             input->left = new ExpressionNode(Variable, "a");
             input->right = new ExpressionNode(Variable, "b");
 
-            // ŒÊË‰‡ÂÏ˚È ÂÁÛÎ¸Ú‡Ú
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç
             ExpressionNode* expected = new ExpressionNode(Or);
             expected->left = new ExpressionNode(Not);
             expected->left->left = new ExpressionNode(Variable, "a");
             expected->right = new ExpressionNode(Variable, "b");
 
-            // ¬˚ÔÓÎÌÂÌËÂ ÔÂÓ·‡ÁÓ‚‡ÌËˇ
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
             transformImplicationAndEquivalence(input);
 
-            // œÓ‚ÂÍ‡ ÂÁÛÎ¸Ú‡Ú‡
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
             Assert::IsTrue(compareExpressionTrees(expected, input),
-                L"ƒÂÂ‚Ó ÌÂ ÒÓÓÚ‚ÂÚÒÚ‚ÛÂÚ ÓÊË‰‡ÂÏÓÏÛ ÔÓÒÎÂ ÔÂÓ·‡ÁÓ‚‡ÌËˇ ËÏÔÎËÍ‡ˆËË");
+                L"–î–µ—Ä–µ–≤–æ –Ω–µ —Å–æ–æ—Ç–≤–µ—Ç—Å—Ç–≤—É–µ—Ç –æ–∂–∏–¥–∞–µ–º–æ–º—É –ø–æ—Å–ª–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è –∏–º–ø–ª–∏–∫–∞—Ü–∏–∏");
 
-            // Œ˜ËÒÚÍ‡ Ô‡ÏˇÚË
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
             delete input;
             delete expected;
         }
 
         /**
-         * @brief “ÂÒÚ 2: œÓÒÚÓÂ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ˝Í‚Ë‚‡ÎÂÌÚÌÓÒÚË
+         * @brief –¢–µ—Å—Ç 2: –ü—Ä–æ—Å—Ç–æ–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç–∏
          *
-         * œÓ‚ÂˇÂÚ, ˜ÚÓ ˝Í‚Ë‚‡ÎÂÌÚÌÓÒÚ¸ A ~ B ÍÓÂÍÚÌÓ ÔÂÓ·‡ÁÛÂÚÒˇ ‚ (A & B) | (!A & !B)
+         * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç, —á—Ç–æ —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç—å A ~ B –∫–æ—Ä—Ä–µ–∫—Ç–Ω–æ –ø—Ä–µ–æ–±—Ä–∞–∑—É–µ—Ç—Å—è –≤ (A & B) | (!A & !B)
          */
         TEST_METHOD(Test2_SimpleEquivalenceTransform)
         {
-            // œÓ‰„ÓÚÓ‚Í‡ ‚ıÓ‰Ì˚ı ‰‡ÌÌ˚ı
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
             ExpressionNode* input = new ExpressionNode(Equivalence);
             input->left = new ExpressionNode(Variable, "a");
             input->right = new ExpressionNode(Variable, "b");
 
-            // ŒÊË‰‡ÂÏ˚È ÂÁÛÎ¸Ú‡Ú
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç
             ExpressionNode* expected = new ExpressionNode(Or);
 
-            // ÀÂ‚‡ˇ ˜‡ÒÚ¸: A & B
+            // –õ–µ–≤–∞—è —á–∞—Å—Ç—å: A & B
             expected->left = new ExpressionNode(And);
             expected->left->left = new ExpressionNode(Variable, "a");
             expected->left->right = new ExpressionNode(Variable, "b");
 
-            // œ‡‚‡ˇ ˜‡ÒÚ¸: !A & !B
+            // –ü—Ä–∞–≤–∞—è —á–∞—Å—Ç—å: !A & !B
             expected->right = new ExpressionNode(And);
             expected->right->left = new ExpressionNode(Not);
             expected->right->left->left = new ExpressionNode(Variable, "a");
             expected->right->right = new ExpressionNode(Not);
             expected->right->right->left = new ExpressionNode(Variable, "b");
 
-            // ¬˚ÔÓÎÌÂÌËÂ ÔÂÓ·‡ÁÓ‚‡ÌËˇ
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
             transformImplicationAndEquivalence(input);
 
-            // œÓ‚ÂÍ‡ ÂÁÛÎ¸Ú‡Ú‡
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
             Assert::IsTrue(compareExpressionTrees(expected, input),
-                L"ƒÂÂ‚Ó ÌÂ ÒÓÓÚ‚ÂÚÒÚ‚ÛÂÚ ÓÊË‰‡ÂÏÓÏÛ ÔÓÒÎÂ ÔÂÓ·‡ÁÓ‚‡ÌËˇ ˝Í‚Ë‚‡ÎÂÌÚÌÓÒÚË");
+                L"–î–µ—Ä–µ–≤–æ –Ω–µ —Å–æ–æ—Ç–≤–µ—Ç—Å—Ç–≤—É–µ—Ç –æ–∂–∏–¥–∞–µ–º–æ–º—É –ø–æ—Å–ª–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç–∏");
 
-            // Œ˜ËÒÚÍ‡ Ô‡ÏˇÚË
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
             delete input;
             delete expected;
         }
 
         /**
-         * @brief “ÂÒÚ 3: ŒÚÒÛÚÒÚ‚ËÂ ÔÂÓ·‡ÁÓ‚‡ÌËˇ ‰Îˇ ÍÓÌ˙˛ÌÍˆËË
+         * @brief –¢–µ—Å—Ç 3: –û—Ç—Å—É—Ç—Å—Ç–≤–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è –¥–ª—è –∫–æ–Ω—ä—é–Ω–∫—Ü–∏–∏
          *
-         * œÓ‚ÂˇÂÚ, ˜ÚÓ ÍÓÌ˙˛ÌÍˆËˇ A & B ÓÒÚ‡ÂÚÒˇ ·ÂÁ ËÁÏÂÌÂÌËÈ
+         * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç, —á—Ç–æ –∫–æ–Ω—ä—é–Ω–∫—Ü–∏—è A & B –æ—Å—Ç–∞–µ—Ç—Å—è –±–µ–∑ –∏–∑–º–µ–Ω–µ–Ω–∏–π
          */
         TEST_METHOD(Test3_NoTransformForAnd)
         {
-            // œÓ‰„ÓÚÓ‚Í‡ ‚ıÓ‰Ì˚ı ‰‡ÌÌ˚ı
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
             ExpressionNode* input = new ExpressionNode(And);
             input->left = new ExpressionNode(Variable, "a");
             input->right = new ExpressionNode(Variable, "b");
 
-            // ŒÊË‰‡ÂÏ˚È ÂÁÛÎ¸Ú‡Ú (‰ÓÎÊÂÌ ÓÒÚ‡Ú¸Òˇ Ú‡ÍËÏ ÊÂ)
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç (–¥–æ–ª–∂–µ–Ω –æ—Å—Ç–∞—Ç—å—Å—è —Ç–∞–∫–∏–º –∂–µ)
             ExpressionNode* expected = new ExpressionNode(And);
             expected->left = new ExpressionNode(Variable, "a");
             expected->right = new ExpressionNode(Variable, "b");
 
-            // ¬˚ÔÓÎÌÂÌËÂ ÔÂÓ·‡ÁÓ‚‡ÌËˇ
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
             transformImplicationAndEquivalence(input);
 
-            // œÓ‚ÂÍ‡ ÂÁÛÎ¸Ú‡Ú‡
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
             Assert::IsTrue(compareExpressionTrees(expected, input),
-                L" ÓÌ˙˛ÌÍˆËˇ ÌÂ ‰ÓÎÊÌ‡ ·˚Î‡ ËÁÏÂÌËÚ¸Òˇ, ÌÓ ËÁÏÂÌËÎ‡Ò¸");
+                L"–ö–æ–Ω—ä—é–Ω–∫—Ü–∏—è –Ω–µ –¥–æ–ª–∂–Ω–∞ –±—ã–ª–∞ –∏–∑–º–µ–Ω–∏—Ç—å—Å—è, –Ω–æ –∏–∑–º–µ–Ω–∏–ª–∞—Å—å");
 
-            // Œ˜ËÒÚÍ‡ Ô‡ÏˇÚË
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
             delete input;
             delete expected;
         }
 
         /**
-         * @brief “ÂÒÚ 4: ŒÚÒÛÚÒÚ‚ËÂ ÔÂÓ·‡ÁÓ‚‡ÌËˇ ‰Îˇ ‰ËÁ˙˛ÌÍˆËË
+         * @brief –¢–µ—Å—Ç 4: –û—Ç—Å—É—Ç—Å—Ç–≤–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è –¥–ª—è –¥–∏–∑—ä—é–Ω–∫—Ü–∏–∏
          *
-         * œÓ‚ÂˇÂÚ, ˜ÚÓ ‰ËÁ˙˛ÌÍˆËˇ A | B ÓÒÚ‡ÂÚÒˇ ·ÂÁ ËÁÏÂÌÂÌËÈ
+         * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç, —á—Ç–æ –¥–∏–∑—ä—é–Ω–∫—Ü–∏—è A | B –æ—Å—Ç–∞–µ—Ç—Å—è –±–µ–∑ –∏–∑–º–µ–Ω–µ–Ω–∏–π
          */
         TEST_METHOD(Test4_NoTransformForOr)
         {
-            // œÓ‰„ÓÚÓ‚Í‡ ‚ıÓ‰Ì˚ı ‰‡ÌÌ˚ı
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
             ExpressionNode* input = new ExpressionNode(Or);
             input->left = new ExpressionNode(Variable, "a");
             input->right = new ExpressionNode(Variable, "b");
 
-            // ŒÊË‰‡ÂÏ˚È ÂÁÛÎ¸Ú‡Ú (‰ÓÎÊÂÌ ÓÒÚ‡Ú¸Òˇ Ú‡ÍËÏ ÊÂ)
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç (–¥–æ–ª–∂–µ–Ω –æ—Å—Ç–∞—Ç—å—Å—è —Ç–∞–∫–∏–º –∂–µ)
             ExpressionNode* expected = new ExpressionNode(Or);
             expected->left = new ExpressionNode(Variable, "a");
             expected->right = new ExpressionNode(Variable, "b");
 
-            // ¬˚ÔÓÎÌÂÌËÂ ÔÂÓ·‡ÁÓ‚‡ÌËˇ
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
             transformImplicationAndEquivalence(input);
 
-            // œÓ‚ÂÍ‡ ÂÁÛÎ¸Ú‡Ú‡
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
             Assert::IsTrue(compareExpressionTrees(expected, input),
-                L"ƒËÁ˙˛ÌÍˆËˇ ÌÂ ‰ÓÎÊÌ‡ ·˚Î‡ ËÁÏÂÌËÚ¸Òˇ, ÌÓ ËÁÏÂÌËÎ‡Ò¸");
+                L"–î–∏–∑—ä—é–Ω–∫—Ü–∏—è –Ω–µ –¥–æ–ª–∂–Ω–∞ –±—ã–ª–∞ –∏–∑–º–µ–Ω–∏—Ç—å—Å—è, –Ω–æ –∏–∑–º–µ–Ω–∏–ª–∞—Å—å");
 
-            // Œ˜ËÒÚÍ‡ Ô‡ÏˇÚË
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
             delete input;
             delete expected;
         }
 
         /**
-         * @brief “ÂÒÚ 5: »ÏÔÎËÍ‡ˆËˇ ‚ÌÛÚË ÓÚËˆ‡ÌËˇ
+         * @brief –¢–µ—Å—Ç 5: –ò–º–ø–ª–∏–∫–∞—Ü–∏—è –≤–Ω—É—Ç—Ä–∏ –æ—Ç—Ä–∏—Ü–∞–Ω–∏—è
          *
-         * œÓ‚ÂˇÂÚ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ËÏÔÎËÍ‡ˆËË ‚ÌÛÚË ÓÔÂ‡ÚÓ‡ ÓÚËˆ‡ÌËˇ: !(A > B)
+         * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ –∏–º–ø–ª–∏–∫–∞—Ü–∏–∏ –≤–Ω—É—Ç—Ä–∏ –æ–ø–µ—Ä–∞—Ç–æ—Ä–∞ –æ—Ç—Ä–∏—Ü–∞–Ω–∏—è: !(A > B)
          */
         TEST_METHOD(Test5_ImplicationInsideNot)
         {
-            // œÓ‰„ÓÚÓ‚Í‡ ‚ıÓ‰Ì˚ı ‰‡ÌÌ˚ı
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
             ExpressionNode* input = new ExpressionNode(Not);
             input->left = new ExpressionNode(Implication);
             input->left->left = new ExpressionNode(Variable, "a");
             input->left->right = new ExpressionNode(Variable, "b");
 
-            // ŒÊË‰‡ÂÏ˚È ÂÁÛÎ¸Ú‡Ú: !(!A | B)
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç: !(!A | B)
             ExpressionNode* expected = new ExpressionNode(Not);
             expected->left = new ExpressionNode(Or);
             expected->left->left = new ExpressionNode(Not);
             expected->left->left->left = new ExpressionNode(Variable, "a");
             expected->left->right = new ExpressionNode(Variable, "b");
 
-            // ¬˚ÔÓÎÌÂÌËÂ ÔÂÓ·‡ÁÓ‚‡ÌËˇ
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
             transformImplicationAndEquivalence(input);
 
-            // œÓ‚ÂÍ‡ ÂÁÛÎ¸Ú‡Ú‡
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
             Assert::IsTrue(compareExpressionTrees(expected, input),
-                L"ÕÂÍÓÂÍÚÌÓÂ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ËÏÔÎËÍ‡ˆËË ‚ÌÛÚË ÓÚËˆ‡ÌËˇ");
+                L"–ù–µ–∫–æ—Ä—Ä–µ–∫—Ç–Ω–æ–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ –∏–º–ø–ª–∏–∫–∞—Ü–∏–∏ –≤–Ω—É—Ç—Ä–∏ –æ—Ç—Ä–∏—Ü–∞–Ω–∏—è");
 
-            // Œ˜ËÒÚÍ‡ Ô‡ÏˇÚË
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
             delete input;
             delete expected;
         }
 
         /**
-         * @brief “ÂÒÚ 6: ›Í‚Ë‚‡ÎÂÌÚÌÓÒÚ¸ ‚ÌÛÚË ÓÚËˆ‡ÌËˇ
+         * @brief –¢–µ—Å—Ç 6: –≠–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç—å –≤–Ω—É—Ç—Ä–∏ –æ—Ç—Ä–∏—Ü–∞–Ω–∏—è
          *
-         * œÓ‚ÂˇÂÚ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ˝Í‚Ë‚‡ÎÂÌÚÌÓÒÚË ‚ÌÛÚË ÓÔÂ‡ÚÓ‡ ÓÚËˆ‡ÌËˇ: !(A ~ B)
+         * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç–∏ –≤–Ω—É—Ç—Ä–∏ –æ–ø–µ—Ä–∞—Ç–æ—Ä–∞ –æ—Ç—Ä–∏—Ü–∞–Ω–∏—è: !(A ~ B)
          */
         TEST_METHOD(Test6_EquivalenceInsideNot)
         {
-            // œÓ‰„ÓÚÓ‚Í‡ ‚ıÓ‰Ì˚ı ‰‡ÌÌ˚ı
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
             ExpressionNode* input = new ExpressionNode(Not);
             input->left = new ExpressionNode(Equivalence);
             input->left->left = new ExpressionNode(Variable, "a");
             input->left->right = new ExpressionNode(Variable, "b");
 
-            // ŒÊË‰‡ÂÏ˚È ÂÁÛÎ¸Ú‡Ú: !((A & B) | (!A & !B))
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç: !((A & B) | (!A & !B))
             ExpressionNode* expected = new ExpressionNode(Not);
             expected->left = new ExpressionNode(Or);
 
-            // ÀÂ‚‡ˇ ˜‡ÒÚ¸ OR: A & B
+            // –õ–µ–≤–∞—è —á–∞—Å—Ç—å OR: A & B
             expected->left->left = new ExpressionNode(And);
             expected->left->left->left = new ExpressionNode(Variable, "a");
             expected->left->left->right = new ExpressionNode(Variable, "b");
 
-            // œ‡‚‡ˇ ˜‡ÒÚ¸ OR: !A & !B
+            // –ü—Ä–∞–≤–∞—è —á–∞—Å—Ç—å OR: !A & !B
             expected->left->right = new ExpressionNode(And);
             expected->left->right->left = new ExpressionNode(Not);
             expected->left->right->left->left = new ExpressionNode(Variable, "a");
             expected->left->right->right = new ExpressionNode(Not);
             expected->left->right->right->left = new ExpressionNode(Variable, "b");
 
-            // ¬˚ÔÓÎÌÂÌËÂ ÔÂÓ·‡ÁÓ‚‡ÌËˇ
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
             transformImplicationAndEquivalence(input);
 
-            // œÓ‚ÂÍ‡ ÂÁÛÎ¸Ú‡Ú‡
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
             Assert::IsTrue(compareExpressionTrees(expected, input),
-                L"ÕÂÍÓÂÍÚÌÓÂ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ˝Í‚Ë‚‡ÎÂÌÚÌÓÒÚË ‚ÌÛÚË ÓÚËˆ‡ÌËˇ");
+                L"–ù–µ–∫–æ—Ä—Ä–µ–∫—Ç–Ω–æ–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç–∏ –≤–Ω—É—Ç—Ä–∏ –æ—Ç—Ä–∏—Ü–∞–Ω–∏—è");
 
-            // Œ˜ËÒÚÍ‡ Ô‡ÏˇÚË
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
             delete input;
             delete expected;
         }
 
         /**
-         * @brief “ÂÒÚ 7: »ÏÔÎËÍ‡ˆËˇ ‚ÌÛÚË ÍÓÌ˙˛ÌÍˆËË
+         * @brief –¢–µ—Å—Ç 7: –ò–º–ø–ª–∏–∫–∞—Ü–∏—è –≤–Ω—É—Ç—Ä–∏ –∫–æ–Ω—ä—é–Ω–∫—Ü–∏–∏
          *
-         * œÓ‚ÂˇÂÚ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ËÏÔÎËÍ‡ˆËË ‚ÌÛÚË ÍÓÌ˙˛ÌÍˆËË: A & (B > C)
+         * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ –∏–º–ø–ª–∏–∫–∞—Ü–∏–∏ –≤–Ω—É—Ç—Ä–∏ –∫–æ–Ω—ä—é–Ω–∫—Ü–∏–∏: A & (B > C)
          */
         TEST_METHOD(Test7_ImplicationInsideAnd)
         {
-            // œÓ‰„ÓÚÓ‚Í‡ ‚ıÓ‰Ì˚ı ‰‡ÌÌ˚ı
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
             ExpressionNode* input = new ExpressionNode(And);
             input->left = new ExpressionNode(Variable, "a");
             input->right = new ExpressionNode(Implication);
             input->right->left = new ExpressionNode(Variable, "b");
             input->right->right = new ExpressionNode(Variable, "c");
 
-            // ŒÊË‰‡ÂÏ˚È ÂÁÛÎ¸Ú‡Ú: A & (!B | C)
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç: A & (!B | C)
             ExpressionNode* expected = new ExpressionNode(And);
             expected->left = new ExpressionNode(Variable, "a");
             expected->right = new ExpressionNode(Or);
@@ -294,76 +294,76 @@ namespace testTransformImplicationAndEquivalence
             expected->right->left->left = new ExpressionNode(Variable, "b");
             expected->right->right = new ExpressionNode(Variable, "c");
 
-            // ¬˚ÔÓÎÌÂÌËÂ ÔÂÓ·‡ÁÓ‚‡ÌËˇ
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
             transformImplicationAndEquivalence(input);
 
-            // œÓ‚ÂÍ‡ ÂÁÛÎ¸Ú‡Ú‡
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
             Assert::IsTrue(compareExpressionTrees(expected, input),
-                L"ÕÂÍÓÂÍÚÌÓÂ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ËÏÔÎËÍ‡ˆËË ‚ÌÛÚË ÍÓÌ˙˛ÌÍˆËË");
+                L"–ù–µ–∫–æ—Ä—Ä–µ–∫—Ç–Ω–æ–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ –∏–º–ø–ª–∏–∫–∞—Ü–∏–∏ –≤–Ω—É—Ç—Ä–∏ –∫–æ–Ω—ä—é–Ω–∫—Ü–∏–∏");
 
-            // Œ˜ËÒÚÍ‡ Ô‡ÏˇÚË
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
             delete input;
             delete expected;
         }
 
         /**
-         * @brief “ÂÒÚ 8: ›Í‚Ë‚‡ÎÂÌÚÌÓÒÚ¸ ‚ÌÛÚË ÍÓÌ˙˛ÌÍˆËË
+         * @brief –¢–µ—Å—Ç 8: –≠–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç—å –≤–Ω—É—Ç—Ä–∏ –∫–æ–Ω—ä—é–Ω–∫—Ü–∏–∏
          *
-         * œÓ‚ÂˇÂÚ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ˝Í‚Ë‚‡ÎÂÌÚÌÓÒÚË ‚ÌÛÚË ÍÓÌ˙˛ÌÍˆËË: A & (B ~ C)
+         * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç–∏ –≤–Ω—É—Ç—Ä–∏ –∫–æ–Ω—ä—é–Ω–∫—Ü–∏–∏: A & (B ~ C)
          */
         TEST_METHOD(Test8_EquivalenceInsideAnd)
         {
-            // œÓ‰„ÓÚÓ‚Í‡ ‚ıÓ‰Ì˚ı ‰‡ÌÌ˚ı
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
             ExpressionNode* input = new ExpressionNode(And);
             input->left = new ExpressionNode(Variable, "a");
             input->right = new ExpressionNode(Equivalence);
             input->right->left = new ExpressionNode(Variable, "b");
             input->right->right = new ExpressionNode(Variable, "c");
 
-            // ŒÊË‰‡ÂÏ˚È ÂÁÛÎ¸Ú‡Ú: A & ((B & C) | (!B & !C))
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç: A & ((B & C) | (!B & !C))
             ExpressionNode* expected = new ExpressionNode(And);
             expected->left = new ExpressionNode(Variable, "a");
             expected->right = new ExpressionNode(Or);
 
-            // ÀÂ‚‡ˇ ˜‡ÒÚ¸ OR: B & C
+            // –õ–µ–≤–∞—è —á–∞—Å—Ç—å OR: B & C
             expected->right->left = new ExpressionNode(And);
             expected->right->left->left = new ExpressionNode(Variable, "b");
             expected->right->left->right = new ExpressionNode(Variable, "c");
 
-            // œ‡‚‡ˇ ˜‡ÒÚ¸ OR: !B & !C
+            // –ü—Ä–∞–≤–∞—è —á–∞—Å—Ç—å OR: !B & !C
             expected->right->right = new ExpressionNode(And);
             expected->right->right->left = new ExpressionNode(Not);
             expected->right->right->left->left = new ExpressionNode(Variable, "b");
             expected->right->right->right = new ExpressionNode(Not);
             expected->right->right->right->left = new ExpressionNode(Variable, "c");
 
-            // ¬˚ÔÓÎÌÂÌËÂ ÔÂÓ·‡ÁÓ‚‡ÌËˇ
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
             transformImplicationAndEquivalence(input);
 
-            // œÓ‚ÂÍ‡ ÂÁÛÎ¸Ú‡Ú‡
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
             Assert::IsTrue(compareExpressionTrees(expected, input),
-                L"ÕÂÍÓÂÍÚÌÓÂ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ˝Í‚Ë‚‡ÎÂÌÚÌÓÒÚË ‚ÌÛÚË ÍÓÌ˙˛ÌÍˆËË");
+                L"–ù–µ–∫–æ—Ä—Ä–µ–∫—Ç–Ω–æ–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç–∏ –≤–Ω—É—Ç—Ä–∏ –∫–æ–Ω—ä—é–Ω–∫—Ü–∏–∏");
 
-            // Œ˜ËÒÚÍ‡ Ô‡ÏˇÚË
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
             delete input;
             delete expected;
         }
 
         /**
-         * @brief “ÂÒÚ 9: »ÏÔÎËÍ‡ˆËˇ ‚ÌÛÚË ‰ËÁ˙˛ÌÍˆËË
+         * @brief –¢–µ—Å—Ç 9: –ò–º–ø–ª–∏–∫–∞—Ü–∏—è –≤–Ω—É—Ç—Ä–∏ –¥–∏–∑—ä—é–Ω–∫—Ü–∏–∏
          *
-         * œÓ‚ÂˇÂÚ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ËÏÔÎËÍ‡ˆËË ‚ÌÛÚË ‰ËÁ˙˛ÌÍˆËË: A | (B > C)
+         * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ –∏–º–ø–ª–∏–∫–∞—Ü–∏–∏ –≤–Ω—É—Ç—Ä–∏ –¥–∏–∑—ä—é–Ω–∫—Ü–∏–∏: A | (B > C)
          */
         TEST_METHOD(Test9_ImplicationInsideOr)
         {
-            // œÓ‰„ÓÚÓ‚Í‡ ‚ıÓ‰Ì˚ı ‰‡ÌÌ˚ı
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
             ExpressionNode* input = new ExpressionNode(Or);
             input->left = new ExpressionNode(Variable, "a");
             input->right = new ExpressionNode(Implication);
             input->right->left = new ExpressionNode(Variable, "b");
             input->right->right = new ExpressionNode(Variable, "c");
 
-            // ŒÊË‰‡ÂÏ˚È ÂÁÛÎ¸Ú‡Ú: A | (!B | C)
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç: A | (!B | C)
             ExpressionNode* expected = new ExpressionNode(Or);
             expected->left = new ExpressionNode(Variable, "a");
             expected->right = new ExpressionNode(Or);
@@ -371,76 +371,76 @@ namespace testTransformImplicationAndEquivalence
             expected->right->left->left = new ExpressionNode(Variable, "b");
             expected->right->right = new ExpressionNode(Variable, "c");
 
-            // ¬˚ÔÓÎÌÂÌËÂ ÔÂÓ·‡ÁÓ‚‡ÌËˇ
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
             transformImplicationAndEquivalence(input);
 
-            // œÓ‚ÂÍ‡ ÂÁÛÎ¸Ú‡Ú‡
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
             Assert::IsTrue(compareExpressionTrees(expected, input),
-                L"ÕÂÍÓÂÍÚÌÓÂ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ËÏÔÎËÍ‡ˆËË ‚ÌÛÚË ‰ËÁ˙˛ÌÍˆËË");
+                L"–ù–µ–∫–æ—Ä—Ä–µ–∫—Ç–Ω–æ–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ –∏–º–ø–ª–∏–∫–∞—Ü–∏–∏ –≤–Ω—É—Ç—Ä–∏ –¥–∏–∑—ä—é–Ω–∫—Ü–∏–∏");
 
-            // Œ˜ËÒÚÍ‡ Ô‡ÏˇÚË
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
             delete input;
             delete expected;
         }
 
         /**
-         * @brief “ÂÒÚ 10: ›Í‚Ë‚‡ÎÂÌÚÌÓÒÚ¸ ‚ÌÛÚË ‰ËÁ˙˛ÌÍˆËË
+         * @brief –¢–µ—Å—Ç 10: –≠–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç—å –≤–Ω—É—Ç—Ä–∏ –¥–∏–∑—ä—é–Ω–∫—Ü–∏–∏
          *
-         * œÓ‚ÂˇÂÚ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ˝Í‚Ë‚‡ÎÂÌÚÌÓÒÚË ‚ÌÛÚË ‰ËÁ˙˛ÌÍˆËË: A | (B ~ C)
+         * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç–∏ –≤–Ω—É—Ç—Ä–∏ –¥–∏–∑—ä—é–Ω–∫—Ü–∏–∏: A | (B ~ C)
          */
         TEST_METHOD(Test10_EquivalenceInsideOr)
         {
-            // œÓ‰„ÓÚÓ‚Í‡ ‚ıÓ‰Ì˚ı ‰‡ÌÌ˚ı
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
             ExpressionNode* input = new ExpressionNode(Or);
             input->left = new ExpressionNode(Variable, "a");
             input->right = new ExpressionNode(Equivalence);
             input->right->left = new ExpressionNode(Variable, "b");
             input->right->right = new ExpressionNode(Variable, "c");
 
-            // ŒÊË‰‡ÂÏ˚È ÂÁÛÎ¸Ú‡Ú: A | ((B & C) | (!B & !C))
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç: A | ((B & C) | (!B & !C))
             ExpressionNode* expected = new ExpressionNode(Or);
             expected->left = new ExpressionNode(Variable, "a");
             expected->right = new ExpressionNode(Or);
 
-            // ÀÂ‚‡ˇ ˜‡ÒÚ¸ ‚ÎÓÊÂÌÌÓ„Ó OR: B & C
+            // –õ–µ–≤–∞—è —á–∞—Å—Ç—å –≤–ª–æ–∂–µ–Ω–Ω–æ–≥–æ OR: B & C
             expected->right->left = new ExpressionNode(And);
             expected->right->left->left = new ExpressionNode(Variable, "b");
             expected->right->left->right = new ExpressionNode(Variable, "c");
 
-            // œ‡‚‡ˇ ˜‡ÒÚ¸ ‚ÎÓÊÂÌÌÓ„Ó OR: !B & !C
+            // –ü—Ä–∞–≤–∞—è —á–∞—Å—Ç—å –≤–ª–æ–∂–µ–Ω–Ω–æ–≥–æ OR: !B & !C
             expected->right->right = new ExpressionNode(And);
             expected->right->right->left = new ExpressionNode(Not);
             expected->right->right->left->left = new ExpressionNode(Variable, "b");
             expected->right->right->right = new ExpressionNode(Not);
             expected->right->right->right->left = new ExpressionNode(Variable, "c");
 
-            // ¬˚ÔÓÎÌÂÌËÂ ÔÂÓ·‡ÁÓ‚‡ÌËˇ
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
             transformImplicationAndEquivalence(input);
 
-            // œÓ‚ÂÍ‡ ÂÁÛÎ¸Ú‡Ú‡
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
             Assert::IsTrue(compareExpressionTrees(expected, input),
-                L"ÕÂÍÓÂÍÚÌÓÂ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ˝Í‚Ë‚‡ÎÂÌÚÌÓÒÚË ‚ÌÛÚË ‰ËÁ˙˛ÌÍˆËË");
+                L"–ù–µ–∫–æ—Ä—Ä–µ–∫—Ç–Ω–æ–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç–∏ –≤–Ω—É—Ç—Ä–∏ –¥–∏–∑—ä—é–Ω–∫—Ü–∏–∏");
 
-            // Œ˜ËÒÚÍ‡ Ô‡ÏˇÚË
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
             delete input;
             delete expected;
         }
 
         /**
-         * @brief “ÂÒÚ 11: ƒ‚ÓÈÌ‡ˇ ËÏÔÎËÍ‡ˆËˇ
+         * @brief –¢–µ—Å—Ç 11: –î–≤–æ–π–Ω–∞—è –∏–º–ø–ª–∏–∫–∞—Ü–∏—è
          *
-         * œÓ‚ÂˇÂÚ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ‰‚ÓÈÌÓÈ ËÏÔÎËÍ‡ˆËË: A > (B > C)
+         * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ –¥–≤–æ–π–Ω–æ–π –∏–º–ø–ª–∏–∫–∞—Ü–∏–∏: A > (B > C)
          */
         TEST_METHOD(Test11_DoubleImplication)
         {
-            // œÓ‰„ÓÚÓ‚Í‡ ‚ıÓ‰Ì˚ı ‰‡ÌÌ˚ı
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
             ExpressionNode* input = new ExpressionNode(Implication);
             input->left = new ExpressionNode(Variable, "a");
             input->right = new ExpressionNode(Implication);
             input->right->left = new ExpressionNode(Variable, "b");
             input->right->right = new ExpressionNode(Variable, "c");
 
-            // ŒÊË‰‡ÂÏ˚È ÂÁÛÎ¸Ú‡Ú: !A | (!B | C)
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç: !A | (!B | C)
             ExpressionNode* expected = new ExpressionNode(Or);
             expected->left = new ExpressionNode(Not);
             expected->left->left = new ExpressionNode(Variable, "a");
@@ -449,60 +449,60 @@ namespace testTransformImplicationAndEquivalence
             expected->right->left->left = new ExpressionNode(Variable, "b");
             expected->right->right = new ExpressionNode(Variable, "c");
 
-            // ¬˚ÔÓÎÌÂÌËÂ ÔÂÓ·‡ÁÓ‚‡ÌËˇ
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
             transformImplicationAndEquivalence(input);
 
-            // œÓ‚ÂÍ‡ ÂÁÛÎ¸Ú‡Ú‡
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
             Assert::IsTrue(compareExpressionTrees(expected, input),
-                L"ÕÂÍÓÂÍÚÌÓÂ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ‰‚ÓÈÌÓÈ ËÏÔÎËÍ‡ˆËË");
+                L"–ù–µ–∫–æ—Ä—Ä–µ–∫—Ç–Ω–æ–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ –¥–≤–æ–π–Ω–æ–π –∏–º–ø–ª–∏–∫–∞—Ü–∏–∏");
 
-            // Œ˜ËÒÚÍ‡ Ô‡ÏˇÚË
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
             delete input;
             delete expected;
         }
 
         /**
-         * @brief “ÂÒÚ 12: ƒ‚ÓÈÌ‡ˇ ˝Í‚Ë‚‡ÎÂÌÚÌÓÒÚ¸
+         * @brief –¢–µ—Å—Ç 12: –î–≤–æ–π–Ω–∞—è —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç—å
          *
-         * œÓ‚ÂˇÂÚ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ‰‚ÓÈÌÓÈ ˝Í‚Ë‚‡ÎÂÌÚÌÓÒÚË: A ~ (B ~ C)
+         * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ –¥–≤–æ–π–Ω–æ–π —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç–∏: A ~ (B ~ C)
          */
         TEST_METHOD(Test12_DoubleEquivalence)
         {
-            // œÓ‰„ÓÚÓ‚Í‡ ‚ıÓ‰Ì˚ı ‰‡ÌÌ˚ı
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
             ExpressionNode* input = new ExpressionNode(Equivalence);
             input->left = new ExpressionNode(Variable, "a");
             input->right = new ExpressionNode(Equivalence);
             input->right->left = new ExpressionNode(Variable, "b");
             input->right->right = new ExpressionNode(Variable, "c");
 
-            // ŒÊË‰‡ÂÏ˚È ÂÁÛÎ¸Ú‡Ú: (A & ((B & C) | (!B & !C))) | (!A & !((B & C) | (!B & !C)))
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç: (A & ((B & C) | (!B & !C))) | (!A & !((B & C) | (!B & !C)))
             ExpressionNode* expected = new ExpressionNode(Or);
 
-            // ÀÂ‚‡ˇ ˜‡ÒÚ¸ OR: A & ((B & C) | (!B & !C))
+            // –õ–µ–≤–∞—è —á–∞—Å—Ç—å OR: A & ((B & C) | (!B & !C))
             expected->left = new ExpressionNode(And);
             expected->left->left = new ExpressionNode(Variable, "a");
             expected->left->right = new ExpressionNode(Or);
 
-            // ÀÂ‚‡ˇ ˜‡ÒÚ¸ ‚ÎÓÊÂÌÌÓ„Ó OR: B & C
+            // –õ–µ–≤–∞—è —á–∞—Å—Ç—å –≤–ª–æ–∂–µ–Ω–Ω–æ–≥–æ OR: B & C
             expected->left->right->left = new ExpressionNode(And);
             expected->left->right->left->left = new ExpressionNode(Variable, "b");
             expected->left->right->left->right = new ExpressionNode(Variable, "c");
 
-            // œ‡‚‡ˇ ˜‡ÒÚ¸ ‚ÎÓÊÂÌÌÓ„Ó OR: !B & !C
+            // –ü—Ä–∞–≤–∞—è —á–∞—Å—Ç—å –≤–ª–æ–∂–µ–Ω–Ω–æ–≥–æ OR: !B & !C
             expected->left->right->right = new ExpressionNode(And);
             expected->left->right->right->left = new ExpressionNode(Not);
             expected->left->right->right->left->left = new ExpressionNode(Variable, "b");
             expected->left->right->right->right = new ExpressionNode(Not);
             expected->left->right->right->right->left = new ExpressionNode(Variable, "c");
 
-            // œ‡‚‡ˇ ˜‡ÒÚ¸ ÓÒÌÓ‚ÌÓ„Ó OR: !A & !((B & C) | (!B & !C))
+            // –ü—Ä–∞–≤–∞—è —á–∞—Å—Ç—å –æ—Å–Ω–æ–≤–Ω–æ–≥–æ OR: !A & !((B & C) | (!B & !C))
             expected->right = new ExpressionNode(And);
             expected->right->left = new ExpressionNode(Not);
             expected->right->left->left = new ExpressionNode(Variable, "a");
             expected->right->right = new ExpressionNode(Not);
             expected->right->right->left = new ExpressionNode(Or);
 
-            //  ÓÔËˇ ÎÂ‚ÓÈ ˜‡ÒÚË ‚ÎÓÊÂÌÌÓ„Ó OR
+            // –ö–æ–ø–∏—è –ª–µ–≤–æ–π —á–∞—Å—Ç–∏ –≤–ª–æ–∂–µ–Ω–Ω–æ–≥–æ OR
             expected->right->right->left->left = new ExpressionNode(And);
             expected->right->right->left->left->left = new ExpressionNode(Variable, "b");
             expected->right->right->left->left->right = new ExpressionNode(Variable, "c");
@@ -512,84 +512,84 @@ namespace testTransformImplicationAndEquivalence
             expected->right->right->left->right->right = new ExpressionNode(Not);
             expected->right->right->left->right->right->left = new ExpressionNode(Variable, "c");
 
-            // ¬˚ÔÓÎÌÂÌËÂ ÔÂÓ·‡ÁÓ‚‡ÌËˇ
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
             transformImplicationAndEquivalence(input);
 
-            // œÓ‚ÂÍ‡ ÂÁÛÎ¸Ú‡Ú‡
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
             Assert::IsTrue(compareExpressionTrees(expected, input),
-                L"ÕÂÍÓÂÍÚÌÓÂ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ‰‚ÓÈÌÓÈ ˝Í‚Ë‚‡ÎÂÌÚÌÓÒÚË");
+                L"–ù–µ–∫–æ—Ä—Ä–µ–∫—Ç–Ω–æ–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ –¥–≤–æ–π–Ω–æ–π —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç–∏");
 
-            // Œ˜ËÒÚÍ‡ Ô‡ÏˇÚË
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
             delete input;
             delete expected;
         }
 
         /**
-         * @brief “ÂÒÚ 13: ›Í‚Ë‚‡ÎÂÌÚÌÓÒÚ¸ ‚ÌÛÚË ËÏÔÎËÍ‡ˆËË
+         * @brief –¢–µ—Å—Ç 13: –≠–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç—å –≤–Ω—É—Ç—Ä–∏ –∏–º–ø–ª–∏–∫–∞—Ü–∏–∏
          *
-         * œÓ‚ÂˇÂÚ ÔÂÓ·‡ÁÓ‚‡ÌËÂ (A ~ B) > C
+         * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ (A ~ B) > C
          */
         TEST_METHOD(Test13_EquivalenceInsideImplication)
         {
-            // œÓ‰„ÓÚÓ‚Í‡ ‚ıÓ‰Ì˚ı ‰‡ÌÌ˚ı
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
             ExpressionNode* input = new ExpressionNode(Implication);
             input->left = new ExpressionNode(Equivalence);
             input->left->left = new ExpressionNode(Variable, "a");
             input->left->right = new ExpressionNode(Variable, "b");
             input->right = new ExpressionNode(Variable, "c");
 
-            // ŒÊË‰‡ÂÏ˚È ÂÁÛÎ¸Ú‡Ú: !((A & B) | (!A & !B)) | C
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç: !((A & B) | (!A & !B)) | C
             ExpressionNode* expected = new ExpressionNode(Or);
             expected->left = new ExpressionNode(Not);
 
-            // ÀÂ‚‡ˇ ˜‡ÒÚ¸ NOT: (A & B) | (!A & !B)
+            // –õ–µ–≤–∞—è —á–∞—Å—Ç—å NOT: (A & B) | (!A & !B)
             expected->left->left = new ExpressionNode(Or);
 
-            // ÀÂ‚‡ˇ ˜‡ÒÚ¸ OR: A & B
+            // –õ–µ–≤–∞—è —á–∞—Å—Ç—å OR: A & B
             expected->left->left->left = new ExpressionNode(And);
             expected->left->left->left->left = new ExpressionNode(Variable, "a");
             expected->left->left->left->right = new ExpressionNode(Variable, "b");
 
-            // œ‡‚‡ˇ ˜‡ÒÚ¸ OR: !A & !B
+            // –ü—Ä–∞–≤–∞—è —á–∞—Å—Ç—å OR: !A & !B
             expected->left->left->right = new ExpressionNode(And);
             expected->left->left->right->left = new ExpressionNode(Not);
             expected->left->left->right->left->left = new ExpressionNode(Variable, "a");
             expected->left->left->right->right = new ExpressionNode(Not);
             expected->left->left->right->right->left = new ExpressionNode(Variable, "b");
 
-            // œ‡‚‡ˇ ˜‡ÒÚ¸ ÓÒÌÓ‚ÌÓ„Ó OR: C
+            // –ü—Ä–∞–≤–∞—è —á–∞—Å—Ç—å –æ—Å–Ω–æ–≤–Ω–æ–≥–æ OR: C
             expected->right = new ExpressionNode(Variable, "c");
 
-            // ¬˚ÔÓÎÌÂÌËÂ ÔÂÓ·‡ÁÓ‚‡ÌËˇ
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
             transformImplicationAndEquivalence(input);
 
-            // œÓ‚ÂÍ‡ ÂÁÛÎ¸Ú‡Ú‡
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
             Assert::IsTrue(compareExpressionTrees(expected, input),
-                L"ÕÂÍÓÂÍÚÌÓÂ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ˝Í‚Ë‚‡ÎÂÌÚÌÓÒÚË ‚ÌÛÚË ËÏÔÎËÍ‡ˆËË");
+                L"–ù–µ–∫–æ—Ä—Ä–µ–∫—Ç–Ω–æ–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç–∏ –≤–Ω—É—Ç—Ä–∏ –∏–º–ø–ª–∏–∫–∞—Ü–∏–∏");
 
-            // Œ˜ËÒÚÍ‡ Ô‡ÏˇÚË
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
             delete input;
             delete expected;
         }
 
         /**
-         * @brief “ÂÒÚ 14: »ÏÔÎËÍ‡ˆËˇ ‚ÌÛÚË ˝Í‚Ë‚‡ÎÂÌÚÌÓÒÚË
+         * @brief –¢–µ—Å—Ç 14: –ò–º–ø–ª–∏–∫–∞—Ü–∏—è –≤–Ω—É—Ç—Ä–∏ —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç–∏
          *
-         * œÓ‚ÂˇÂÚ ÔÂÓ·‡ÁÓ‚‡ÌËÂ (A > B) ~ C
+         * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ (A > B) ~ C
          */
         TEST_METHOD(Test14_ImplicationInsideEquivalence)
         {
-            // œÓ‰„ÓÚÓ‚Í‡ ‚ıÓ‰Ì˚ı ‰‡ÌÌ˚ı
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
             ExpressionNode* input = new ExpressionNode(Equivalence);
             input->left = new ExpressionNode(Implication);
             input->left->left = new ExpressionNode(Variable, "a");
             input->left->right = new ExpressionNode(Variable, "b");
             input->right = new ExpressionNode(Variable, "c");
 
-            // ŒÊË‰‡ÂÏ˚È ÂÁÛÎ¸Ú‡Ú: ((!A | B) & C) | (!(!A | B) & !C)
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç: ((!A | B) & C) | (!(!A | B) & !C)
             ExpressionNode* expected = new ExpressionNode(Or);
 
-            // ÀÂ‚‡ˇ ˜‡ÒÚ¸ OR: (!A | B) & C
+            // –õ–µ–≤–∞—è —á–∞—Å—Ç—å OR: (!A | B) & C
             expected->left = new ExpressionNode(And);
             expected->left->left = new ExpressionNode(Or);
             expected->left->left->left = new ExpressionNode(Not);
@@ -597,7 +597,7 @@ namespace testTransformImplicationAndEquivalence
             expected->left->left->right = new ExpressionNode(Variable, "b");
             expected->left->right = new ExpressionNode(Variable, "c");
 
-            // œ‡‚‡ˇ ˜‡ÒÚ¸ OR: !(!A | B) & !C
+            // –ü—Ä–∞–≤–∞—è —á–∞—Å—Ç—å OR: !(!A | B) & !C
             expected->right = new ExpressionNode(And);
             expected->right->left = new ExpressionNode(Not);
             expected->right->left->left = new ExpressionNode(Or);
@@ -607,14 +607,269 @@ namespace testTransformImplicationAndEquivalence
             expected->right->right = new ExpressionNode(Not);
             expected->right->right->left = new ExpressionNode(Variable, "c");
 
-            // ¬˚ÔÓÎÌÂÌËÂ ÔÂÓ·‡ÁÓ‚‡ÌËˇ
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
             transformImplicationAndEquivalence(input);
 
-            // œÓ‚ÂÍ‡ ÂÁÛÎ¸Ú‡Ú‡
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
             Assert::IsTrue(compareExpressionTrees(expected, input),
-                L"ÕÂÍÓÂÍÚÌÓÂ ÔÂÓ·‡ÁÓ‚‡ÌËÂ ËÏÔÎËÍ‡ˆËË ‚ÌÛÚË ˝Í‚Ë‚‡ÎÂÌÚÌÓÒÚË");
+                L"–ù–µ–∫–æ—Ä—Ä–µ–∫—Ç–Ω–æ–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ –∏–º–ø–ª–∏–∫–∞—Ü–∏–∏ –≤–Ω—É—Ç—Ä–∏ —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç–∏");
 
-            // Œ˜ËÒÚÍ‡ Ô‡ÏˇÚË
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
+            delete input;
+            delete expected;
+        }
+
+        /**
+         * @brief –¢–µ—Å—Ç 15: –ú–Ω–æ–∂–µ—Å—Ç–≤–µ–Ω–Ω–∞—è —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ü–∏—è
+        *
+        * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ a ~ (c ~ (d ~ e))
+        */
+        TEST_METHOD(Test15_MultipleEquivalence)
+        {
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
+            ExpressionNode* input = new ExpressionNode(Equivalence);
+            input->left = new ExpressionNode(Variable, "a");
+            input->right = new ExpressionNode(Equivalence);
+            input->right->left = new ExpressionNode(Variable, "c");
+            input->right->right = new ExpressionNode(Equivalence);
+            input->right->right->left = new ExpressionNode(Variable, "d");
+            input->right->right->right = new ExpressionNode(Variable, "e");
+
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç
+            ExpressionNode* expected = new ExpressionNode(Or);
+
+            // –õ–µ–≤–∞—è —á–∞—Å—Ç—å OR: a ‚àß ((c ‚àß (d ‚àß e)) ‚à® (¬¨c ‚àß ¬¨(d ‚àß e)))
+            expected->left = new ExpressionNode(And);
+            expected->left->left = new ExpressionNode(Variable, "a");
+            expected->left->right = new ExpressionNode(Or);
+
+            // –õ–µ–≤–∞—è —á–∞—Å—Ç—å –≤–ª–æ–∂–µ–Ω–Ω–æ–≥–æ OR: c ‚àß (d ‚àß e)
+            expected->left->right->left = new ExpressionNode(And);
+            expected->left->right->left->left = new ExpressionNode(Variable, "c");
+            expected->left->right->left->right = new ExpressionNode(And);
+            expected->left->right->left->right->left = new ExpressionNode(Variable, "d");
+            expected->left->right->left->right->right = new ExpressionNode(Variable, "e");
+
+            // –ü—Ä–∞–≤–∞—è —á–∞—Å—Ç—å –≤–ª–æ–∂–µ–Ω–Ω–æ–≥–æ OR: ¬¨c ‚àß ¬¨(d ‚àß e)
+            expected->left->right->right = new ExpressionNode(And);
+            expected->left->right->right->left = new ExpressionNode(Not);
+            expected->left->right->right->left->left = new ExpressionNode(Variable, "c");
+            expected->left->right->right->right = new ExpressionNode(Not);
+            expected->left->right->right->right->left = new ExpressionNode(And);
+            expected->left->right->right->right->left->left = new ExpressionNode(Variable, "d");
+            expected->left->right->right->right->left->right = new ExpressionNode(Variable, "e");
+
+            // –ü—Ä–∞–≤–∞—è —á–∞—Å—Ç—å –æ—Å–Ω–æ–≤–Ω–æ–≥–æ OR: ¬¨a ‚àß ¬¨((c ‚àß (d ‚àß e)) ‚à® (¬¨c ‚àß ¬¨(d ‚àß e)))
+            expected->right = new ExpressionNode(And);
+            expected->right->left = new ExpressionNode(Not);
+            expected->right->left->left = new ExpressionNode(Variable, "a");
+            expected->right->right = new ExpressionNode(Not);
+            expected->right->right->left = new ExpressionNode(Or);
+
+            // –ö–æ–ø–∏—è –ª–µ–≤–æ–π —á–∞—Å—Ç–∏ –≤–ª–æ–∂–µ–Ω–Ω–æ–≥–æ OR
+            expected->right->right->left->left = new ExpressionNode(And);
+            expected->right->right->left->left->left = new ExpressionNode(Variable, "c");
+            expected->right->right->left->left->right = new ExpressionNode(And);
+            expected->right->right->left->left->right->left = new ExpressionNode(Variable, "d");
+            expected->right->right->left->left->right->right = new ExpressionNode(Variable, "e");
+
+            expected->right->right->left->right = new ExpressionNode(And);
+            expected->right->right->left->right->left = new ExpressionNode(Not);
+            expected->right->right->left->right->left->left = new ExpressionNode(Variable, "c");
+            expected->right->right->left->right->right = new ExpressionNode(Not);
+            expected->right->right->left->right->right->left = new ExpressionNode(And);
+            expected->right->right->left->right->right->left->left = new ExpressionNode(Variable, "d");
+            expected->right->right->left->right->right->left->right = new ExpressionNode(Variable, "e");
+
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
+            transformImplicationAndEquivalence(input);
+
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"–ù–µ–∫–æ—Ä—Ä–µ–∫—Ç–Ω–æ–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ –º–Ω–æ–∂–µ—Å—Ç–≤–µ–Ω–Ω–æ–π —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç–∏");
+
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
+            delete input;
+            delete expected;
+        }
+
+        /**
+         * @brief –¢–µ—Å—Ç 16: –ú–Ω–æ–∂–µ—Å—Ç–≤–µ–Ω–Ω–∞—è –∏–º–ø–ª–∏–∫–∞—Ü–∏—è
+         *
+         * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ a ‚Üí (c ‚Üí (d ‚Üí e))
+         */
+        TEST_METHOD(Test16_MultipleImplication)
+        {
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
+            ExpressionNode* input = new ExpressionNode(Implication);
+            input->left = new ExpressionNode(Variable, "a");
+            input->right = new ExpressionNode(Implication);
+            input->right->left = new ExpressionNode(Variable, "c");
+            input->right->right = new ExpressionNode(Implication);
+            input->right->right->left = new ExpressionNode(Variable, "d");
+            input->right->right->right = new ExpressionNode(Variable, "e");
+
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç
+            ExpressionNode* expected = new ExpressionNode(Or);
+            expected->left = new ExpressionNode(Not);
+            expected->left->left = new ExpressionNode(Variable, "a");
+            expected->right = new ExpressionNode(Or);
+            expected->right->left = new ExpressionNode(Not);
+            expected->right->left->left = new ExpressionNode(Variable, "c");
+            expected->right->right = new ExpressionNode(Or);
+            expected->right->right->left = new ExpressionNode(Not);
+            expected->right->right->left->left = new ExpressionNode(Variable, "d");
+            expected->right->right->right = new ExpressionNode(Variable, "e");
+
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
+            transformImplicationAndEquivalence(input);
+
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"–ù–µ–∫–æ—Ä—Ä–µ–∫—Ç–Ω–æ–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ –º–Ω–æ–∂–µ—Å—Ç–≤–µ–Ω–Ω–æ–π –∏–º–ø–ª–∏–∫–∞—Ü–∏–∏");
+
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
+            delete input;
+            delete expected;
+        }
+
+        /**
+         * @brief –¢–µ—Å—Ç 17: –ú–Ω–æ–∂–µ—Å—Ç–≤–µ–Ω–Ω–∞—è –∫–æ–º–±–∏–Ω–∞—Ü–∏—è —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ü–∏–∏ –∏ –∏–º–ø–ª–∏–∫–∞—Ü–∏–∏
+         *
+         * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ (a ‚Üí b) ‚Üî (c ‚Üî d)
+         */
+        TEST_METHOD(Test17_CombinationImplicationEquivalence)
+        {
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
+            ExpressionNode* input = new ExpressionNode(Equivalence);
+            input->left = new ExpressionNode(Implication);
+            input->left->left = new ExpressionNode(Variable, "a");
+            input->left->right = new ExpressionNode(Variable, "b");
+            input->right = new ExpressionNode(Equivalence);
+            input->right->left = new ExpressionNode(Variable, "c");
+            input->right->right = new ExpressionNode(Variable, "d");
+
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç
+            ExpressionNode* expected = new ExpressionNode(Or);
+
+            // –õ–µ–≤–∞—è —á–∞—Å—Ç—å OR: (¬¨a ‚à® b) ‚àß ((c ‚àß d) ‚à® (¬¨c ‚àß ¬¨d))
+            expected->left = new ExpressionNode(And);
+            expected->left->left = new ExpressionNode(Or);
+            expected->left->left->left = new ExpressionNode(Not);
+            expected->left->left->left->left = new ExpressionNode(Variable, "a");
+            expected->left->left->right = new ExpressionNode(Variable, "b");
+
+            expected->left->right = new ExpressionNode(Or);
+            expected->left->right->left = new ExpressionNode(And);
+            expected->left->right->left->left = new ExpressionNode(Variable, "c");
+            expected->left->right->left->right = new ExpressionNode(Variable, "d");
+            expected->left->right->right = new ExpressionNode(And);
+            expected->left->right->right->left = new ExpressionNode(Not);
+            expected->left->right->right->left->left = new ExpressionNode(Variable, "c");
+            expected->left->right->right->right = new ExpressionNode(Not);
+            expected->left->right->right->right->left = new ExpressionNode(Variable, "d");
+
+            // –ü—Ä–∞–≤–∞—è —á–∞—Å—Ç—å OR: ¬¨(¬¨a ‚à® b) ‚àß ¬¨((c ‚àß d) ‚à® (¬¨c ‚àß ¬¨d))
+            expected->right = new ExpressionNode(And);
+            expected->right->left = new ExpressionNode(Not);
+            expected->right->left->left = new ExpressionNode(Or);
+            expected->right->left->left->left = new ExpressionNode(Not);
+            expected->right->left->left->left->left = new ExpressionNode(Variable, "a");
+            expected->right->left->left->right = new ExpressionNode(Variable, "b");
+
+            expected->right->right = new ExpressionNode(Not);
+            expected->right->right->left = new ExpressionNode(Or);
+            expected->right->right->left->left = new ExpressionNode(And);
+            expected->right->right->left->left->left = new ExpressionNode(Variable, "c");
+            expected->right->right->left->left->right = new ExpressionNode(Variable, "d");
+            expected->right->right->left->right = new ExpressionNode(And);
+            expected->right->right->left->right->left = new ExpressionNode(Not);
+            expected->right->right->left->right->left->left = new ExpressionNode(Variable, "c");
+            expected->right->right->left->right->right = new ExpressionNode(Not);
+            expected->right->right->left->right->right->left = new ExpressionNode(Variable, "d");
+
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
+            transformImplicationAndEquivalence(input);
+
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"–ù–µ–∫–æ—Ä—Ä–µ–∫—Ç–Ω–æ–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ –∫–æ–º–±–∏–Ω–∞—Ü–∏–∏ –∏–º–ø–ª–∏–∫–∞—Ü–∏–∏ –∏ —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç–∏");
+
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
+            delete input;
+            delete expected;
+        }
+
+        /**
+         * @brief –¢–µ—Å—Ç 18: –ü—Ä–æ—Å—Ç–∞—è –æ–ø–µ—Ä–∞—Ü–∏—è –≤ —Å–æ—Å—Ç–∞–≤–µ –∏–º–ø–ª–∏–∫–∞—Ü–∏–∏
+         *
+         * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ (a ‚à® b) ‚Üí c
+         */
+        TEST_METHOD(Test18_SimpleOperationInImplication)
+        {
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
+            ExpressionNode* input = new ExpressionNode(Implication);
+            input->left = new ExpressionNode(Or);
+            input->left->left = new ExpressionNode(Variable, "a");
+            input->left->right = new ExpressionNode(Variable, "b");
+            input->right = new ExpressionNode(Variable, "c");
+
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç
+            ExpressionNode* expected = new ExpressionNode(Or);
+            expected->left = new ExpressionNode(Not);
+            expected->left->left = new ExpressionNode(Or);
+            expected->left->left->left = new ExpressionNode(Variable, "a");
+            expected->left->left->right = new ExpressionNode(Variable, "b");
+            expected->right = new ExpressionNode(Variable, "c");
+
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
+            transformImplicationAndEquivalence(input);
+
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"–ù–µ–∫–æ—Ä—Ä–µ–∫—Ç–Ω–æ–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ –ø—Ä–æ—Å—Ç–æ–π –æ–ø–µ—Ä–∞—Ü–∏–∏ –≤ —Å–æ—Å—Ç–∞–≤–µ –∏–º–ø–ª–∏–∫–∞—Ü–∏–∏");
+
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
+            delete input;
+            delete expected;
+        }
+
+        /**
+         * @brief –¢–µ—Å—Ç 19: –ü—Ä–æ—Å—Ç–∞—è –æ–ø–µ—Ä–∞—Ü–∏—è –≤ —Å–æ—Å—Ç–∞–≤–µ —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ü–∏–∏
+         *
+         * –ü—Ä–æ–≤–µ—Ä—è–µ—Ç –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ (a ‚à® b) ‚Üî c
+         */
+        TEST_METHOD(Test19_SimpleOperationInEquivalence)
+        {
+            // –ü–æ–¥–≥–æ—Ç–æ–≤–∫–∞ –≤—Ö–æ–¥–Ω—ã—Ö –¥–∞–Ω–Ω—ã—Ö
+            ExpressionNode* input = new ExpressionNode(Equivalence);
+            input->left = new ExpressionNode(Or);
+            input->left->left = new ExpressionNode(Variable, "a");
+            input->left->right = new ExpressionNode(Variable, "b");
+            input->right = new ExpressionNode(Variable, "c");
+
+            // –û–∂–∏–¥–∞–µ–º—ã–π —Ä–µ–∑—É–ª—å—Ç–∞—Ç
+            ExpressionNode* expected = new ExpressionNode(Or);
+
+            // –õ–µ–≤–∞—è —á–∞—Å—Ç—å OR: (a ‚à® b) ‚àß c
+            expected->left = new ExpressionNode(And);
+            expected->left->left = new ExpressionNode(Or);
+            expected->left->left->left = new ExpressionNode(Variable, "a");
+            expected->left->left->right = new ExpressionNode(Variable, "b");
+            expected->left->right = new ExpressionNode(Variable, "c");
+
+            // –ü—Ä–∞–≤–∞—è —á–∞—Å—Ç—å OR: ¬¨(a ‚à® b) ‚àß ¬¨c
+            expected->right = new ExpressionNode(And);
+            expected->right->left = new ExpressionNode(Not);
+            expected->right->left->left = new ExpressionNode(Or);
+            expected->right->left->left->left = new ExpressionNode(Variable, "a");
+            expected->right->left->left->right = new ExpressionNode(Variable, "b");
+            expected->right->right = new ExpressionNode(Not);
+            expected->right->right->left = new ExpressionNode(Variable, "c");
+
+            // –í—ã–ø–æ–ª–Ω–µ–Ω–∏–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏—è
+            transformImplicationAndEquivalence(input);
+            —É
+            // –ü—Ä–æ–≤–µ—Ä–∫–∞ —Ä–µ–∑—É–ª—å—Ç–∞—Ç–∞
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"–ù–µ–∫–æ—Ä—Ä–µ–∫—Ç–Ω–æ–µ –ø—Ä–µ–æ–±—Ä–∞–∑–æ–≤–∞–Ω–∏–µ –ø—Ä–æ—Å—Ç–æ–π –æ–ø–µ—Ä–∞—Ü–∏–∏ –≤ —Å–æ—Å—Ç–∞–≤–µ —ç–∫–≤–∏–≤–∞–ª–µ–Ω—Ç–Ω–æ—Å—Ç–∏");
+
+            // –û—á–∏—Å—Ç–∫–∞ –ø–∞–º—è—Ç–∏
             delete input;
             delete expected;
         }
