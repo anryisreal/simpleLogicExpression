@@ -40,8 +40,7 @@ namespace testbuildExpressionTree
                 return false;
             }
 
-            return compareExpressionTrees(expected->left, actual->left, path + "-left") &&
-                compareExpressionTrees(expected->right, actual->right, path + "-right");
+            return compareExpressionTrees(expected->left, actual->left, path + "-left") && compareExpressionTrees(expected->right, actual->right, path + "-right");
         }
 
         /**
@@ -65,8 +64,7 @@ namespace testbuildExpressionTree
             if (!missingErrors.empty()) {
                 message += "Отсутствующие ошибки:\n";
                 for (const auto& error : missingErrors) {
-                    message += "  - " + Error::getErrorTypeString(error.type) +
-                        " на позиции " + std::to_string(error.position) + "\n";
+                    message += "  - " + Error::getErrorTypeString(error.type) + " на позиции " + std::to_string(error.position) + "\n";
                 }
             }
 
