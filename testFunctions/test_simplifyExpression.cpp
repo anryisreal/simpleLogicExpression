@@ -1,4 +1,4 @@
-#include "pch.h"
+п»ї#include "pch.h"
 #include "CppUnitTest.h"
 #include "../simpleLogicExpression/functions.h"
 #include "../simpleLogicExpression/objects.h"
@@ -11,50 +11,49 @@ namespace testSimplifyExpression
     {
     public:
         /**
-         * @brief Рекурсивно сравнивает два дерева выражений
-         * @param expected Ожидаемое дерево
-         * @param actual Фактическое дерево
-         * @param path Текущий путь в дереве (для диагностики)
-         * @return true если деревья идентичны, false в противном случае
+         * @brief Р РµРєСѓСЂСЃРёРІРЅРѕ СЃСЂР°РІРЅРёРІР°РµС‚ РґРІР° РґРµСЂРµРІР° РІС‹СЂР°Р¶РµРЅРёР№
+         * @param expected РћР¶РёРґР°РµРјРѕРµ РґРµСЂРµРІРѕ
+         * @param actual Р¤Р°РєС‚РёС‡РµСЃРєРѕРµ РґРµСЂРµРІРѕ
+         * @param path РўРµРєСѓС‰РёР№ РїСѓС‚СЊ РІ РґРµСЂРµРІРµ (РґР»СЏ РґРёР°РіРЅРѕСЃС‚РёРєРё)
+         * @return true РµСЃР»Рё РґРµСЂРµРІСЊСЏ РёРґРµРЅС‚РёС‡РЅС‹, false РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ
          */
         bool compareExpressionTrees(const ExpressionNode* expected, const ExpressionNode* actual, const std::string& path = "root") const
         {
             if (expected == nullptr && actual == nullptr) return true;
             if (expected == nullptr) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - ожидался nullptr").c_str());
+                Logger::WriteMessage(("РћС€РёР±РєР° РІ СѓР·Р»Рµ: " + path + " - РѕР¶РёРґР°Р»СЃСЏ nullptr").c_str());
                 return false;
             }
             if (actual == nullptr) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - неожиданный nullptr").c_str());
+                Logger::WriteMessage(("РћС€РёР±РєР° РІ СѓР·Р»Рµ: " + path + " - РЅРµРѕР¶РёРґР°РЅРЅС‹Р№ nullptr").c_str());
                 return false;
             }
 
             if (expected->type != actual->type) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - тип узла не совпадает").c_str());
+                Logger::WriteMessage(("РћС€РёР±РєР° РІ СѓР·Р»Рµ: " + path + " - С‚РёРї СѓР·Р»Р° РЅРµ СЃРѕРІРїР°РґР°РµС‚").c_str());
                 return false;
             }
 
             if (expected->value != actual->value) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - значение не совпадает").c_str());
+                Logger::WriteMessage(("РћС€РёР±РєР° РІ СѓР·Р»Рµ: " + path + " - Р·РЅР°С‡РµРЅРёРµ РЅРµ СЃРѕРІРїР°РґР°РµС‚").c_str());
                 return false;
             }
 
-            return compareExpressionTrees(expected->left, actual->left, path + "-left") &&
-                compareExpressionTrees(expected->right, actual->right, path + "-right");
+            return compareExpressionTrees(expected->left, actual->left, path + "-left") && compareExpressionTrees(expected->right, actual->right, path + "-right");
         }
 
         /**
-         * @brief Тест 1: Отрицание конъюнкции (первый закон де Моргана)
+         * @brief РўРµСЃС‚ 1: РћС‚СЂРёС†Р°РЅРёРµ РєРѕРЅСЉСЋРЅРєС†РёРё (РїРµСЂРІС‹Р№ Р·Р°РєРѕРЅ РґРµ РњРѕСЂРіР°РЅР°)
          */
         TEST_METHOD(Test1_NegationOfConjunction)
         {
-            // Входные данные: !(a & b)
+            // Р’С…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ: !(a & b)
             ExpressionNode* input = new ExpressionNode(Not);
             input->left = new ExpressionNode(And);
             input->left->left = new ExpressionNode(Variable, "a");
             input->left->right = new ExpressionNode(Variable, "b");
 
-            // Ожидаемый результат: !a | !b
+            // РћР¶РёРґР°РµРјС‹Р№ СЂРµР·СѓР»СЊС‚Р°С‚: !a | !b
             ExpressionNode* expected = new ExpressionNode(Or);
             expected->left = new ExpressionNode(Not);
             expected->left->left = new ExpressionNode(Variable, "a");
@@ -62,25 +61,25 @@ namespace testSimplifyExpression
             expected->right->left = new ExpressionNode(Variable, "b");
 
             bool changed = simplifyExpression(input);
-            Assert::IsTrue(changed, L"Ожидалось изменение выражения");
-            Assert::IsTrue(compareExpressionTrees(expected, input), L"Некорректное применение первого закона де Моргана");
+            Assert::IsTrue(changed, L"РћР¶РёРґР°Р»РѕСЃСЊ РёР·РјРµРЅРµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ");
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"РќРµРєРѕСЂСЂРµРєС‚РЅРѕРµ РїСЂРёРјРµРЅРµРЅРёРµ РїРµСЂРІРѕРіРѕ Р·Р°РєРѕРЅР° РґРµ РњРѕСЂРіР°РЅР°");
 
             delete input;
             delete expected;
         }
 
         /**
-         * @brief Тест 2: Отрицание дизъюнкции (второй закон де Моргана)
+         * @brief РўРµСЃС‚ 2: РћС‚СЂРёС†Р°РЅРёРµ РґРёР·СЉСЋРЅРєС†РёРё (РІС‚РѕСЂРѕР№ Р·Р°РєРѕРЅ РґРµ РњРѕСЂРіР°РЅР°)
          */
         TEST_METHOD(Test2_NegationOfDisjunction)
         {
-            // Входные данные: !(a | b)
+            // Р’С…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ: !(a | b)
             ExpressionNode* input = new ExpressionNode(Not);
             input->left = new ExpressionNode(Or);
             input->left->left = new ExpressionNode(Variable, "a");
             input->left->right = new ExpressionNode(Variable, "b");
 
-            // Ожидаемый результат: !a & !b
+            // РћР¶РёРґР°РµРјС‹Р№ СЂРµР·СѓР»СЊС‚Р°С‚: !a & !b
             ExpressionNode* expected = new ExpressionNode(And);
             expected->left = new ExpressionNode(Not);
             expected->left->left = new ExpressionNode(Variable, "a");
@@ -88,169 +87,166 @@ namespace testSimplifyExpression
             expected->right->left = new ExpressionNode(Variable, "b");
 
             bool changed = simplifyExpression(input);
-            Assert::IsTrue(changed, L"Ожидалось изменение выражения");
-            Assert::IsTrue(compareExpressionTrees(expected, input), L"Некорректное применение второго закона де Моргана");
+            Assert::IsTrue(changed, L"РћР¶РёРґР°Р»РѕСЃСЊ РёР·РјРµРЅРµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ");
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"РќРµРєРѕСЂСЂРµРєС‚РЅРѕРµ РїСЂРёРјРµРЅРµРЅРёРµ РІС‚РѕСЂРѕРіРѕ Р·Р°РєРѕРЅР° РґРµ РњРѕСЂРіР°РЅР°");
 
             delete input;
             delete expected;
         }
 
         /**
-         * @brief Тест 3: Нет преобразований (конъюнкция)
+         * @brief РўРµСЃС‚ 3: РќРµС‚ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёР№ (РєРѕРЅСЉСЋРЅРєС†РёСЏ)
          */
         TEST_METHOD(Test3_NoTransformAnd)
         {
-            // Входные данные: a & b
+            // Р’С…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ: a & b
             ExpressionNode* input = new ExpressionNode(And);
             input->left = new ExpressionNode(Variable, "a");
             input->right = new ExpressionNode(Variable, "b");
 
-            // Ожидаемый результат: a & b (без изменений)
+            // РћР¶РёРґР°РµРјС‹Р№ СЂРµР·СѓР»СЊС‚Р°С‚: a & b (Р±РµР· РёР·РјРµРЅРµРЅРёР№)
             ExpressionNode* expected = new ExpressionNode(And);
             expected->left = new ExpressionNode(Variable, "a");
             expected->right = new ExpressionNode(Variable, "b");
 
             bool changed = simplifyExpression(input);
-            Assert::IsFalse(changed, L"Не ожидалось изменений выражения");
-            Assert::IsTrue(compareExpressionTrees(expected, input), L"Конъюнкция не должна была измениться");
+            Assert::IsFalse(changed, L"РќРµ РѕР¶РёРґР°Р»РѕСЃСЊ РёР·РјРµРЅРµРЅРёР№ РІС‹СЂР°Р¶РµРЅРёСЏ");
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"РљРѕРЅСЉСЋРЅРєС†РёСЏ РЅРµ РґРѕР»Р¶РЅР° Р±С‹Р»Р° РёР·РјРµРЅРёС‚СЊСЃСЏ");
 
             delete input;
             delete expected;
         }
 
         /**
-         * @brief Тест 4: Нет преобразований (дизъюнкция)
+         * @brief РўРµСЃС‚ 4: РќРµС‚ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёР№ (РґРёР·СЉСЋРЅРєС†РёСЏ)
          */
         TEST_METHOD(Test4_NoTransformOr)
         {
-            // Входные данные: a | b
+            // Р’С…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ: a | b
             ExpressionNode* input = new ExpressionNode(Or);
             input->left = new ExpressionNode(Variable, "a");
             input->right = new ExpressionNode(Variable, "b");
 
-            // Ожидаемый результат: a | b (без изменений)
+            // РћР¶РёРґР°РµРјС‹Р№ СЂРµР·СѓР»СЊС‚Р°С‚: a | b (Р±РµР· РёР·РјРµРЅРµРЅРёР№)
             ExpressionNode* expected = new ExpressionNode(Or);
             expected->left = new ExpressionNode(Variable, "a");
             expected->right = new ExpressionNode(Variable, "b");
 
             bool changed = simplifyExpression(input);
-            Assert::IsFalse(changed, L"Не ожидалось изменений выражения");
-            Assert::IsTrue(compareExpressionTrees(expected, input), L"Дизъюнкция не должна была измениться");
+            Assert::IsFalse(changed, L"РќРµ РѕР¶РёРґР°Р»РѕСЃСЊ РёР·РјРµРЅРµРЅРёР№ РІС‹СЂР°Р¶РµРЅРёСЏ");
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"Р”РёР·СЉСЋРЅРєС†РёСЏ РЅРµ РґРѕР»Р¶РЅР° Р±С‹Р»Р° РёР·РјРµРЅРёС‚СЊСЃСЏ");
 
             delete input;
             delete expected;
         }
 
         /**
-         * @brief Тест 5: Нет преобразований (импликация)
+         * @brief РўРµСЃС‚ 5: РќРµС‚ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёР№ (РёРјРїР»РёРєР°С†РёСЏ)
          */
         TEST_METHOD(Test5_NoTransformImplication)
         {
-            // Входные данные: a > b
+            // Р’С…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ: a > b
             ExpressionNode* input = new ExpressionNode(Implication);
             input->left = new ExpressionNode(Variable, "a");
             input->right = new ExpressionNode(Variable, "b");
 
-            // Ожидаемый результат: a > b (без изменений)
+            // РћР¶РёРґР°РµРјС‹Р№ СЂРµР·СѓР»СЊС‚Р°С‚: a > b (Р±РµР· РёР·РјРµРЅРµРЅРёР№)
             ExpressionNode* expected = new ExpressionNode(Implication);
             expected->left = new ExpressionNode(Variable, "a");
             expected->right = new ExpressionNode(Variable, "b");
 
             bool changed = simplifyExpression(input);
-            Assert::IsFalse(changed, L"Не ожидалось изменений выражения");
-            Assert::IsTrue(compareExpressionTrees(expected, input), L"Импликация не должна была измениться");
+            Assert::IsFalse(changed, L"РќРµ РѕР¶РёРґР°Р»РѕСЃСЊ РёР·РјРµРЅРµРЅРёР№ РІС‹СЂР°Р¶РµРЅРёСЏ");
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"РРјРїР»РёРєР°С†РёСЏ РЅРµ РґРѕР»Р¶РЅР° Р±С‹Р»Р° РёР·РјРµРЅРёС‚СЊСЃСЏ");
 
             delete input;
             delete expected;
         }
 
         /**
-         * @brief Тест 6: Нет преобразований (эквиваленция)
+         * @brief РўРµСЃС‚ 6: РќРµС‚ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёР№ (СЌРєРІРёРІР°Р»РµРЅС†РёСЏ)
          */
         TEST_METHOD(Test6_NoTransformEquivalence)
         {
-            // Входные данные: a ~ b
+            // Р’С…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ: a ~ b
             ExpressionNode* input = new ExpressionNode(Equivalence);
             input->left = new ExpressionNode(Variable, "a");
             input->right = new ExpressionNode(Variable, "b");
 
-            // Ожидаемый результат: a ~ b (без изменений)
+            // РћР¶РёРґР°РµРјС‹Р№ СЂРµР·СѓР»СЊС‚Р°С‚: a ~ b (Р±РµР· РёР·РјРµРЅРµРЅРёР№)
             ExpressionNode* expected = new ExpressionNode(Equivalence);
             expected->left = new ExpressionNode(Variable, "a");
             expected->right = new ExpressionNode(Variable, "b");
 
             bool changed = simplifyExpression(input);
-            Assert::IsFalse(changed, L"Не ожидалось изменений выражения");
-            Assert::IsTrue(compareExpressionTrees(expected, input), L"Эквиваленция не должна была измениться");
+            Assert::IsFalse(changed, L"РќРµ РѕР¶РёРґР°Р»РѕСЃСЊ РёР·РјРµРЅРµРЅРёР№ РІС‹СЂР°Р¶РµРЅРёСЏ");
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"Р­РєРІРёРІР°Р»РµРЅС†РёСЏ РЅРµ РґРѕР»Р¶РЅР° Р±С‹Р»Р° РёР·РјРµРЅРёС‚СЊСЃСЏ");
 
             delete input;
             delete expected;
         }
 
         /**
-         * @brief Тест 7: Первый закон внутри отрицания
-         */
+        * @brief РўРµСЃС‚ 7: РџРµСЂРІС‹Р№ Р·Р°РєРѕРЅ РІРЅСѓС‚СЂРё РѕС‚СЂРёС†Р°РЅРёСЏ
+        * !(!(a в€§ b)) в†’ !!a в€Ё !!b
+        */
         TEST_METHOD(Test7_FirstLawInsideNegation)
         {
-            // Входные данные: !(Not(And("a", "b")))
             ExpressionNode* input = new ExpressionNode(Not);
             input->left = new ExpressionNode(Not);
             input->left->left = new ExpressionNode(And);
             input->left->left->left = new ExpressionNode(Variable, "a");
             input->left->left->right = new ExpressionNode(Variable, "b");
 
-            // Ожидаемый результат: !(Or(Not("a"), Not("b")))
-            ExpressionNode* expected = new ExpressionNode(Not);
-            expected->left = new ExpressionNode(Or);
+            ExpressionNode* expected = new ExpressionNode(Or);
+            expected->left = new ExpressionNode(Not);
             expected->left->left = new ExpressionNode(Not);
             expected->left->left->left = new ExpressionNode(Variable, "a");
-            expected->left->right = new ExpressionNode(Not);
-            expected->left->right->left = new ExpressionNode(Variable, "b");
+            expected->right = new ExpressionNode(Not);
+            expected->right->left = new ExpressionNode(Not);
+            expected->right->left->left = new ExpressionNode(Variable, "b");
 
             bool changed = simplifyExpression(input);
-            Assert::IsTrue(changed, L"Ожидалось изменение выражения");
-            Assert::IsTrue(compareExpressionTrees(expected, input), L"Некорректное преобразование");
+            Assert::IsTrue(changed, L"РћР¶РёРґР°Р»РѕСЃСЊ РёР·РјРµРЅРµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ");
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"РќРµРєРѕСЂСЂРµРєС‚РЅРѕРµ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ");
 
             delete input;
             delete expected;
         }
         /**
-         * @brief Тест 8: Второй закон внутри отрицания
-         *
-         * Проверяет преобразование !(Not(Or("a", "b"))) в !(And(Not("a"), Not("b")))
-         */
+        * @brief РўРµСЃС‚ 8: Р’С‚РѕСЂРѕР№ Р·Р°РєРѕРЅ РІРЅСѓС‚СЂРё РѕС‚СЂРёС†Р°РЅРёСЏ
+        * !(!(a в€Ё b)) в†’ !!a в€§ !!b
+        */
         TEST_METHOD(Test8_SecondLawInsideNegation)
         {
-            // Входные данные: !(Not(Or("a", "b")))
             ExpressionNode* input = new ExpressionNode(Not);
             input->left = new ExpressionNode(Not);
             input->left->left = new ExpressionNode(Or);
             input->left->left->left = new ExpressionNode(Variable, "a");
             input->left->left->right = new ExpressionNode(Variable, "b");
 
-            // Ожидаемый результат: !(And(Not("a"), Not("b")))
-            ExpressionNode* expected = new ExpressionNode(Not);
-            expected->left = new ExpressionNode(And);
+            ExpressionNode* expected = new ExpressionNode(And);
+            expected->left = new ExpressionNode(Not);
             expected->left->left = new ExpressionNode(Not);
             expected->left->left->left = new ExpressionNode(Variable, "a");
-            expected->left->right = new ExpressionNode(Not);
-            expected->left->right->left = new ExpressionNode(Variable, "b");
+            expected->right = new ExpressionNode(Not);
+            expected->right->left = new ExpressionNode(Not);
+            expected->right->left->left = new ExpressionNode(Variable, "b");
 
             bool changed = simplifyExpression(input);
-            Assert::IsTrue(changed, L"Ожидалось изменение выражения");
-            Assert::IsTrue(compareExpressionTrees(expected, input),
-                L"Некорректное применение второго закона де Моргана внутри отрицания");
+            Assert::IsTrue(changed, L"РћР¶РёРґР°Р»РѕСЃСЊ РёР·РјРµРЅРµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ");
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"РќРµРєРѕСЂСЂРµРєС‚РЅРѕРµ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ");
 
             delete input;
             delete expected;
         }
 
         /**
-         * @brief Тест 9: Первый закон внутри второго закона
-         */
-        TEST_METHOD(Test9_FirstLawInsideSecondLaw)
+        * @brief РўРµСЃС‚ 9: РџРµСЂРІС‹Р№ Р·Р°РєРѕРЅ РґР»СЏ СЃР»РѕР¶РЅРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ
+        * В¬((a в€§ b) в€Ё c) в†’ (В¬a в€Ё В¬b) в€§ В¬c
+        */
+        TEST_METHOD(Test9_FirstLawForComplexExpression)
         {
-            // Входные данные: !(Or(And("a", "b"), "c"))
             ExpressionNode* input = new ExpressionNode(Not);
             input->left = new ExpressionNode(Or);
             input->left->left = new ExpressionNode(And);
@@ -258,7 +254,6 @@ namespace testSimplifyExpression
             input->left->left->right = new ExpressionNode(Variable, "b");
             input->left->right = new ExpressionNode(Variable, "c");
 
-            // Ожидаемый результат: And(Or(Not("a"), Not("b")), Not("c"))
             ExpressionNode* expected = new ExpressionNode(And);
             expected->left = new ExpressionNode(Or);
             expected->left->left = new ExpressionNode(Not);
@@ -269,19 +264,19 @@ namespace testSimplifyExpression
             expected->right->left = new ExpressionNode(Variable, "c");
 
             bool changed = simplifyExpression(input);
-            Assert::IsTrue(changed, L"Ожидалось изменение выражения");
-            Assert::IsTrue(compareExpressionTrees(expected, input), L"Некорректное преобразование");
+            Assert::IsTrue(changed, L"РћР¶РёРґР°Р»РѕСЃСЊ РёР·РјРµРЅРµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ");
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"РќРµРєРѕСЂСЂРµРєС‚РЅРѕРµ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ");
 
             delete input;
             delete expected;
         }
 
         /**
-         * @brief Тест 10: Второй закон внутри первого закона
-         */
-        TEST_METHOD(Test10_SecondLawInsideFirstLaw)
+        * @brief РўРµСЃС‚ 10: Р’С‚РѕСЂРѕР№ Р·Р°РєРѕРЅ РґР»СЏ СЃР»РѕР¶РЅРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ
+        * В¬((a в€Ё b) в€§ c) в†’ (В¬a в€§ В¬b) в€Ё В¬c
+        */
+        TEST_METHOD(Test10_SecondLawForComplexExpression)
         {
-            // Входные данные: !(And(Or("a", "b"), "c"))
             ExpressionNode* input = new ExpressionNode(Not);
             input->left = new ExpressionNode(And);
             input->left->left = new ExpressionNode(Or);
@@ -289,7 +284,6 @@ namespace testSimplifyExpression
             input->left->left->right = new ExpressionNode(Variable, "b");
             input->left->right = new ExpressionNode(Variable, "c");
 
-            // Ожидаемый результат: Or(And(Not("a"), Not("b")), Not("c"))
             ExpressionNode* expected = new ExpressionNode(Or);
             expected->left = new ExpressionNode(And);
             expected->left->left = new ExpressionNode(Not);
@@ -300,19 +294,19 @@ namespace testSimplifyExpression
             expected->right->left = new ExpressionNode(Variable, "c");
 
             bool changed = simplifyExpression(input);
-            Assert::IsTrue(changed, L"Ожидалось изменение выражения");
-            Assert::IsTrue(compareExpressionTrees(expected, input), L"Некорректное преобразование");
+            Assert::IsTrue(changed, L"РћР¶РёРґР°Р»РѕСЃСЊ РёР·РјРµРЅРµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ");
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"РќРµРєРѕСЂСЂРµРєС‚РЅРѕРµ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ");
 
             delete input;
             delete expected;
         }
 
         /**
-         * @brief Тест 11: Последовательные первые законы
-         */
-        TEST_METHOD(Test11_SequentialFirstLaws)
+        * @brief РўРµСЃС‚ 11: Р’Р»РѕР¶РµРЅРЅС‹Рµ РїРµСЂРІС‹Рµ Р·Р°РєРѕРЅС‹
+        * !(!(a в€§ b) в€§ c) в†’ (!!a в€Ё !!b) в€Ё !c
+        */
+        TEST_METHOD(Test11_NestedFirstLaws)
         {
-            // Входные данные: !(And(Not(And("a", "b")), "c"))
             ExpressionNode* input = new ExpressionNode(Not);
             input->left = new ExpressionNode(And);
             input->left->left = new ExpressionNode(Not);
@@ -321,30 +315,31 @@ namespace testSimplifyExpression
             input->left->left->left->right = new ExpressionNode(Variable, "b");
             input->left->right = new ExpressionNode(Variable, "c");
 
-            // Ожидаемый результат: Or(Or(Not("a"), Not("b")), Not("c"))
             ExpressionNode* expected = new ExpressionNode(Or);
             expected->left = new ExpressionNode(Or);
             expected->left->left = new ExpressionNode(Not);
-            expected->left->left->left = new ExpressionNode(Variable, "a");
+            expected->left->left->left = new ExpressionNode(Not);
+            expected->left->left->left->left = new ExpressionNode(Variable, "a");
             expected->left->right = new ExpressionNode(Not);
-            expected->left->right->left = new ExpressionNode(Variable, "b");
+            expected->left->right->left = new ExpressionNode(Not);
+            expected->left->right->left->left = new ExpressionNode(Variable, "b");
             expected->right = new ExpressionNode(Not);
             expected->right->left = new ExpressionNode(Variable, "c");
 
             bool changed = simplifyExpression(input);
-            Assert::IsTrue(changed, L"Ожидалось изменение выражения");
-            Assert::IsTrue(compareExpressionTrees(expected, input), L"Некорректное преобразование");
+            Assert::IsTrue(changed, L"РћР¶РёРґР°Р»РѕСЃСЊ РёР·РјРµРЅРµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ");
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"РќРµРєРѕСЂСЂРµРєС‚РЅРѕРµ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ");
 
             delete input;
             delete expected;
         }
 
         /**
-         * @brief Тест 12: Последовательные вторые законы
+         * @brief РўРµСЃС‚ 12: Р’Р»РѕР¶РµРЅРЅС‹Рµ РІС‚РѕСЂС‹Рµ Р·Р°РєРѕРЅС‹
+         * !(!(a в€Ё b) в€Ё c) в†’ (!!a в€§ !!b) в€§ !c
          */
-        TEST_METHOD(Test12_SequentialSecondLaws)
+        TEST_METHOD(Test12_NestedSecondLaws)
         {
-            // Входные данные: !(Or(Not(Or("a", "b")), "c"))
             ExpressionNode* input = new ExpressionNode(Not);
             input->left = new ExpressionNode(Or);
             input->left->left = new ExpressionNode(Not);
@@ -353,30 +348,31 @@ namespace testSimplifyExpression
             input->left->left->left->right = new ExpressionNode(Variable, "b");
             input->left->right = new ExpressionNode(Variable, "c");
 
-            // Ожидаемый результат: And(And(Not("a"), Not("b")), Not("c"))
             ExpressionNode* expected = new ExpressionNode(And);
             expected->left = new ExpressionNode(And);
             expected->left->left = new ExpressionNode(Not);
-            expected->left->left->left = new ExpressionNode(Variable, "a");
+            expected->left->left->left = new ExpressionNode(Not);
+            expected->left->left->left->left = new ExpressionNode(Variable, "a");
             expected->left->right = new ExpressionNode(Not);
-            expected->left->right->left = new ExpressionNode(Variable, "b");
+            expected->left->right->left = new ExpressionNode(Not);
+            expected->left->right->left->left = new ExpressionNode(Variable, "b");
             expected->right = new ExpressionNode(Not);
             expected->right->left = new ExpressionNode(Variable, "c");
 
             bool changed = simplifyExpression(input);
-            Assert::IsTrue(changed, L"Ожидалось изменение выражения");
-            Assert::IsTrue(compareExpressionTrees(expected, input), L"Некорректное преобразование");
+            Assert::IsTrue(changed, L"РћР¶РёРґР°Р»РѕСЃСЊ РёР·РјРµРЅРµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ");
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"РќРµРєРѕСЂСЂРµРєС‚РЅРѕРµ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ");
 
             delete input;
             delete expected;
         }
 
         /**
-         * @brief Тест 13: Последовательные первые и вторые законы
+         * @brief РўРµСЃС‚ 13: РџРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅС‹Рµ РїРµСЂРІС‹Рµ Рё РІС‚РѕСЂС‹Рµ Р·Р°РєРѕРЅС‹
+         * !(!(a в€Ё b) в€§ !(c в€§ d)) в†’ !!(a в€Ё b) в€Ё !!(c в€§ d)
          */
         TEST_METHOD(Test13_SequentialFirstAndSecondLaws)
         {
-            // Входные данные: !(And(Not(Or("a", "b")), Not(And("c", "d"))))
             ExpressionNode* input = new ExpressionNode(Not);
             input->left = new ExpressionNode(And);
             input->left->left = new ExpressionNode(Not);
@@ -388,36 +384,38 @@ namespace testSimplifyExpression
             input->left->right->left->left = new ExpressionNode(Variable, "c");
             input->left->right->left->right = new ExpressionNode(Variable, "d");
 
-            // Ожидаемый результат: Or(Or("a", "b"), And("c", "d"))
             ExpressionNode* expected = new ExpressionNode(Or);
-            expected->left = new ExpressionNode(Or);
-            expected->left->left = new ExpressionNode(Variable, "a");
-            expected->left->right = new ExpressionNode(Variable, "b");
-            expected->right = new ExpressionNode(And);
-            expected->right->left = new ExpressionNode(Variable, "c");
-            expected->right->right = new ExpressionNode(Variable, "d");
+            expected->left = new ExpressionNode(Not);
+            expected->left->left = new ExpressionNode(Not);
+            expected->left->left->left = new ExpressionNode(Or);
+            expected->left->left->left->left = new ExpressionNode(Variable, "a");
+            expected->left->left->left->right = new ExpressionNode(Variable, "b");
+            expected->right = new ExpressionNode(Not);
+            expected->right->left = new ExpressionNode(Not);
+            expected->right->left->left = new ExpressionNode(And);
+            expected->right->left->left->left = new ExpressionNode(Variable, "c");
+            expected->right->left->left->right = new ExpressionNode(Variable, "d");
 
             bool changed = simplifyExpression(input);
-            Assert::IsTrue(changed, L"Ожидалось изменение выражения");
-            Assert::IsTrue(compareExpressionTrees(expected, input), L"Некорректное преобразование");
+            Assert::IsTrue(changed, L"РћР¶РёРґР°Р»РѕСЃСЊ РёР·РјРµРЅРµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ");
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"РќРµРєРѕСЂСЂРµРєС‚РЅРѕРµ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ");
 
             delete input;
             delete expected;
         }
 
         /**
-         * @brief Тест 14: Сохранение структуры сложного выражения
+         * @brief РўРµСЃС‚ 14: РЎРѕС…СЂР°РЅРµРЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ СЃР»РѕР¶РЅРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ
+         * a в€§ (b в€Ё c) в†’ a в€§ (b в€Ё c)
          */
         TEST_METHOD(Test14_PreserveComplexStructure)
         {
-            // Входные данные: And("a", Or("b", "c"))
             ExpressionNode* input = new ExpressionNode(And);
             input->left = new ExpressionNode(Variable, "a");
             input->right = new ExpressionNode(Or);
             input->right->left = new ExpressionNode(Variable, "b");
             input->right->right = new ExpressionNode(Variable, "c");
 
-            // Ожидаемый результат: And("a", Or("b", "c")) (без изменений)
             ExpressionNode* expected = new ExpressionNode(And);
             expected->left = new ExpressionNode(Variable, "a");
             expected->right = new ExpressionNode(Or);
@@ -425,8 +423,8 @@ namespace testSimplifyExpression
             expected->right->right = new ExpressionNode(Variable, "c");
 
             bool changed = simplifyExpression(input);
-            Assert::IsFalse(changed, L"Не ожидалось изменений выражения");
-            Assert::IsTrue(compareExpressionTrees(expected, input), L"Структура не должна была измениться");
+            Assert::IsFalse(changed, L"РќРµ РѕР¶РёРґР°Р»РѕСЃСЊ РёР·РјРµРЅРµРЅРёР№ РІС‹СЂР°Р¶РµРЅРёСЏ");
+            Assert::IsTrue(compareExpressionTrees(expected, input), L"РЎС‚СЂСѓРєС‚СѓСЂР° РЅРµ РґРѕР»Р¶РЅР° Р±С‹Р»Р° РёР·РјРµРЅРёС‚СЊСЃСЏ");
 
             delete input;
             delete expected;
