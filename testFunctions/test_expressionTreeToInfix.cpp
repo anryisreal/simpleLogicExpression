@@ -70,7 +70,7 @@ namespace testExpressionTreeToInfix
             input->left = new ExpressionNode(TokenType::Variable, "a");
             input->right = new ExpressionNode(TokenType::Variable, "b");
             std::string result = expressionTreeToInfix(input);
-            std::string expected = "a | b";
+            std::string expected = "a || b";
 
             Assert::AreEqual(expected, result);
 
@@ -87,7 +87,7 @@ namespace testExpressionTreeToInfix
             input->left = new ExpressionNode(TokenType::Variable, "a");
             input->right = new ExpressionNode(TokenType::Variable, "b");
             std::string result = expressionTreeToInfix(input);
-            std::string expected = "a > b";
+            std::string expected = "a -> b";
 
             Assert::AreEqual(expected, result);
 
@@ -125,7 +125,7 @@ namespace testExpressionTreeToInfix
             input->right->left = new ExpressionNode(TokenType::Variable, "c");
             input->right->right = new ExpressionNode(TokenType::Variable, "d");
             std::string result = expressionTreeToInfix(input);
-            std::string expected = "(a | b) & (c | d)";
+            std::string expected = "(a || b) & (c || d)";
 
             Assert::AreEqual(expected, result);
 
@@ -145,7 +145,7 @@ namespace testExpressionTreeToInfix
             input->left->right->left = new ExpressionNode(TokenType::Variable, "b");
             input->left->right->right = new ExpressionNode(TokenType::Variable, "c");
             std::string result = expressionTreeToInfix(input);
-            std::string expected = "!(a | (b & c))";
+            std::string expected = "!(a || (b & c))";
 
             Assert::AreEqual(expected, result);
 
@@ -166,7 +166,7 @@ namespace testExpressionTreeToInfix
             input->right->left = new ExpressionNode(TokenType::Variable, "c");
             input->right->right = new ExpressionNode(TokenType::Variable, "d");
             std::string result = expressionTreeToInfix(input);
-            std::string expected = "(a > b) & (c ~ d)";
+            std::string expected = "(a -> b) & (c ~ d)";
 
             Assert::AreEqual(expected, result);
 
@@ -187,7 +187,7 @@ namespace testExpressionTreeToInfix
             input->right->left = new ExpressionNode(TokenType::Variable, "c");
             input->right->right = new ExpressionNode(TokenType::Variable, "d");
             std::string result = expressionTreeToInfix(input);
-            std::string expected = "a & b | (c ~ d)";
+            std::string expected = "a & b || (c ~ d)";
 
             Assert::AreEqual(expected, result);
 
@@ -208,7 +208,7 @@ namespace testExpressionTreeToInfix
             input->right->left = new ExpressionNode(TokenType::Variable, "c");
             input->right->right = new ExpressionNode(TokenType::Variable, "d");
             std::string result = expressionTreeToInfix(input);
-            std::string expected = "(a ~ b) | c & d";
+            std::string expected = "(a ~ b) || c & d";
 
             Assert::AreEqual(expected, result);
 
@@ -252,7 +252,7 @@ namespace testExpressionTreeToInfix
             input->left->right->left = new ExpressionNode(TokenType::Variable, "c");
             input->left->right->right = new ExpressionNode(TokenType::Variable, "d");
             std::string result = expressionTreeToInfix(input);
-            std::string expected = "!(!(a & b) | c & d)";
+            std::string expected = "!(!(a & b) || c & d)";
 
             Assert::AreEqual(expected, result);
 
@@ -288,7 +288,7 @@ namespace testExpressionTreeToInfix
             input->left->left->left = new ExpressionNode(TokenType::Variable, "a");
             input->left->left->right = new ExpressionNode(TokenType::Variable, "b");
             std::string result = expressionTreeToInfix(input);
-            std::string expected = "!!(a | b)";
+            std::string expected = "!!(a || b)";
 
             Assert::AreEqual(expected, result);
 
@@ -326,7 +326,7 @@ namespace testExpressionTreeToInfix
             input->left->left->left = new ExpressionNode(TokenType::Variable, "a");
             input->left->left->right = new ExpressionNode(TokenType::Variable, "b");
             std::string result = expressionTreeToInfix(input);
-            std::string expected = "!!(a > b)";
+            std::string expected = "!!(a -> b)";
 
             Assert::AreEqual(expected, result);
 
