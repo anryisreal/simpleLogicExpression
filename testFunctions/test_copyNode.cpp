@@ -407,8 +407,6 @@ namespace testcopyNode
             ExpressionNode* node = new ExpressionNode(TokenType::And);
             node->left = new ExpressionNode(TokenType::And);
             node->left->left = new ExpressionNode(TokenType::Variable, "a");
-            node->left->right = new ExpressionNode(TokenType::Variable, "b");
-            node->right = new ExpressionNode(TokenType::Variable, "c");
 
             ExpressionNode* copiedNode = copyNode(node);
 
@@ -427,8 +425,6 @@ namespace testcopyNode
             ExpressionNode* node = new ExpressionNode(TokenType::And);
             node->left = new ExpressionNode(TokenType::Variable, "a");
             node->right = new ExpressionNode(TokenType::And);
-            node->right->left = new ExpressionNode(TokenType::Variable, "b");
-            node->right->right = new ExpressionNode(TokenType::Variable, "c");
 
             ExpressionNode* copiedNode = copyNode(node);
 
@@ -446,11 +442,7 @@ namespace testcopyNode
         {
             ExpressionNode* node = new ExpressionNode(TokenType::And);
             node->left = new ExpressionNode(TokenType::And);
-            node->left->left = new ExpressionNode(TokenType::Variable, "a");
-            node->left->right = new ExpressionNode(TokenType::Variable, "b");
             node->right = new ExpressionNode(TokenType::And);
-            node->right->left = new ExpressionNode(TokenType::Variable, "c");
-            node->right->right = new ExpressionNode(TokenType::Variable, "d");
 
             ExpressionNode* copiedNode = copyNode(node);
 
@@ -586,5 +578,36 @@ namespace testcopyNode
             delete node;
             delete copiedNode;
         }
+
+        /**
+        * @brief Тест 30: Глубокое дерево
+        */
+        TEST_METHOD(Test29_CopyWithAllOperationTypesCombination)
+        {
+            ExpressionNode* node = new ExpressionNode(TokenType::And);
+
+            node->left = new ExpressionNode(TokenType::Or);
+            node->left->left = new ExpressionNode(TokenType::And);
+            node->left->left->left = new ExpressionNode(TokenType::Or);
+            node->left->left->left->left = new ExpressionNode(TokenType::Variable, "a");
+            node->left->left->left->right = new ExpressionNode(TokenType::Variable, "b");
+
+            node->left->left->right = new ExpressionNode(TokenType::Variable, "a");
+
+            node->left->right = new ExpressionNode(TokenType::Or);
+            node->left->right->left = new ExpressionNode(TokenType::Variable, "c");
+            node->left->right->left = new ExpressionNode(TokenType::Variable, "d");
+
+            node->right = new ExpressionNode(TokenType::Variable, "a");
+
+            ExpressionNode* copiedNode = copyNode(node);
+
+            AssertNodesEqual(node, copiedNode);
+
+            delete node;
+            delete copiedNode;
+        }
+
+
     };
 }
