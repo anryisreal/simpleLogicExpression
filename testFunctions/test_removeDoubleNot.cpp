@@ -12,6 +12,22 @@ namespace testRemoveDoubleNot
     {
     public:
         /**
+         * @brief Тест 1: Нет отрицаний
+         */
+        TEST_METHOD(Test2_SingleNegation)
+        {
+            ExpressionNode* input = new ExpressionNode(TokenType::Variable, "a");
+            removeDoubleNot(input);
+
+            ExpressionNode* expected = new ExpressionNode(TokenType::Variable, "a");
+
+            Assert::IsTrue(compareExpressionTrees(expected, input));
+
+            delete input;
+            delete expected;
+        }
+
+        /**
          * @brief Тест 2: Одинарное отрицание
          * @details Проверяет, что функция не изменяет дерево с одним отрицанием
          */
