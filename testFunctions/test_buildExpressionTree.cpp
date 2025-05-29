@@ -108,13 +108,14 @@ namespace testbuildExpressionTree
         {
             std::vector<Token> tokens = { Token(TokenType::Variable, "a", 0) };
             std::set<Error> errorList;
+            std::set<Error> expectedErrors;
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
             ExpressionNode* expected = new ExpressionNode(TokenType::Variable, "a");
 
             Assert::IsNotNull(result);
             Assert::IsTrue(compareExpressionTrees(expected, result));
-            Assert::IsTrue(errorList.empty());
+            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
 
             delete result;
             delete expected;
@@ -148,6 +149,7 @@ namespace testbuildExpressionTree
                 Token(TokenType::Not, "!", 1)
             };
             std::set<Error> errorList;
+            std::set<Error> expectedErrors;
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
@@ -156,7 +158,7 @@ namespace testbuildExpressionTree
 
             Assert::IsNotNull(result);
             Assert::IsTrue(compareExpressionTrees(expected, result));
-            Assert::IsTrue(errorList.empty());
+            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
 
             delete result;
             delete expected;
@@ -173,6 +175,7 @@ namespace testbuildExpressionTree
                 Token(TokenType::And, "&", 2)
             };
             std::set<Error> errorList;
+            std::set<Error> expectedErrors;
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
@@ -182,7 +185,7 @@ namespace testbuildExpressionTree
 
             Assert::IsNotNull(result);
             Assert::IsTrue(compareExpressionTrees(expected, result));
-            Assert::IsTrue(errorList.empty());
+            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
 
             delete result;
             delete expected;
@@ -200,6 +203,7 @@ namespace testbuildExpressionTree
                 Token(TokenType::Not, "!", 3)
             };
             std::set<Error> errorList;
+            std::set<Error> expectedErrors;
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
@@ -210,7 +214,7 @@ namespace testbuildExpressionTree
 
             Assert::IsNotNull(result);
             Assert::IsTrue(compareExpressionTrees(expected, result));
-            Assert::IsTrue(errorList.empty());
+            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
 
             delete result;
             delete expected;
@@ -231,6 +235,7 @@ namespace testbuildExpressionTree
                 Token(TokenType::Or, "|", 6)
             };
             std::set<Error> errorList;
+            std::set<Error> expectedErrors;
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
@@ -244,7 +249,7 @@ namespace testbuildExpressionTree
 
             Assert::IsNotNull(result);
             Assert::IsTrue(compareExpressionTrees(expected, result));
-            Assert::IsTrue(errorList.empty());
+            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
 
             delete result;
             delete expected;
@@ -283,6 +288,7 @@ namespace testbuildExpressionTree
                 Token(TokenType::Implication, ">", 2)
             };
             std::set<Error> errorList;
+            std::set<Error> expectedErrors;
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
@@ -292,7 +298,7 @@ namespace testbuildExpressionTree
 
             Assert::IsNotNull(result);
             Assert::IsTrue(compareExpressionTrees(expected, result));
-            Assert::IsTrue(errorList.empty());
+            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
 
             delete result;
             delete expected;
@@ -309,6 +315,7 @@ namespace testbuildExpressionTree
                 Token(TokenType::Equivalence, "~", 2)
             };
             std::set<Error> errorList;
+            std::set<Error> expectedErrors;
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
@@ -318,7 +325,7 @@ namespace testbuildExpressionTree
 
             Assert::IsNotNull(result);
             Assert::IsTrue(compareExpressionTrees(expected, result));
-            Assert::IsTrue(errorList.empty());
+            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
 
             delete result;
             delete expected;
@@ -338,6 +345,7 @@ namespace testbuildExpressionTree
                 Token(TokenType::Or, "|", 5)
             };
             std::set<Error> errorList;
+            std::set<Error> expectedErrors;
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
@@ -350,7 +358,7 @@ namespace testbuildExpressionTree
 
             Assert::IsNotNull(result);
             Assert::IsTrue(compareExpressionTrees(expected, result));
-            Assert::IsTrue(errorList.empty());
+            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
 
             delete result;
             delete expected;
@@ -395,6 +403,7 @@ namespace testbuildExpressionTree
                 Token(TokenType::Not, "!", 6)
             };
             std::set<Error> errorList;
+            std::set<Error> expectedErrors;
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
@@ -408,7 +417,7 @@ namespace testbuildExpressionTree
 
             Assert::IsNotNull(result);
             Assert::IsTrue(compareExpressionTrees(expected, result));
-            Assert::IsTrue(errorList.empty());
+            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
 
             delete result;
             delete expected;
@@ -425,6 +434,7 @@ namespace testbuildExpressionTree
                 Token(TokenType::Not, "!", 2)
             };
             std::set<Error> errorList;
+            std::set<Error> expectedErrors;
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
@@ -434,7 +444,7 @@ namespace testbuildExpressionTree
 
             Assert::IsNotNull(result);
             Assert::IsTrue(compareExpressionTrees(expected, result));
-            Assert::IsTrue(errorList.empty());
+            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
 
             delete result;
             delete expected;
@@ -458,6 +468,7 @@ namespace testbuildExpressionTree
                 Token(TokenType::Not, "!", 9)
             };
             std::set<Error> errorList;
+            std::set<Error> expectedErrors;
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
@@ -475,7 +486,7 @@ namespace testbuildExpressionTree
 
             Assert::IsNotNull(result);
             Assert::IsTrue(compareExpressionTrees(expected, result));
-            Assert::IsTrue(errorList.empty());
+            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
 
             delete result;
             delete expected;
