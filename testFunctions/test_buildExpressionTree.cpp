@@ -544,16 +544,18 @@ namespace testbuildExpressionTree
         TEST_METHOD(Test18_MultipleErrorTypes)
         {
             std::vector<Token> tokens = {
-                Token(TokenType::Variable, "a_!", 0),
-                Token(TokenType::And, "&", 1)
+                Token(TokenType::Variable, "1a", 0),
+                Token(TokenType::Variable, "a_!", 1),
+                Token(TokenType::And, "&", 2)
             };
             std::set<Error> errorList;
 
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
             std::set<Error> expectedErrors = {
-                {Error::invalidVariableChar, 0},
-                {Error::insufficientOperands, 1}
+                {Error::invalidVariableName, 0},
+                {Error::invalidVariableChar, 1},
+                {Error::insufficientOperands, 2}
             };
 
             Assert::IsNull(result);
