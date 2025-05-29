@@ -2,6 +2,7 @@
 #include "CppUnitTest.h"
 #include "../simpleLogicExpression/functions.h"
 #include "../simpleLogicExpression/objects.h"
+#include "testFunctions.cpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -10,66 +11,6 @@ namespace testcopyNode
     TEST_CLASS(testcopyNode)
     {
     private:
-        /**
-         * @brief Рекурсивно проверяет соответствие двух узлов и выводит путь при несоответствии
-         * @param original Оригинальный узел
-         * @param copied Скопированный узел
-         * @param path Текущий путь в дереве (для сообщений об ошибках)
-         * @return true если узлы идентичны, false в противном случае
-         */
-        bool compareNodesRecursive(const ExpressionNode* original, const ExpressionNode* copied, const std::string& path = "node")
-        {
-            // Проверка на равенство указателей
-            if (original == copied) {
-                if (original != nullptr) {
-                    Logger::WriteMessage(("Ошибка в узле: " + path + " (указатели на оригинал и копию совпадают)").c_str());
-                }
-                return false;
-            }
-
-            // Проверка на nullptr
-            if (original == nullptr && copied == nullptr) {
-                return true;
-            }
-
-            if (original == nullptr) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " (оригинал null, но копия не null)").c_str());
-                return false;
-            }
-
-            if (copied == nullptr) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " (копия null, но оригинал не null)").c_str());
-                return false;
-            }
-
-            // Проверка содержимого узлов
-            if (original->type != copied->type) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " (тип не совпадает: оригинал " + std::to_string(static_cast<int>(original->type)) + ", копия " + std::to_string(static_cast<int>(copied->type)) + ")").c_str());
-                return false;
-            }
-
-            if (original->value != copied->value) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " (значение не совпадает: оригинал '" + original->value + "', копия '" + copied->value + "')").c_str());
-                return false;
-            }
-
-            // Проверка поддеревьев
-            bool leftValid = compareNodesRecursive(original->left, copied->left, path + "-left");
-            bool rightValid = compareNodesRecursive(original->right, copied->right, path + "-right");
-
-            return leftValid && rightValid;
-        }
-
-        /**
-         * @brief Проверяет, что два узла идентичны, включая все поддеревья
-         * @param original Оригинальный узел
-         * @param copied Скопированный узел
-         */
-        void AssertNodesEqual(const ExpressionNode* original, const ExpressionNode* copied)
-        {
-            bool result = compareNodesRecursive(original, copied);
-            Assert::IsTrue(result, L"Узлы не идентичны. Проверьте вывод для деталей.");
-        }
 
     public:
         /**

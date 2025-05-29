@@ -2,6 +2,8 @@
 #include "CppUnitTest.h"
 #include "../simpleLogicExpression/functions.h"
 #include "../simpleLogicExpression/objects.h"
+#include "testFunctions.cpp"
+
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

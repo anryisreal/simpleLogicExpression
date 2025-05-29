@@ -2,6 +2,7 @@
 #include "CppUnitTest.h"
 #include "../simpleLogicExpression/functions.h"
 #include "../simpleLogicExpression/objects.h"
+#include "testFunctions.cpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -10,38 +11,6 @@ namespace testSimplifyExpression
     TEST_CLASS(testSimplifyExpression)
     {
     public:
-        /**
-         * @brief Рекурсивно сравнивает два дерева выражений
-         * @param expected Ожидаемое дерево
-         * @param actual Фактическое дерево
-         * @param path Текущий путь в дереве (для диагностики)
-         * @return true если деревья идентичны, false в противном случае
-         */
-        bool compareExpressionTrees(const ExpressionNode* expected, const ExpressionNode* actual, const std::string& path = "root") const
-        {
-            if (expected == nullptr && actual == nullptr) return true;
-            if (expected == nullptr) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - ожидался nullptr").c_str());
-                return false;
-            }
-            if (actual == nullptr) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - неожиданный nullptr").c_str());
-                return false;
-            }
-
-            if (expected->type != actual->type) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - тип узла не совпадает").c_str());
-                return false;
-            }
-
-            if (expected->value != actual->value) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - значение не совпадает").c_str());
-                return false;
-            }
-
-            return compareExpressionTrees(expected->left, actual->left, path + "-left") && compareExpressionTrees(expected->right, actual->right, path + "-right");
-        }
-
         /**
          * @brief Тест 1: Отрицание конъюнкции (первый закон де Моргана)
          */

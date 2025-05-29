@@ -2,6 +2,7 @@
 #include "CppUnitTest.h"
 #include "../simpleLogicExpression/functions.h"
 #include "../simpleLogicExpression/objects.h"
+#include "testFunctions.cpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -9,58 +10,7 @@ namespace testRemoveDoubleNot
 {
     TEST_CLASS(testRemoveDoubleNot)
     {
-    private:
-        /**
-         * @brief Рекурсивно проверяет соответствие двух узлов и выводит путь при несоответствии
-         * @param expected Ожидаемый узел
-         * @param actual Фактический узел
-         * @param path Текущий путь в дереве (для сообщений об ошибках)
-         * @return true если узлы идентичны, false в противном случае
-         */
-        bool compareExpressionTrees(const ExpressionNode* expected, const ExpressionNode* actual, const std::string& path = "root") const
-        {
-            if (expected == nullptr && actual == nullptr) {
-                return true;
-            }
-
-            if (expected == nullptr) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - ожидался nullptr").c_str());
-                return false;
-            }
-
-            if (actual == nullptr) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - неожиданный nullptr").c_str());
-                return false;
-            }
-
-            if (expected->type != actual->type) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - тип узла не совпадает (ожидался: " + std::to_string(expected->type) + ", получен: " + std::to_string(actual->type) + ")").c_str());
-                return false;
-            }
-
-            if (expected->value != actual->value) { 
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - значение не совпадает (ожидалось: '" + expected->value + "', получено: '" + actual->value + "')").c_str());
-                return false;
-            }
-
-            bool leftMatch = compareExpressionTrees(expected->left, actual->left, path + "-left");
-            bool rightMatch = compareExpressionTrees(expected->right, actual->right, path + "-right");
-
-            if (!leftMatch) { 
-                Logger::WriteMessage(("Ошибка в левом поддереве узла: " + path).c_str());
-                return false;
-            }
-
-            if (!rightMatch) { 
-                Logger::WriteMessage(("Ошибка в правом поддереве узла: " + path).c_str());
-                return false;
-            }
-
-            return true;
-        }
-
     public:
-
         /**
          * @brief Тест 2: Одинарное отрицание
          * @details Проверяет, что функция не изменяет дерево с одним отрицанием

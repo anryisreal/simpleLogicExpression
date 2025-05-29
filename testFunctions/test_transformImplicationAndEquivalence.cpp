@@ -2,6 +2,7 @@
 #include "CppUnitTest.h"
 #include "../simpleLogicExpression/functions.h"
 #include "../simpleLogicExpression/objects.h"
+#include "testFunctions.cpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -10,67 +11,6 @@ namespace testTransformImplicationAndEquivalence
     TEST_CLASS(testTransformImplicationAndEquivalence)
     {
     public:
-        /**
-         * Рекурсивно сравнивает два дерева выражений
-         * @param expected Ожидаемое дерево
-         * @param actual Фактическое дерево
-         * @param path Текущий путь в дереве (для диагностики)
-         * @return true если деревья идентичны, false в противном случае
-         */
-        bool compareExpressionTrees(const ExpressionNode* expected, const ExpressionNode* actual, const std::string& path = "root") const
-        {
-            // Оба узла nullptr - совпадают
-            if (expected == nullptr && actual == nullptr) {
-                return true;
-            }
-
-            // Только один из узлов nullptr - не совпадают
-            if (expected == nullptr) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - ожидался nullptr").c_str());
-                return false;
-            }
-            if (actual == nullptr) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - неожиданный nullptr").c_str());
-                return false;
-            }
-
-            // Проверка типа узла
-            if (expected->type != actual->type) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - тип узла не совпадает. Ожидался: " + tokenTypeToString(expected->type) + ", получен: " + tokenTypeToString(actual->type)).c_str());
-                return false;
-            }
-
-            // Проверка значения переменной (если есть)
-            if (expected->value != actual->value) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - значение не совпадает. Ожидалось: '" + expected->value + "', получено: '" + actual->value + "'").c_str());
-                return false;
-            }
-
-            // Рекурсивная проверка левого и правого поддеревьев
-            bool leftMatch = compareExpressionTrees(expected->left, actual->left, path + "-left");
-            bool rightMatch = compareExpressionTrees(expected->right, actual->right, path + "-right");
-
-            return leftMatch && rightMatch;
-        }
-
-        /**
-         * @brief Преобразует TokenType в строку для сообщений об ошибках
-         * @param type Тип токена
-         * @return Строковое представление типа
-         */
-        std::string tokenTypeToString(TokenType type) const
-        {
-            switch (type) {
-            case Variable:    return "Variable";
-            case Not:         return "Not";
-            case And:         return "And";
-            case Or:          return "Or";
-            case Implication: return "Implication";
-            case Equivalence: return "Equivalence";
-            case Any:         return "Any";
-            default:          return "Unknown";
-            }
-        }
 
         /**
          * @brief Тест 1: Простое преобразование импликации
@@ -374,7 +314,6 @@ namespace testTransformImplicationAndEquivalence
             // Выполнение преобразования
             transformImplicationAndEquivalence(input);
 
-            // Проверка результата
             Assert::IsTrue(compareExpressionTrees(expected, input),
                 L"Некорректное преобразование импликации внутри дизъюнкции");
 
@@ -417,7 +356,6 @@ namespace testTransformImplicationAndEquivalence
             // Выполнение преобразования
             transformImplicationAndEquivalence(input);
 
-            // Проверка результата
             Assert::IsTrue(compareExpressionTrees(expected, input),
                 L"Некорректное преобразование эквивалентности внутри дизъюнкции");
 
@@ -452,7 +390,6 @@ namespace testTransformImplicationAndEquivalence
             // Выполнение преобразования
             transformImplicationAndEquivalence(input);
 
-            // Проверка результата
             Assert::IsTrue(compareExpressionTrees(expected, input),
                 L"Некорректное преобразование двойной импликации");
 
@@ -515,7 +452,6 @@ namespace testTransformImplicationAndEquivalence
             // Выполнение преобразования
             transformImplicationAndEquivalence(input);
 
-            // Проверка результата
             Assert::IsTrue(compareExpressionTrees(expected, input),
                 L"Некорректное преобразование двойной эквивалентности");
 
@@ -563,7 +499,6 @@ namespace testTransformImplicationAndEquivalence
             // Выполнение преобразования
             transformImplicationAndEquivalence(input);
 
-            // Проверка результата
             Assert::IsTrue(compareExpressionTrees(expected, input),
                 L"Некорректное преобразование эквивалентности внутри импликации");
 
@@ -610,7 +545,6 @@ namespace testTransformImplicationAndEquivalence
             // Выполнение преобразования
             transformImplicationAndEquivalence(input);
 
-            // Проверка результата
             Assert::IsTrue(compareExpressionTrees(expected, input),
                 L"Некорректное преобразование импликации внутри эквивалентности");
 
@@ -684,8 +618,8 @@ namespace testTransformImplicationAndEquivalence
             // Выполнение преобразования
             transformImplicationAndEquivalence(input);
 
-            // Проверка результата
-            Assert::IsTrue(compareExpressionTrees(expected, input), L"Некорректное преобразование множественной эквивалентности");
+            Assert::IsTrue(compareExpressionTrees(expected, input), 
+                L"Некорректное преобразование множественной эквивалентности");
 
             // Очистка памяти
             delete input;
@@ -723,8 +657,8 @@ namespace testTransformImplicationAndEquivalence
             // Выполнение преобразования
             transformImplicationAndEquivalence(input);
 
-            // Проверка результата
-            Assert::IsTrue(compareExpressionTrees(expected, input), L"Некорректное преобразование множественной импликации");
+            Assert::IsTrue(compareExpressionTrees(expected, input), 
+                L"Некорректное преобразование множественной импликации");
 
             // Очистка памяти
             delete input;
@@ -789,8 +723,8 @@ namespace testTransformImplicationAndEquivalence
             // Выполнение преобразования
             transformImplicationAndEquivalence(input);
 
-            // Проверка результата
-            Assert::IsTrue(compareExpressionTrees(expected, input), L"Некорректное преобразование комбинации импликации и эквивалентности");
+            Assert::IsTrue(compareExpressionTrees(expected, input), 
+                L"Некорректное преобразование комбинации импликации и эквивалентности");
 
             // Очистка памяти
             delete input;
@@ -822,8 +756,8 @@ namespace testTransformImplicationAndEquivalence
             // Выполнение преобразования
             transformImplicationAndEquivalence(input);
 
-            // Проверка результата
-            Assert::IsTrue(compareExpressionTrees(expected, input), L"Некорректное преобразование простой операции в составе импликации");
+            Assert::IsTrue(compareExpressionTrees(expected, input), 
+                L"Некорректное преобразование простой операции в составе импликации");
 
             // Очистка памяти
             delete input;
@@ -865,9 +799,9 @@ namespace testTransformImplicationAndEquivalence
 
             // Выполнение преобразования
             transformImplicationAndEquivalence(input);
-            у
-            // Проверка результата
-            Assert::IsTrue(compareExpressionTrees(expected, input), L"Некорректное преобразование простой операции в составе эквивалентности");
+            
+            Assert::IsTrue(compareExpressionTrees(expected, input), 
+                L"Некорректное преобразование простой операции в составе эквивалентности");
 
             // Очистка памяти
             delete input;

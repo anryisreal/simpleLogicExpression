@@ -3,6 +3,7 @@
 #include <algorithm>
 #include "../simpleLogicExpression/functions.h"
 #include "../simpleLogicExpression/objects.h"
+#include "testFunctions.cpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -11,77 +12,6 @@ namespace testbuildExpressionTree
     TEST_CLASS(testbuildExpressionTree)
     {
     public:
-        /**
-         * @brief Рекурсивно сравнивает два дерева выражений
-         * @param expected Ожидаемое дерево
-         * @param actual Фактическое дерево
-         * @param path Текущий путь в дереве (для диагностики)
-         * @return true если деревья идентичны, false в противном случае
-         */
-        bool compareExpressionTrees(const ExpressionNode* expected, const ExpressionNode* actual, const std::string& path = "root") const
-        {
-            if (expected == nullptr && actual == nullptr) return true;
-            if (expected == nullptr) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - ожидался nullptr").c_str());
-                return false;
-            }
-            if (actual == nullptr) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - неожиданный nullptr").c_str());
-                return false;
-            }
-
-            if (expected->type != actual->type) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - тип узла не совпадает").c_str());
-                return false;
-            }
-
-            if (expected->value != actual->value) {
-                Logger::WriteMessage(("Ошибка в узле: " + path + " - значение не совпадает").c_str());
-                return false;
-            }
-
-            return compareExpressionTrees(expected->left, actual->left, path + "-left") && compareExpressionTrees(expected->right, actual->right, path + "-right");
-        }
-
-        /**
-         * @brief Сравнивает два множества ошибок и выводит различия
-         * @param expected Ожидаемое множество ошибок
-         * @param actual Фактическое множество ошибок
-         * @return true если множества идентичны, false в противном случае
-         */
-        bool compareErrorSets(const std::set<Error>& expected, const std::set<Error>& actual) const
-        {
-            if (expected == actual) {
-                return true;
-            }
-
-            std::string message = "Ошибки не совпадают:\n";
-
-            // Находим ошибки, которые ожидались, но отсутствуют в actual
-            std::vector<Error> missingErrors;
-            std::set_difference(expected.begin(), expected.end(), actual.begin(), actual.end(), std::back_inserter(missingErrors));
-
-            if (!missingErrors.empty()) {
-                message += "Отсутствующие ошибки:\n";
-                for (const auto& error : missingErrors) {
-                    message += "  - " + Error::getErrorTypeString(error.type) + " на позиции " + std::to_string(error.position) + "\n";
-                }
-            }
-
-            // Находим ошибки, которые не ожидались, но присутствуют в actual
-            std::vector<Error> unexpectedErrors;
-            std::set_difference(actual.begin(), actual.end(), expected.begin(), expected.end(), std::back_inserter(unexpectedErrors));
-
-            if (!unexpectedErrors.empty()) {
-                message += "Неожиданные ошибки:\n";
-                for (const auto& error : unexpectedErrors) {
-                    message += "  + " + Error::getErrorTypeString(error.type) + " на позиции " + std::to_string(error.position) + "\n";
-                }
-            }
-
-            Logger::WriteMessage(message.c_str());
-            return false;
-        }
 
         /**
          * @brief Тест 1: Проверка обработки пустого списка токенов
