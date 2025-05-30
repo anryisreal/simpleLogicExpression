@@ -22,6 +22,9 @@ namespace testExpressionTreeToInfix
             std::string result = expressionTreeToInfix(input);
             std::string expected = "a";
 
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
+
             Assert::AreEqual(expected, result);
 
             delete input;
@@ -37,6 +40,9 @@ namespace testExpressionTreeToInfix
             input->left = new ExpressionNode(TokenType::Variable, "a");
             std::string result = expressionTreeToInfix(input);
             std::string expected = "!a";
+
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
 
             Assert::AreEqual(expected, result);
 
@@ -55,6 +61,9 @@ namespace testExpressionTreeToInfix
             std::string result = expressionTreeToInfix(input);
             std::string expected = "a & b";
 
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
+
             Assert::AreEqual(expected, result);
 
             delete input;
@@ -71,6 +80,9 @@ namespace testExpressionTreeToInfix
             input->right = new ExpressionNode(TokenType::Variable, "b");
             std::string result = expressionTreeToInfix(input);
             std::string expected = "a || b";
+
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
 
             Assert::AreEqual(expected, result);
 
@@ -89,6 +101,9 @@ namespace testExpressionTreeToInfix
             std::string result = expressionTreeToInfix(input);
             std::string expected = "a -> b";
 
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
+
             Assert::AreEqual(expected, result);
 
             delete input;
@@ -105,6 +120,9 @@ namespace testExpressionTreeToInfix
             input->right = new ExpressionNode(TokenType::Variable, "b");
             std::string result = expressionTreeToInfix(input);
             std::string expected = "a ~ b";
+
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
 
             Assert::AreEqual(expected, result);
 
@@ -127,6 +145,9 @@ namespace testExpressionTreeToInfix
             std::string result = expressionTreeToInfix(input);
             std::string expected = "(a || b) & (c || d)";
 
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
+
             Assert::AreEqual(expected, result);
 
             delete input;
@@ -146,6 +167,9 @@ namespace testExpressionTreeToInfix
             input->left->right->right = new ExpressionNode(TokenType::Variable, "c");
             std::string result = expressionTreeToInfix(input);
             std::string expected = "!(a || (b & c))";
+
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
 
             Assert::AreEqual(expected, result);
 
@@ -168,6 +192,9 @@ namespace testExpressionTreeToInfix
             std::string result = expressionTreeToInfix(input);
             std::string expected = "(a -> b) & (c ~ d)";
 
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
+
             Assert::AreEqual(expected, result);
 
             delete input;
@@ -188,6 +215,9 @@ namespace testExpressionTreeToInfix
             input->right->right = new ExpressionNode(TokenType::Variable, "d");
             std::string result = expressionTreeToInfix(input);
             std::string expected = "a & b || (c ~ d)";
+
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
 
             Assert::AreEqual(expected, result);
 
@@ -210,6 +240,9 @@ namespace testExpressionTreeToInfix
             std::string result = expressionTreeToInfix(input);
             std::string expected = "(a ~ b) || c & d";
 
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
+
             Assert::AreEqual(expected, result);
 
             delete input;
@@ -230,6 +263,9 @@ namespace testExpressionTreeToInfix
             input->right->right = new ExpressionNode(TokenType::Variable, "d");
             std::string result = expressionTreeToInfix(input);
             std::string expected = "a & b & c & d";
+
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
 
             Assert::AreEqual(expected, result);
 
@@ -254,6 +290,9 @@ namespace testExpressionTreeToInfix
             std::string result = expressionTreeToInfix(input);
             std::string expected = "!(!(a & b) || c & d)";
 
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
+
             Assert::AreEqual(expected, result);
 
             delete input;
@@ -270,6 +309,9 @@ namespace testExpressionTreeToInfix
             input->left->left = new ExpressionNode(TokenType::Variable, "a");
             std::string result = expressionTreeToInfix(input);
             std::string expected = "!!a";
+
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
 
             Assert::AreEqual(expected, result);
 
@@ -290,6 +332,9 @@ namespace testExpressionTreeToInfix
             std::string result = expressionTreeToInfix(input);
             std::string expected = "!!(a || b)";
 
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
+
             Assert::AreEqual(expected, result);
 
             delete input;
@@ -308,6 +353,9 @@ namespace testExpressionTreeToInfix
             input->left->left->right = new ExpressionNode(TokenType::Variable, "b");
             std::string result = expressionTreeToInfix(input);
             std::string expected = "!!(a & b)";
+
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
 
             Assert::AreEqual(expected, result);
 
@@ -328,6 +376,9 @@ namespace testExpressionTreeToInfix
             std::string result = expressionTreeToInfix(input);
             std::string expected = "!!(a -> b)";
 
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
+
             Assert::AreEqual(expected, result);
 
             delete input;
@@ -347,6 +398,9 @@ namespace testExpressionTreeToInfix
             std::string result = expressionTreeToInfix(input);
             std::string expected = "!!(a ~ b)";
 
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
+
             Assert::AreEqual(expected, result);
 
             delete input;
@@ -365,6 +419,9 @@ namespace testExpressionTreeToInfix
             input->left->right->left = new ExpressionNode(TokenType::Variable, "b");
             std::string result = expressionTreeToInfix(input);
             std::string expected = "!(a & !b)";
+
+            result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
+            expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
 
             Assert::AreEqual(expected, result);
 

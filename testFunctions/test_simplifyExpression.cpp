@@ -338,7 +338,7 @@ namespace testSimplifyExpression
 
         /**
          * @brief Тест 13: Последовательные первые и вторые законы
-         * !(!(a ∨ b) ∧ !(c ∧ d)) → !!(a ∨ b) ∨ !!(c ∧ d)
+         * !(!(a ∨ b) ∧ !(c ∧ d)) → (a ∨ b) ∨ (c ∧ d)
          */
         TEST_METHOD(Test13_SequentialFirstAndSecondLaws)
         {
@@ -354,16 +354,12 @@ namespace testSimplifyExpression
             input->left->right->left->right = new ExpressionNode(Variable, "d");
 
             ExpressionNode* expected = new ExpressionNode(Or);
-            expected->left = new ExpressionNode(Not);
-            expected->left->left = new ExpressionNode(Not);
-            expected->left->left->left = new ExpressionNode(Or);
-            expected->left->left->left->left = new ExpressionNode(Variable, "a");
-            expected->left->left->left->right = new ExpressionNode(Variable, "b");
-            expected->right = new ExpressionNode(Not);
-            expected->right->left = new ExpressionNode(Not);
-            expected->right->left->left = new ExpressionNode(And);
-            expected->right->left->left->left = new ExpressionNode(Variable, "c");
-            expected->right->left->left->right = new ExpressionNode(Variable, "d");
+            expected->left = new ExpressionNode(Or);
+            expected->left->left = new ExpressionNode(Variable, "a");
+            expected->left->right = new ExpressionNode(Variable, "b");
+            expected->right = new ExpressionNode(And);
+            expected->right->left = new ExpressionNode(Variable, "c");
+            expected->right->right = new ExpressionNode(Variable, "d");
 
             bool changed = simplifyExpression(input);
             Assert::IsTrue(changed, L"Ожидалось изменение выражения");

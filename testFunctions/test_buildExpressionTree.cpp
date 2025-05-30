@@ -12,7 +12,6 @@ namespace testbuildExpressionTree
     TEST_CLASS(testbuildExpressionTree)
     {
     public:
-
         /**
          * @brief Тест 1: Проверка обработки пустого списка токенов
          */
