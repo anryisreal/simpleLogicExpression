@@ -355,11 +355,19 @@ namespace testSimplifyExpression
 
             ExpressionNode* expected = new ExpressionNode(Or);
             expected->left = new ExpressionNode(Or);
-            expected->left->left = new ExpressionNode(Variable, "a");
-            expected->left->right = new ExpressionNode(Variable, "b");
+            expected->left->left = new ExpressionNode(Not);
+            expected->left->left->right = new ExpressionNode(Not);
+            expected->left->left->left->right = new ExpressionNode(Variable, "a");
+            expected->left->right = new ExpressionNode(Not);
+            expected->left->right->right = new ExpressionNode(Not);
+            expected->left->right->right->right = new ExpressionNode(Variable, "b");
             expected->right = new ExpressionNode(And);
-            expected->right->left = new ExpressionNode(Variable, "c");
-            expected->right->right = new ExpressionNode(Variable, "d");
+            expected->right->left = new ExpressionNode(Not);
+            expected->right->left->right = new ExpressionNode(Not);
+            expected->right->left->right->right = new ExpressionNode(Variable, "c");
+            expected->right->right = new ExpressionNode(Not);
+            expected->right->right->right = new ExpressionNode(Not);
+            expected->right->right->right->right = new ExpressionNode(Variable, "d");
 
             bool changed = simplifyExpression(input);
             Assert::IsTrue(changed, L"Ожидалось изменение выражения");
