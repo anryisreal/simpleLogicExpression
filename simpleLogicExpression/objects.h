@@ -120,4 +120,13 @@ public:
     void message() const {
         std::cout << description.c_str() << std::endl;
     }
+
+    /**
+    * // Оператор сравнения для использования в std::set
+    */
+    bool operator<(const Error& other) const {
+        if (type != other.type)
+            return type < other.type;
+        return position < other.position;
+    }
 };

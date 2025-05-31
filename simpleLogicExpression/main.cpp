@@ -1,7 +1,9 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <map>
+#include <algorithm>
 #include "objects.h"
 #include "functions.h"
 
@@ -68,37 +70,39 @@ void writeFile(const std::string& filePath, const std::string& content) {
 std::vector<Token> tokenize(const std::string& expression, std::set<Error>& errorList) {
     std::vector<Token> tokens;
     std::istringstream iss(expression);
-    std::string item;
+    std::string tokenStr;
     int position = 0;
 
-    while (iss >> item) {
-        auto it = stringToTokenType.find(item);
+    while (iss >> tokenStr) {
+        position++;
+
+        // Проверка на операцию
+        auto it = stringToTokenType.find(tokenStr);
         if (it != stringToTokenType.end()) {
-            // Это операция
-            tokens.emplace_back(it->second, item, position);
+            tokens.emplace_back(it->second, tokenStr, position);
+            continue;
         }
-        else if (!item.empty() && isLatinLetter(item[0])) {
-            // Это переменная, проверяем все символы
-            for (size_t i = 1; i < item.length(); ++i) {
-                if (!isLatinLetterOrDigit(item[i])) {
-                    throw Error(Error::invalidVariableChar, position);
-                }
+
+        // Проверка на переменную
+        if (isalpha(tokenStr[0])) {
+            bool valid = all_of(tokenStr.begin(), tokenStr.end(), [](char c) {
+                return isalnum(c);
+                });
+
+            if (!valid) {
+                errorList.insert(Error(Error::ErrorType::invalidVariableChar, position));
+                continue;
             }
-            tokens.emplace_back(TokenType::Variable, item, position);
+
+            tokens.emplace_back(TokenType::Variable, tokenStr, position);
+            continue;
         }
-        else {
-            // Некорректный токен
-            if (!item.empty() && !isLatinLetter(item[0])) {
-                throw Error(Error::invalidVariableName, position);
-            }
-            else {
-                throw Error(Error::unsupportedOperation, position);
-            }
-        }
-        position += item.length() + 1; // +1 для пробела
+
+        // Если токен не распознан
+        errorList.insert(Error(Error::ErrorType::invalidVariableName, position));
     }
 
-	return tokens;
+    return tokens;
 }
 
 ExpressionNode* buildExpressionTree(const std::vector<Token>& tokens, std::set<Error>& errorList) {
