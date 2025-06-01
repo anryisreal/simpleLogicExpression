@@ -57,6 +57,15 @@ public:
      */
     ExpressionNode(TokenType t, const std::string& v = "") : type(t), value(v), left(nullptr), right(nullptr) {}
 
+    /**
+    * Конструктор класса ExpressionNode
+    * @param t Тип узла
+    * @param v Значение переменной
+    * @param l Левый ребенок
+    * @param r Правыйй ребенок
+    */
+    ExpressionNode(TokenType t, const std::string& v, ExpressionNode* l, ExpressionNode* r) : type(t), value(v), left(l), right(r) {}
+
     /// Деструктор (рекурсивно удаляет поддеревья)
     ~ExpressionNode() {
         delete left;

@@ -523,7 +523,7 @@ namespace testcopyNode
         /**
         * @brief Тест 30: Глубокое дерево
         */
-        TEST_METHOD(Test29_CopyWithAllOperationTypesCombination)
+        TEST_METHOD(Test30_DeepCopyTree)
         {
             ExpressionNode* node = new ExpressionNode(TokenType::And);
 

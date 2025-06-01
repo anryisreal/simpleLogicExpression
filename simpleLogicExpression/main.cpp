@@ -106,9 +106,45 @@ std::vector<Token> tokenize(const std::string& expression, std::set<Error>& erro
 }
 
 ExpressionNode* buildExpressionTree(const std::vector<Token>& tokens, std::set<Error>& errorList) {
-	ExpressionNode* node = nullptr;
+    std::vector<ExpressionNode*> stack;
 
-	return node;
+    for (const auto& token : tokens) {
+        if (token.type == TokenType::Variable) {
+            stack.push_back(new ExpressionNode(token.type, token.value));
+            continue;
+        }
+
+        if (token.type == TokenType::Not) {
+            if (stack.empty()) {
+                errorList.insert(Error(Error::ErrorType::insufficientOperands, token.position));
+                continue;
+            }
+
+            ExpressionNode* operand = stack.back();
+            stack.pop_back();
+            stack.push_back(new ExpressionNode(token.type, token.value, nullptr, operand));
+            continue;
+        }
+
+        // Бинарные операции
+        if (stack.size() < 2) {
+            errorList.insert(Error(Error::ErrorType::insufficientOperands, token.position));
+            continue;
+        }
+
+        ExpressionNode* right = stack.back();
+        stack.pop_back();
+        ExpressionNode* left = stack.back();
+        stack.pop_back();
+        stack.push_back(new ExpressionNode(token.type, token.value, left, right));
+    }
+
+    if (stack.size() != 1) {
+        errorList.insert(Error(Error::ErrorType::missingOperation, 0));
+        return nullptr;
+    }
+
+    return stack.back();
 }
 
 ExpressionNode* copyNode(ExpressionNode* node) {
