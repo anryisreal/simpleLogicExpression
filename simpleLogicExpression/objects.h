@@ -131,11 +131,18 @@ public:
     }
 
     /**
-    * // Оператор сравнения для использования в std::set
+    * Оператор сравнения для использования в std::set
     */
     bool operator<(const Error& other) const {
         if (type != other.type)
             return type < other.type;
         return position < other.position;
+    }
+
+    /**
+    * Оператор равенства для сравнения ошибок в std::set
+    */
+    bool operator==(const Error& other) const {
+        return type == other.type && position == other.position;
     }
 };

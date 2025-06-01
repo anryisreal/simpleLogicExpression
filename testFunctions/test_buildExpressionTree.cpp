@@ -3,7 +3,7 @@
 #include <algorithm>
 #include "../simpleLogicExpression/functions.h"
 #include "../simpleLogicExpression/objects.h"
-#include "testFunctions.cpp"
+#include "testFunctions.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
