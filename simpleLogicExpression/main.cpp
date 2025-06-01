@@ -201,7 +201,25 @@ bool simplifyExpression(ExpressionNode* node) {
 }
 
 void removeDoubleNot(ExpressionNode* node) {
+    if (!node) return;
 
+    // Рекурсивно обрабатываем поддеревья
+    removeDoubleNot(node->left);
+    removeDoubleNot(node->right);
+
+    // Удаляем двойное отрицание
+    if (node->type == TokenType::Not && node->right && node->right->type == TokenType::Not) {
+        ExpressionNode* temp = node->right;
+        node->type = temp->right->type;
+        node->value = temp->right->value;
+        node->left = temp->right->left;
+        node->right = temp->right->right;
+
+        // Обнуляем указатели, чтобы избежать двойного удаления
+        temp->right->left = nullptr;
+        temp->right->right = nullptr;
+        delete temp;
+    }
 }
 
 std::string expressionTreeToInfix(ExpressionNode* node) {

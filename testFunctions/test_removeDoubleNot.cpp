@@ -53,8 +53,8 @@ namespace testRemoveDoubleNot
         TEST_METHOD(Test3_DoubleNegation)
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Not);
-            input->left = new ExpressionNode(TokenType::Not);
-            input->left->left = new ExpressionNode(TokenType::Variable, "a");
+            input->right = new ExpressionNode(TokenType::Not);
+            input->right->right = new ExpressionNode(TokenType::Variable, "a");
             removeDoubleNot(input);
 
             ExpressionNode* expected = new ExpressionNode(TokenType::Variable, "a");
