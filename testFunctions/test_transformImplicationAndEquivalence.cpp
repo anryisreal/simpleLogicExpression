@@ -27,7 +27,7 @@ namespace testTransformImplicationAndEquivalence
             // Ожидаемый результат
             ExpressionNode* expected = new ExpressionNode(Or);
             expected->left = new ExpressionNode(Not);
-            expected->left->right = new ExpressionNode(Variable, "a"); // Corrected: child of Not on right
+            expected->left->right = new ExpressionNode(Variable, "a");
             expected->right = new ExpressionNode(Variable, "b");
 
             // Выполнение преобразования
@@ -51,15 +51,15 @@ namespace testTransformImplicationAndEquivalence
         {
             // Подготовка входных данных
             ExpressionNode* input = new ExpressionNode(Not);
-            input->right = new ExpressionNode(Implication); // Corrected: child of Not on right
+            input->right = new ExpressionNode(Implication);
             input->right->left = new ExpressionNode(Variable, "a");
             input->right->right = new ExpressionNode(Variable, "b");
 
             // Ожидаемый результат: !(!A | B)
             ExpressionNode* expected = new ExpressionNode(Not);
-            expected->right = new ExpressionNode(Or); // Corrected: child of Not on right
+            expected->right = new ExpressionNode(Or);
             expected->right->left = new ExpressionNode(Not);
-            expected->right->left->right = new ExpressionNode(Variable, "a"); // Corrected: child of Not on right
+            expected->right->left->right = new ExpressionNode(Variable, "a");
             expected->right->right = new ExpressionNode(Variable, "b");
 
             // Выполнение преобразования
@@ -83,13 +83,13 @@ namespace testTransformImplicationAndEquivalence
         {
             // Подготовка входных данных
             ExpressionNode* input = new ExpressionNode(Not);
-            input->right = new ExpressionNode(Equivalence); // Corrected: child of Not on right
+            input->right = new ExpressionNode(Equivalence);
             input->right->left = new ExpressionNode(Variable, "a");
             input->right->right = new ExpressionNode(Variable, "b");
 
             // Ожидаемый результат: !((A & B) | (!A & !B))
             ExpressionNode* expected = new ExpressionNode(Not);
-            expected->right = new ExpressionNode(Or); // Corrected: child of Not on right
+            expected->right = new ExpressionNode(Or);
 
             // Левая часть OR: A & B
             expected->right->left = new ExpressionNode(And);
@@ -99,9 +99,9 @@ namespace testTransformImplicationAndEquivalence
             // Правая часть OR: !A & !B
             expected->right->right = new ExpressionNode(And);
             expected->right->right->left = new ExpressionNode(Not);
-            expected->right->right->left->right = new ExpressionNode(Variable, "a"); // Corrected: child of Not on right
+            expected->right->right->left->right = new ExpressionNode(Variable, "a");
             expected->right->right->right = new ExpressionNode(Not);
-            expected->right->right->right->right = new ExpressionNode(Variable, "b"); // Corrected: child of Not on right
+            expected->right->right->right->right = new ExpressionNode(Variable, "b");
 
             // Выполнение преобразования
             transformImplicationAndEquivalence(input);
@@ -142,9 +142,9 @@ namespace testTransformImplicationAndEquivalence
             // Правая часть OR: !B & !C
             expected->right->right = new ExpressionNode(And);
             expected->right->right->left = new ExpressionNode(Not);
-            expected->right->right->left->right = new ExpressionNode(Variable, "b"); // Corrected: child of Not on right
+            expected->right->right->left->right = new ExpressionNode(Variable, "b");
             expected->right->right->right = new ExpressionNode(Not);
-            expected->right->right->right->right = new ExpressionNode(Variable, "c"); // Corrected: child of Not on right
+            expected->right->right->right->right = new ExpressionNode(Variable, "c");
 
             // Выполнение преобразования
             transformImplicationAndEquivalence(input);
@@ -185,9 +185,9 @@ namespace testTransformImplicationAndEquivalence
             // Правая часть вложенного OR: !B & !C
             expected->right->right = new ExpressionNode(And);
             expected->right->right->left = new ExpressionNode(Not);
-            expected->right->right->left->right = new ExpressionNode(Variable, "b"); // Corrected: child of Not on right
+            expected->right->right->left->right = new ExpressionNode(Variable, "b");
             expected->right->right->right = new ExpressionNode(Not);
-            expected->right->right->right->right = new ExpressionNode(Variable, "c"); // Corrected: child of Not on right
+            expected->right->right->right->right = new ExpressionNode(Variable, "c");
 
             // Выполнение преобразования
             transformImplicationAndEquivalence(input);
@@ -217,10 +217,10 @@ namespace testTransformImplicationAndEquivalence
             // Ожидаемый результат: !A | (!B | C)
             ExpressionNode* expected = new ExpressionNode(Or);
             expected->left = new ExpressionNode(Not);
-            expected->left->right = new ExpressionNode(Variable, "a"); // Corrected: child of Not on right
+            expected->left->right = new ExpressionNode(Variable, "a");
             expected->right = new ExpressionNode(Or);
             expected->right->left = new ExpressionNode(Not);
-            expected->right->left->right = new ExpressionNode(Variable, "b"); // Corrected: child of Not on right
+            expected->right->left->right = new ExpressionNode(Variable, "b");
             expected->right->right = new ExpressionNode(Variable, "c");
 
             // Выполнение преобразования
@@ -264,16 +264,16 @@ namespace testTransformImplicationAndEquivalence
             // Правая часть вложенного OR: !B & !C
             expected->left->right->right = new ExpressionNode(And);
             expected->left->right->right->left = new ExpressionNode(Not);
-            expected->left->right->right->left->right = new ExpressionNode(Variable, "b"); // Corrected: child of Not on right
+            expected->left->right->right->left->right = new ExpressionNode(Variable, "b");
             expected->left->right->right->right = new ExpressionNode(Not);
-            expected->left->right->right->right->right = new ExpressionNode(Variable, "c"); // Corrected: child of Not on right
+            expected->left->right->right->right->right = new ExpressionNode(Variable, "c");
 
             // Правая часть основного OR: !A & !((B & C) | (!B & !C))
             expected->right = new ExpressionNode(And);
             expected->right->left = new ExpressionNode(Not);
-            expected->right->left->right = new ExpressionNode(Variable, "a"); // Corrected: child of Not on right
+            expected->right->left->right = new ExpressionNode(Variable, "a");
             expected->right->right = new ExpressionNode(Not);
-            expected->right->right->right = new ExpressionNode(Or); // Corrected: child of Not on right
+            expected->right->right->right = new ExpressionNode(Or);
 
             // Копия левой части вложенного OR
             expected->right->right->right->left = new ExpressionNode(And);
@@ -281,9 +281,9 @@ namespace testTransformImplicationAndEquivalence
             expected->right->right->right->left->right = new ExpressionNode(Variable, "c");
             expected->right->right->right->right = new ExpressionNode(And);
             expected->right->right->right->right->left = new ExpressionNode(Not);
-            expected->right->right->right->right->left->right = new ExpressionNode(Variable, "b"); // Corrected: child of Not on right
+            expected->right->right->right->right->left->right = new ExpressionNode(Variable, "b");
             expected->right->right->right->right->right = new ExpressionNode(Not);
-            expected->right->right->right->right->right->right = new ExpressionNode(Variable, "c"); // Corrected: child of Not on right
+            expected->right->right->right->right->right->right = new ExpressionNode(Variable, "c");
 
             // Выполнение преобразования
             transformImplicationAndEquivalence(input);
@@ -313,7 +313,7 @@ namespace testTransformImplicationAndEquivalence
             // Ожидаемый результат: !((A & B) | (!A & !B)) | C
             ExpressionNode* expected = new ExpressionNode(Or);
             expected->left = new ExpressionNode(Not);
-            expected->left->right = new ExpressionNode(Or); // Corrected: child of Not on right
+            expected->left->right = new ExpressionNode(Or);
 
             // Левая часть OR: A & B
             expected->left->right->left = new ExpressionNode(And);
@@ -323,9 +323,9 @@ namespace testTransformImplicationAndEquivalence
             // Правая часть OR: !A & !B
             expected->left->right->right = new ExpressionNode(And);
             expected->left->right->right->left = new ExpressionNode(Not);
-            expected->left->right->right->left->right = new ExpressionNode(Variable, "a"); // Corrected: child of Not on right
+            expected->left->right->right->left->right = new ExpressionNode(Variable, "a");
             expected->left->right->right->right = new ExpressionNode(Not);
-            expected->left->right->right->right->right = new ExpressionNode(Variable, "b"); // Corrected: child of Not on right
+            expected->left->right->right->right->right = new ExpressionNode(Variable, "b");
 
             // Правая часть основного OR: C
             expected->right = new ExpressionNode(Variable, "c");
@@ -362,19 +362,19 @@ namespace testTransformImplicationAndEquivalence
             expected->left = new ExpressionNode(And);
             expected->left->left = new ExpressionNode(Or);
             expected->left->left->left = new ExpressionNode(Not);
-            expected->left->left->left->right = new ExpressionNode(Variable, "a"); // Corrected: child of Not on right
+            expected->left->left->left->right = new ExpressionNode(Variable, "a");
             expected->left->left->right = new ExpressionNode(Variable, "b");
             expected->left->right = new ExpressionNode(Variable, "c");
 
             // Правая часть OR: !(!A | B) & !C
             expected->right = new ExpressionNode(And);
             expected->right->left = new ExpressionNode(Not);
-            expected->right->left->right = new ExpressionNode(Or); // Corrected: child of Not on right
+            expected->right->left->right = new ExpressionNode(Or);
             expected->right->left->right->left = new ExpressionNode(Not);
-            expected->right->left->right->left->right = new ExpressionNode(Variable, "a"); // Corrected: child of Not on right
+            expected->right->left->right->left->right = new ExpressionNode(Variable, "a");
             expected->right->left->right->right = new ExpressionNode(Variable, "b");
             expected->right->right = new ExpressionNode(Not);
-            expected->right->right->right = new ExpressionNode(Variable, "c"); // Corrected: child of Not on right
+            expected->right->right->right = new ExpressionNode(Variable, "c");
 
             // Выполнение преобразования
             transformImplicationAndEquivalence(input);
@@ -503,13 +503,13 @@ namespace testTransformImplicationAndEquivalence
             // Ожидаемый результат
             ExpressionNode* expected = new ExpressionNode(Or);
             expected->left = new ExpressionNode(Not);
-            expected->left->right = new ExpressionNode(Variable, "a"); // Corrected: child of Not on right
+            expected->left->right = new ExpressionNode(Variable, "a");
             expected->right = new ExpressionNode(Or);
             expected->right->left = new ExpressionNode(Not);
-            expected->right->left->right = new ExpressionNode(Variable, "c"); // Corrected: child of Not on right
+            expected->right->left->right = new ExpressionNode(Variable, "c");
             expected->right->right = new ExpressionNode(Or);
             expected->right->right->left = new ExpressionNode(Not);
-            expected->right->right->left->right = new ExpressionNode(Variable, "d"); // Corrected: child of Not on right
+            expected->right->right->left->right = new ExpressionNode(Variable, "d");
             expected->right->right->right = new ExpressionNode(Variable, "e");
 
             // Выполнение преобразования
@@ -546,7 +546,7 @@ namespace testTransformImplicationAndEquivalence
             expected->left = new ExpressionNode(And);
             expected->left->left = new ExpressionNode(Or);
             expected->left->left->left = new ExpressionNode(Not);
-            expected->left->left->left->right = new ExpressionNode(Variable, "a"); // Corrected: child of Not on right
+            expected->left->left->left->right = new ExpressionNode(Variable, "a");
             expected->left->left->right = new ExpressionNode(Variable, "b");
 
             expected->left->right = new ExpressionNode(Or);
@@ -555,28 +555,28 @@ namespace testTransformImplicationAndEquivalence
             expected->left->right->left->right = new ExpressionNode(Variable, "d");
             expected->left->right->right = new ExpressionNode(And);
             expected->left->right->right->left = new ExpressionNode(Not);
-            expected->left->right->right->left->right = new ExpressionNode(Variable, "c"); // Corrected: child of Not on right
+            expected->left->right->right->left->right = new ExpressionNode(Variable, "c");
             expected->left->right->right->right = new ExpressionNode(Not);
-            expected->left->right->right->right->right = new ExpressionNode(Variable, "d"); // Corrected: child of Not on right
+            expected->left->right->right->right->right = new ExpressionNode(Variable, "d");
 
             // Правая часть OR: ¬(¬a ∨ b) ∧ ¬((c ∧ d) ∨ (¬c ∧ ¬d))
             expected->right = new ExpressionNode(And);
             expected->right->left = new ExpressionNode(Not);
-            expected->right->left->right = new ExpressionNode(Or); // Corrected: child of Not on right
+            expected->right->left->right = new ExpressionNode(Or);
             expected->right->left->right->left = new ExpressionNode(Not);
-            expected->right->left->right->left->right = new ExpressionNode(Variable, "a"); // Corrected: child of Not on right
+            expected->right->left->right->left->right = new ExpressionNode(Variable, "a");
             expected->right->left->right->right = new ExpressionNode(Variable, "b");
 
             expected->right->right = new ExpressionNode(Not);
-            expected->right->right->right = new ExpressionNode(Or); // Corrected: child of Not on right
+            expected->right->right->right = new ExpressionNode(Or);
             expected->right->right->right->left = new ExpressionNode(And);
             expected->right->right->right->left->left = new ExpressionNode(Variable, "c");
             expected->right->right->right->left->right = new ExpressionNode(Variable, "d");
             expected->right->right->right->right = new ExpressionNode(And);
             expected->right->right->right->right->left = new ExpressionNode(Not);
-            expected->right->right->right->right->left->right = new ExpressionNode(Variable, "c"); // Corrected: child of Not on right
+            expected->right->right->right->right->left->right = new ExpressionNode(Variable, "c");
             expected->right->right->right->right->right = new ExpressionNode(Not);
-            expected->right->right->right->right->right->right = new ExpressionNode(Variable, "d"); // Corrected: child of Not on right
+            expected->right->right->right->right->right->right = new ExpressionNode(Variable, "d");
 
             // Выполнение преобразования
             transformImplicationAndEquivalence(input);
@@ -606,7 +606,7 @@ namespace testTransformImplicationAndEquivalence
             // Ожидаемый результат
             ExpressionNode* expected = new ExpressionNode(Or);
             expected->left = new ExpressionNode(Not);
-            expected->left->right = new ExpressionNode(Or); // Corrected: child of Not on right
+            expected->left->right = new ExpressionNode(Or);
             expected->left->right->left = new ExpressionNode(Variable, "a");
             expected->left->right->right = new ExpressionNode(Variable, "b");
             expected->right = new ExpressionNode(Variable, "c");
@@ -649,11 +649,11 @@ namespace testTransformImplicationAndEquivalence
             // Правая часть OR: ¬(a ∨ b) ∧ ¬c
             expected->right = new ExpressionNode(And);
             expected->right->left = new ExpressionNode(Not);
-            expected->right->left->right = new ExpressionNode(Or); // Corrected: child of Not on right
+            expected->right->left->right = new ExpressionNode(Or);
             expected->right->left->right->left = new ExpressionNode(Variable, "a");
             expected->right->left->right->right = new ExpressionNode(Variable, "b");
             expected->right->right = new ExpressionNode(Not);
-            expected->right->right->right = new ExpressionNode(Variable, "c"); // Corrected: child of Not on right
+            expected->right->right->right = new ExpressionNode(Variable, "c");
 
             // Выполнение преобразования
             transformImplicationAndEquivalence(input);
@@ -666,6 +666,5 @@ namespace testTransformImplicationAndEquivalence
             delete expected;
         }
 
-        // Tests 2, 3, 4, 7, and 9 remain unchanged as they either don't involve Not nodes or already correctly use right pointers
     };
 }
