@@ -122,7 +122,7 @@ ExpressionNode* buildExpressionTree(const std::vector<Token>& tokens, std::set<E
 
             ExpressionNode* operand = stack.back();
             stack.pop_back();
-            stack.push_back(new ExpressionNode(token.type, token.value, nullptr, operand));
+            stack.push_back(new ExpressionNode(token.type, nullptr, operand));
             continue;
         }
 
@@ -136,7 +136,7 @@ ExpressionNode* buildExpressionTree(const std::vector<Token>& tokens, std::set<E
         stack.pop_back();
         ExpressionNode* left = stack.back();
         stack.pop_back();
-        stack.push_back(new ExpressionNode(token.type, token.value, left, right));
+        stack.push_back(new ExpressionNode(token.type, left, right));
     }
 
     if (stack.size() != 1) {
