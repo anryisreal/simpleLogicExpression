@@ -1,4 +1,4 @@
-#include <iostream>
+п»ї#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -8,7 +8,7 @@
 #include "functions.h"
 
 /**
-* Соответствие между строкой и типом операции
+* РЎРѕРѕС‚РІРµС‚СЃС‚РІРёРµ РјРµР¶РґСѓ СЃС‚СЂРѕРєРѕР№ Рё С‚РёРїРѕРј РѕРїРµСЂР°С†РёРё
 */
 const std::map<std::string, TokenType> stringToTokenType = {
     {"!", TokenType::Not},
@@ -19,13 +19,13 @@ const std::map<std::string, TokenType> stringToTokenType = {
 };
 
 /**
- * Главная функция программы.
+ * Р“Р»Р°РІРЅР°СЏ С„СѓРЅРєС†РёСЏ РїСЂРѕРіСЂР°РјРјС‹.
  *
- * Обрабатывает аргументы командной строки, выполняет чтение входного файла,
- * преобразование выражения и запись результата в выходной файл.
- * @param argc Количество аргументов
- * @param argv Массив аргументов (argv[1] - входной файл, argv[2] - выходной файл)
- * @return 0 при успешном завершении
+ * РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ Р°СЂРіСѓРјРµРЅС‚С‹ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё, РІС‹РїРѕР»РЅСЏРµС‚ С‡С‚РµРЅРёРµ РІС…РѕРґРЅРѕРіРѕ С„Р°Р№Р»Р°,
+ * РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ Рё Р·Р°РїРёСЃСЊ СЂРµР·СѓР»СЊС‚Р°С‚Р° РІ РІС‹С…РѕРґРЅРѕР№ С„Р°Р№Р».
+ * @param argc РљРѕР»РёС‡РµСЃС‚РІРѕ Р°СЂРіСѓРјРµРЅС‚РѕРІ
+ * @param argv РњР°СЃСЃРёРІ Р°СЂРіСѓРјРµРЅС‚РѕРІ (argv[1] - РІС…РѕРґРЅРѕР№ С„Р°Р№Р», argv[2] - РІС‹С…РѕРґРЅРѕР№ С„Р°Р№Р»)
+ * @return 0 РїСЂРё СѓСЃРїРµС€РЅРѕРј Р·Р°РІРµСЂС€РµРЅРёРё
  */
 int main() {
 
@@ -33,38 +33,38 @@ int main() {
 }
 
 /**
-* Функци для чтения из файла
+* Р¤СѓРЅРєС†Рё РґР»СЏ С‡С‚РµРЅРёСЏ РёР· С„Р°Р№Р»Р°
 */
 std::string readFile(const std::string& filePath) {
 
-    std::ifstream file(filePath);	// Создаем поток для чтения из файла
+    std::ifstream file(filePath);	// РЎРѕР·РґР°РµРј РїРѕС‚РѕРє РґР»СЏ С‡С‚РµРЅРёСЏ РёР· С„Р°Р№Р»Р°
 
-	// Выброс исключения, если файл не открылся
+	// Р’С‹Р±СЂРѕСЃ РёСЃРєР»СЋС‡РµРЅРёСЏ, РµСЃР»Рё С„Р°Р№Р» РЅРµ РѕС‚РєСЂС‹Р»СЃСЏ
     if (!file.is_open()) {
         throw Error(Error::inputFile);
     }
     
-    std::string content;			// Считываемая строка из файла
-    std::getline(file, content);	// Считывание строки
-    file.close();					// Закрытие файла
+    std::string content;			// РЎС‡РёС‚С‹РІР°РµРјР°СЏ СЃС‚СЂРѕРєР° РёР· С„Р°Р№Р»Р°
+    std::getline(file, content);	// РЎС‡РёС‚С‹РІР°РЅРёРµ СЃС‚СЂРѕРєРё
+    file.close();					// Р—Р°РєСЂС‹С‚РёРµ С„Р°Р№Р»Р°
 
 	return content;
 }
 
 /**
-* Функция для записи в файл
+* Р¤СѓРЅРєС†РёСЏ РґР»СЏ Р·Р°РїРёСЃРё РІ С„Р°Р№Р»
 */
 void writeFile(const std::string& filePath, const std::string& content) {
 
-    std::ofstream file(filePath);  // Создаем поток для записи в файл
+    std::ofstream file(filePath);  // РЎРѕР·РґР°РµРј РїРѕС‚РѕРє РґР»СЏ Р·Р°РїРёСЃРё РІ С„Р°Р№Р»
 
-    // Выброс исключения, если файл не открылся
+    // Р’С‹Р±СЂРѕСЃ РёСЃРєР»СЋС‡РµРЅРёСЏ, РµСЃР»Рё С„Р°Р№Р» РЅРµ РѕС‚РєСЂС‹Р»СЃСЏ
     if (!file.is_open()) {
         throw Error(Error::outputFile);
     }
 
-    file << content;               // Запись в файл
-    file.close();                  // Закрытие файла
+    file << content;               // Р—Р°РїРёСЃСЊ РІ С„Р°Р№Р»
+    file.close();                  // Р—Р°РєСЂС‹С‚РёРµ С„Р°Р№Р»Р°
 }
 
 std::vector<Token> tokenize(const std::string& expression, std::set<Error>& errorList) {
@@ -76,14 +76,14 @@ std::vector<Token> tokenize(const std::string& expression, std::set<Error>& erro
     while (iss >> tokenStr) {
         position++;
 
-        // Проверка на операцию
+        // РџСЂРѕРІРµСЂРєР° РЅР° РѕРїРµСЂР°С†РёСЋ
         auto it = stringToTokenType.find(tokenStr);
         if (it != stringToTokenType.end()) {
             tokens.emplace_back(it->second, tokenStr, position);
             continue;
         }
 
-        // Проверка на переменную
+        // РџСЂРѕРІРµСЂРєР° РЅР° РїРµСЂРµРјРµРЅРЅСѓСЋ
         if (isalpha(tokenStr[0])) {
             bool valid = std::all_of(tokenStr.begin(), tokenStr.end(), [](char c) {
                 return isalnum(c);
@@ -98,13 +98,13 @@ std::vector<Token> tokenize(const std::string& expression, std::set<Error>& erro
             continue;
         }
 
-        // Если токен начинается с цифры или недопустимого символа
+        // Р•СЃР»Рё С‚РѕРєРµРЅ РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ С†РёС„СЂС‹ РёР»Рё РЅРµРґРѕРїСѓСЃС‚РёРјРѕРіРѕ СЃРёРјРІРѕР»Р°
         if (isdigit(tokenStr[0]) || !isalpha(tokenStr[0])) {
             errorList.insert(Error(Error::ErrorType::invalidVariableName, position));
             continue;
         }
 
-        // Все остальные случаи - неподдерживаемая операция
+        // Р’СЃРµ РѕСЃС‚Р°Р»СЊРЅС‹Рµ СЃР»СѓС‡Р°Рё - РЅРµРїРѕРґРґРµСЂР¶РёРІР°РµРјР°СЏ РѕРїРµСЂР°С†РёСЏ
         errorList.insert(Error(Error::ErrorType::unsupportedOperation, position));
     }
 
@@ -132,7 +132,7 @@ ExpressionNode* buildExpressionTree(const std::vector<Token>& tokens, std::set<E
             continue;
         }
 
-        // Бинарные операции
+        // Р‘РёРЅР°СЂРЅС‹Рµ РѕРїРµСЂР°С†РёРё
         if (stack.size() < 2) {
             errorList.insert(Error(Error::ErrorType::insufficientOperands, token.position));
             continue;
@@ -167,46 +167,29 @@ ExpressionNode* copyNode(ExpressionNode* node) {
 void transformImplicationAndEquivalence(ExpressionNode* node) {
     if (!node) return;
 
-    // Рекурсивно преобразуем поддеревья
+    // Р РµРєСѓСЂСЃРёРІРЅРѕ РїСЂРµРѕР±СЂР°Р·СѓРµРј РїРѕРґРґРµСЂРµРІСЊСЏ
     transformImplicationAndEquivalence(node->left);
     transformImplicationAndEquivalence(node->right);
 
-    // Преобразование импликации A > B в !A | B
+    // РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РёРјРїР»РёРєР°С†РёРё A > B РІ !A | B
     if (node->type == TokenType::Implication) {
-        ExpressionNode* newNot = new ExpressionNode(TokenType::Not, nullptr, node->left);
+        ExpressionNode* newNot = new ExpressionNode(TokenType::Not, nullptr, copyNode(node->left));
         node->type = TokenType::Or;
-        node->left = newNot;
+        node->left = newNot; // node->right РѕСЃС‚Р°РµС‚СЃСЏ Р±РµР· РёР·РјРµРЅРµРЅРёР№
+        return;
     }
 
-    // Преобразование эквивалентности A ~ B в (A & B) | (!A & !B)
+    // РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СЌРєРІРёРІР°Р»РµРЅС‚РЅРѕСЃС‚Рё A ~ B РІ (A & B) | (!A & !B)
     if (node->type == TokenType::Equivalence) {
-        // Левый узел конъюнкции (A & B)
-        ExpressionNode* newLeft = new ExpressionNode(
-            TokenType::And,
-            copyNode(node->left),
-            copyNode(node->right)
-        );
+        // РЎРѕР·РґР°РµРј Р»РµРІС‹Р№ СѓР·РµР» РєРѕРЅСЉСЋРЅРєС†РёРё (A & B)
+        ExpressionNode* newLeft = new ExpressionNode(TokenType::And, copyNode(node->left), copyNode(node->right));
 
-        // Правый узел конъюнкции (!A & !B)
-        ExpressionNode* newRightL = new ExpressionNode(
-            TokenType::Not,
-            nullptr,
-            copyNode(node->left)
-        );
+        // РЎРѕР·РґР°РµРј РїСЂР°РІС‹Р№ СѓР·РµР» РєРѕРЅСЉСЋРЅРєС†РёРё (!A & !B)
+        ExpressionNode* newRightL = new ExpressionNode(TokenType::Not, nullptr, copyNode(node->left));
+        ExpressionNode* newRightR = new ExpressionNode(TokenType::Not, nullptr, copyNode(node->right));
+        ExpressionNode* newRight = new ExpressionNode(TokenType::And, newRightL, newRightR);
 
-        ExpressionNode* newRightR = new ExpressionNode(
-            TokenType::Not,
-            nullptr,
-            copyNode(node->right)
-        );
-
-        ExpressionNode* newRight = new ExpressionNode(
-            TokenType::And,
-            newRightL,
-            newRightR
-        );
-
-        // Обновляем текущий узел
+        // РћР±РЅРѕРІР»СЏРµРј С‚РµРєСѓС‰РёР№ СѓР·РµР»
         node->type = TokenType::Or;
         node->left = newLeft;
         node->right = newRight;
