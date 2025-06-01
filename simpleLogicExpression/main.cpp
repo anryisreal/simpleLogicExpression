@@ -165,7 +165,52 @@ ExpressionNode* copyNode(ExpressionNode* node) {
 }
 
 void transformImplicationAndEquivalence(ExpressionNode* node) {
+    if (!node) return;
 
+    // Рекурсивно преобразуем поддеревья
+    transformImplicationAndEquivalence(node->left);
+    transformImplicationAndEquivalence(node->right);
+
+    // Преобразование импликации A > B в !A | B
+    if (node->type == TokenType::Implication) {
+        ExpressionNode* newNot = new ExpressionNode(TokenType::Not, nullptr, node->left);
+        node->type = TokenType::Or;
+        node->left = newNot;
+    }
+
+    // Преобразование эквивалентности A ~ B в (A & B) | (!A & !B)
+    if (node->type == TokenType::Equivalence) {
+        // Левый узел конъюнкции (A & B)
+        ExpressionNode* newLeft = new ExpressionNode(
+            TokenType::And,
+            copyNode(node->left),
+            copyNode(node->right)
+        );
+
+        // Правый узел конъюнкции (!A & !B)
+        ExpressionNode* newRightL = new ExpressionNode(
+            TokenType::Not,
+            nullptr,
+            copyNode(node->left)
+        );
+
+        ExpressionNode* newRightR = new ExpressionNode(
+            TokenType::Not,
+            nullptr,
+            copyNode(node->right)
+        );
+
+        ExpressionNode* newRight = new ExpressionNode(
+            TokenType::And,
+            newRightL,
+            newRightR
+        );
+
+        // Обновляем текущий узел
+        node->type = TokenType::Or;
+        node->left = newLeft;
+        node->right = newRight;
+    }
 }
 
 bool simplifyExpression(ExpressionNode* node) {

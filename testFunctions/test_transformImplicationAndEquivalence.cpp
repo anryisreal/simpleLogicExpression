@@ -27,7 +27,7 @@ namespace testTransformImplicationAndEquivalence
             // Ожидаемый результат
             ExpressionNode* expected = new ExpressionNode(Or);
             expected->left = new ExpressionNode(Not);
-            expected->left->left = new ExpressionNode(Variable, "a");
+            expected->left->right = new ExpressionNode(Variable, "a");
             expected->right = new ExpressionNode(Variable, "b");
 
             // Выполнение преобразования
