@@ -154,9 +154,14 @@ ExpressionNode* buildExpressionTree(const std::vector<Token>& tokens, std::set<E
 }
 
 ExpressionNode* copyNode(ExpressionNode* node) {
-	ExpressionNode* newNode = nullptr;
+    if (!node) return nullptr;
 
-	return newNode;
+    return new ExpressionNode(
+        node->type,
+        node->value,
+        copyNode(node->left),
+        copyNode(node->right)
+    );
 }
 
 void transformImplicationAndEquivalence(ExpressionNode* node) {

@@ -87,17 +87,17 @@ bool compareErrorSets(const std::set<Error>& expected, const std::set<Error>& ac
  */
 bool compareNodesRecursive(const ExpressionNode* original, const ExpressionNode* copied, const std::string& path = "node")
 {
+    // Проверка на nullptr
+    if (original == nullptr && copied == nullptr) {
+        return true;
+    }
+
     // Проверка на равенство указателей
     if (original == copied) {
         if (original != nullptr) {
             Logger::WriteMessage(("Ошибка в узле: " + path + " (указатели на оригинал и копию совпадают)").c_str());
         }
         return false;
-    }
-
-    // Проверка на nullptr
-    if (original == nullptr && copied == nullptr) {
-        return true;
     }
 
     if (original == nullptr) {
