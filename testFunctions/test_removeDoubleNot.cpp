@@ -14,7 +14,7 @@ namespace testRemoveDoubleNot
         /**
          * @brief Тест 1: Нет отрицаний
          */
-        TEST_METHOD(Test2_SingleNegation)
+        TEST_METHOD(Test2_NoNegation)
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Variable, "a");
             removeDoubleNot(input);
