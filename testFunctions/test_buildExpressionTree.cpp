@@ -23,7 +23,7 @@ namespace testbuildExpressionTree
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
             std::set<Error> expectedErrors = {
-                {Error::missingOperation, -1}
+                {Error::missingOperation, 0}
             };
 
             Assert::IsNull(result);
@@ -61,7 +61,8 @@ namespace testbuildExpressionTree
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
             std::set<Error> expectedErrors = {
-                {Error::insufficientOperands, 0}
+                {Error::insufficientOperands, 0},
+                {Error::missingOperation, 0}
             };
 
             Assert::IsNull(result);
@@ -83,7 +84,7 @@ namespace testbuildExpressionTree
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
             ExpressionNode* expected = new ExpressionNode(TokenType::Not);
-            expected->left = new ExpressionNode(TokenType::Variable, "a");
+            expected->right = new ExpressionNode(TokenType::Variable, "a");
 
             Assert::IsNotNull(result);
             Assert::IsTrue(compareExpressionTrees(expected, result));
@@ -137,9 +138,9 @@ namespace testbuildExpressionTree
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
             ExpressionNode* expected = new ExpressionNode(TokenType::Not);
-            expected->left = new ExpressionNode(TokenType::And);
-            expected->left->left = new ExpressionNode(TokenType::Variable, "a");
-            expected->left->right = new ExpressionNode(TokenType::Variable, "b");
+            expected->right = new ExpressionNode(TokenType::And);
+            expected->right->left = new ExpressionNode(TokenType::Variable, "a");
+            expected->right->right = new ExpressionNode(TokenType::Variable, "b");
 
             Assert::IsNotNull(result);
             Assert::IsTrue(compareExpressionTrees(expected, result));
@@ -281,7 +282,7 @@ namespace testbuildExpressionTree
             ExpressionNode* expected = new ExpressionNode(TokenType::Or);
             expected->left = new ExpressionNode(TokenType::And);
             expected->left->left = new ExpressionNode(TokenType::Not);
-            expected->left->left->left = new ExpressionNode(TokenType::Variable, "b");
+            expected->left->left->right = new ExpressionNode(TokenType::Variable, "b");
             expected->left->right = new ExpressionNode(TokenType::Variable, "c");
             expected->right = new ExpressionNode(TokenType::Variable, "d");
 
@@ -337,12 +338,12 @@ namespace testbuildExpressionTree
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
             ExpressionNode* expected = new ExpressionNode(TokenType::Not);
-            expected->left = new ExpressionNode(TokenType::Or);
-            expected->left->left = new ExpressionNode(TokenType::And);
-            expected->left->left->left = new ExpressionNode(TokenType::Not);
-            expected->left->left->left->left = new ExpressionNode(TokenType::Variable, "b");
-            expected->left->left->right = new ExpressionNode(TokenType::Variable, "c");
-            expected->left->right = new ExpressionNode(TokenType::Variable, "d");
+            expected->right = new ExpressionNode(TokenType::Or);
+            expected->right->left = new ExpressionNode(TokenType::And);
+            expected->right->left->left = new ExpressionNode(TokenType::Not);
+            expected->right->left->left->right = new ExpressionNode(TokenType::Variable, "b");
+            expected->right->left->right = new ExpressionNode(TokenType::Variable, "c");
+            expected->right->right = new ExpressionNode(TokenType::Variable, "d");
 
             Assert::IsNotNull(result);
             Assert::IsTrue(compareExpressionTrees(expected, result));
@@ -368,8 +369,8 @@ namespace testbuildExpressionTree
             ExpressionNode* result = buildExpressionTree(tokens, errorList);
 
             ExpressionNode* expected = new ExpressionNode(TokenType::Not);
-            expected->left = new ExpressionNode(TokenType::Not);
-            expected->left->left = new ExpressionNode(TokenType::Variable, "a");
+            expected->right = new ExpressionNode(TokenType::Not);
+            expected->right->right = new ExpressionNode(TokenType::Variable, "a");
 
             Assert::IsNotNull(result);
             Assert::IsTrue(compareExpressionTrees(expected, result));
@@ -403,15 +404,15 @@ namespace testbuildExpressionTree
 
             // Создаем ожидаемое дерево
             ExpressionNode* expected = new ExpressionNode(TokenType::Not);
-            expected->left = new ExpressionNode(TokenType::Or);
-            expected->left->left = new ExpressionNode(TokenType::Not);
-            expected->left->left->left = new ExpressionNode(TokenType::Implication);
-            expected->left->left->left->left = new ExpressionNode(TokenType::Variable, "a");
-            expected->left->left->left->right = new ExpressionNode(TokenType::Variable, "b");
-            expected->left->right = new ExpressionNode(TokenType::Not);
-            expected->left->right->left = new ExpressionNode(TokenType::And);
-            expected->left->right->left->left = new ExpressionNode(TokenType::Variable, "c");
-            expected->left->right->left->right = new ExpressionNode(TokenType::Variable, "d");
+            expected->right = new ExpressionNode(TokenType::Or);
+            expected->right->left = new ExpressionNode(TokenType::Not);
+            expected->right->left->right = new ExpressionNode(TokenType::Implication);
+            expected->right->left->right->left = new ExpressionNode(TokenType::Variable, "a");
+            expected->right->left->right->right = new ExpressionNode(TokenType::Variable, "b");
+            expected->right->right = new ExpressionNode(TokenType::Not);
+            expected->right->right->right = new ExpressionNode(TokenType::And);
+            expected->right->right->right->left = new ExpressionNode(TokenType::Variable, "c");
+            expected->right->right->right->right = new ExpressionNode(TokenType::Variable, "d");
 
             Assert::IsNotNull(result);
             Assert::IsTrue(compareExpressionTrees(expected, result));

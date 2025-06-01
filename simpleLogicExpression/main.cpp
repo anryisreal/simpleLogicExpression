@@ -85,7 +85,7 @@ std::vector<Token> tokenize(const std::string& expression, std::set<Error>& erro
 
         // Проверка на переменную
         if (isalpha(tokenStr[0])) {
-            bool valid = all_of(tokenStr.begin(), tokenStr.end(), [](char c) {
+            bool valid = std::all_of(tokenStr.begin(), tokenStr.end(), [](char c) {
                 return isalnum(c);
                 });
 
@@ -98,8 +98,14 @@ std::vector<Token> tokenize(const std::string& expression, std::set<Error>& erro
             continue;
         }
 
-        // Если токен не распознан
-        errorList.insert(Error(Error::ErrorType::invalidVariableName, position));
+        // Если токен начинается с цифры или недопустимого символа
+        if (isdigit(tokenStr[0]) || !isalpha(tokenStr[0])) {
+            errorList.insert(Error(Error::ErrorType::invalidVariableName, position));
+            continue;
+        }
+
+        // Все остальные случаи - неподдерживаемая операция
+        errorList.insert(Error(Error::ErrorType::unsupportedOperation, position));
     }
 
     return tokens;
