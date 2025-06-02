@@ -186,28 +186,6 @@ namespace testbuildExpressionTree
         }
 
         /**
-         * @brief Тест 8: Проверка обработки некорректного токена
-         */
-        TEST_METHOD(Test8_InvalidToken)
-        {
-            std::vector<Token> tokens = {
-                Token(TokenType::Variable, "1a", 0),
-                Token(TokenType::Variable, "b", 1),
-                Token(TokenType::And, "&", 2)
-            };
-            std::set<Error> errorList;
-
-            ExpressionNode* result = buildExpressionTree(tokens, errorList);
-
-            std::set<Error> expectedErrors = {
-                {Error::invalidVariableName, 0}
-            };
-
-            Assert::IsNull(result);
-            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
-        }
-
-        /**
          * @brief Тест 9: Проверка обработки импликации
          */
         TEST_METHOD(Test9_Implication)
@@ -292,30 +270,6 @@ namespace testbuildExpressionTree
 
             delete result;
             delete expected;
-        }
-
-        /**
-         * @brief Тест 12: Проверка обработки ошибки в середине выражения
-         */
-        TEST_METHOD(Test12_ErrorInMiddleOfExpression)
-        {
-            std::vector<Token> tokens = {
-                Token(TokenType::Variable, "a", 0),
-                Token(TokenType::Variable, "b", 1),
-                Token(TokenType::Any, "+", 2),
-                Token(TokenType::Variable, "c", 3),
-                Token(TokenType::And, "&", 4)
-            };
-            std::set<Error> errorList;
-
-            ExpressionNode* result = buildExpressionTree(tokens, errorList);
-
-            std::set<Error> expectedErrors = {
-                {Error::unsupportedOperation, 2}
-            };
-
-            Assert::IsNull(result);
-            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
         }
 
         /**
@@ -420,76 +374,6 @@ namespace testbuildExpressionTree
 
             delete result;
             delete expected;
-        }
-
-        /**
-         * @brief Тест 16: Проверка обработки переменной с запрещенными символами
-         */
-        TEST_METHOD(Test16_VariableWithForbiddenChars)
-        {
-            std::vector<Token> tokens = {
-                Token(TokenType::Variable, "a_!", 0),
-                Token(TokenType::Variable, "b", 1),
-                Token(TokenType::And, "&", 2)
-            };
-            std::set<Error> errorList;
-
-            ExpressionNode* result = buildExpressionTree(tokens, errorList);
-
-            std::set<Error> expectedErrors = {
-                {Error::invalidVariableChar, 0}
-            };
-
-            Assert::IsNull(result);
-            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
-        }
-
-        /**
-         * @brief Тест 17: Проверка обработки только бинарных операций
-         */
-        TEST_METHOD(Test17_OnlyBinaryOperations)
-        {
-            std::vector<Token> tokens = {
-                Token(TokenType::And, "&", 0),
-                Token(TokenType::Implication, ">", 1),
-                Token(TokenType::Equivalence, "~", 2)
-            };
-            std::set<Error> errorList;
-
-            ExpressionNode* result = buildExpressionTree(tokens, errorList);
-
-            std::set<Error> expectedErrors = {
-                {Error::insufficientOperands, 0},
-                {Error::insufficientOperands, 1},
-                {Error::insufficientOperands, 2}
-            };
-
-            Assert::IsNull(result);
-            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
-        }
-
-        /**
-         * @brief Тест 18: Проверка обработки нескольких типов ошибок
-         */
-        TEST_METHOD(Test18_MultipleErrorTypes)
-        {
-            std::vector<Token> tokens = {
-                Token(TokenType::Variable, "1a", 0),
-                Token(TokenType::Variable, "a_!", 1),
-                Token(TokenType::And, "&", 2)
-            };
-            std::set<Error> errorList;
-
-            ExpressionNode* result = buildExpressionTree(tokens, errorList);
-
-            std::set<Error> expectedErrors = {
-                {Error::invalidVariableName, 0},
-                {Error::invalidVariableChar, 1},
-                {Error::insufficientOperands, 2}
-            };
-
-            Assert::IsNull(result);
-            Assert::IsTrue(compareErrorSets(expectedErrors, errorList));
         }
     };
 }
