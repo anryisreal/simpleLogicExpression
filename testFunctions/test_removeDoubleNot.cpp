@@ -14,7 +14,7 @@ namespace testRemoveDoubleNot
         /**
          * @brief Тест 1: Нет отрицаний
          */
-        TEST_METHOD(Test2_NoNegation)
+        TEST_METHOD(Test1_NoNegation)
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Variable, "a");
             removeDoubleNot(input);
@@ -72,13 +72,13 @@ namespace testRemoveDoubleNot
         TEST_METHOD(Test4_TripleNegation)
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Not);
-            input->left = new ExpressionNode(TokenType::Not);
-            input->left->left = new ExpressionNode(TokenType::Not);
-            input->left->left->left = new ExpressionNode(TokenType::Variable, "a");
+            input->right = new ExpressionNode(TokenType::Not);
+            input->right->right = new ExpressionNode(TokenType::Not);
+            input->right->right->right = new ExpressionNode(TokenType::Variable, "a");
             removeDoubleNot(input);
 
             ExpressionNode* expected = new ExpressionNode(TokenType::Not);
-            expected->left = new ExpressionNode(TokenType::Variable, "a");
+            expected->right = new ExpressionNode(TokenType::Variable, "a");
 
             Assert::IsTrue(compareExpressionTrees(expected, input));
 
@@ -116,10 +116,10 @@ namespace testRemoveDoubleNot
         TEST_METHOD(Test6_DoubleNegationBeforeAnd)
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Not);
-            input->left = new ExpressionNode(TokenType::Not);
-            input->left->left = new ExpressionNode(TokenType::And);
-            input->left->left->left = new ExpressionNode(TokenType::Variable, "a");
-            input->left->left->right = new ExpressionNode(TokenType::Variable, "b");
+            input->right = new ExpressionNode(TokenType::Not);
+            input->right->right = new ExpressionNode(TokenType::And);
+            input->right->right->left = new ExpressionNode(TokenType::Variable, "a");
+            input->right->right->right = new ExpressionNode(TokenType::Variable, "b");
             removeDoubleNot(input);
 
             ExpressionNode* expected = new ExpressionNode(TokenType::And);
@@ -139,12 +139,12 @@ namespace testRemoveDoubleNot
         TEST_METHOD(Test7_NestedDoubleNegations)
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Not);
-            input->left = new ExpressionNode(TokenType::Not);
-            input->left->left = new ExpressionNode(TokenType::And);
-            input->left->left->left = new ExpressionNode(TokenType::Not);
-            input->left->left->left->left = new ExpressionNode(TokenType::Not);
-            input->left->left->left->left->left = new ExpressionNode(TokenType::Variable, "a");
-            input->left->left->right = new ExpressionNode(TokenType::Variable, "b");
+            input->right = new ExpressionNode(TokenType::Not);
+            input->right->right = new ExpressionNode(TokenType::And);
+            input->right->right->left = new ExpressionNode(TokenType::Not);
+            input->right->right->left->right = new ExpressionNode(TokenType::Not);
+            input->right->right->left->right->right = new ExpressionNode(TokenType::Variable, "a");
+            input->right->right->right = new ExpressionNode(TokenType::Variable, "b");
             removeDoubleNot(input);
 
             ExpressionNode* expected = new ExpressionNode(TokenType::And);
@@ -165,8 +165,8 @@ namespace testRemoveDoubleNot
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Or);
             input->left = new ExpressionNode(TokenType::Not);
-            input->left->left = new ExpressionNode(TokenType::Not);
-            input->left->left->left = new ExpressionNode(TokenType::Variable, "a");
+            input->left->right = new ExpressionNode(TokenType::Not);
+            input->left->right->right = new ExpressionNode(TokenType::Variable, "a");
             input->right = new ExpressionNode(TokenType::Variable, "b");
             removeDoubleNot(input);
 
@@ -188,8 +188,8 @@ namespace testRemoveDoubleNot
         {
             ExpressionNode* input = new ExpressionNode(TokenType::And);
             input->left = new ExpressionNode(TokenType::Not);
-            input->left->left = new ExpressionNode(TokenType::Not);
-            input->left->left->left = new ExpressionNode(TokenType::Variable, "a");
+            input->left->right = new ExpressionNode(TokenType::Not);
+            input->left->right->right = new ExpressionNode(TokenType::Variable, "a");
             input->right = new ExpressionNode(TokenType::Variable, "b");
             removeDoubleNot(input);
 
@@ -211,8 +211,8 @@ namespace testRemoveDoubleNot
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Implication);
             input->left = new ExpressionNode(TokenType::Not);
-            input->left->left = new ExpressionNode(TokenType::Not);
-            input->left->left->left = new ExpressionNode(TokenType::Variable, "a");
+            input->left->right = new ExpressionNode(TokenType::Not);
+            input->left->right->right = new ExpressionNode(TokenType::Variable, "a");
             input->right = new ExpressionNode(TokenType::Variable, "b");
             removeDoubleNot(input);
 
@@ -234,8 +234,8 @@ namespace testRemoveDoubleNot
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Equivalence);
             input->left = new ExpressionNode(TokenType::Not);
-            input->left->left = new ExpressionNode(TokenType::Not);
-            input->left->left->left = new ExpressionNode(TokenType::Variable, "a");
+            input->left->right = new ExpressionNode(TokenType::Not);
+            input->left->right->right = new ExpressionNode(TokenType::Variable, "a");
             input->right = new ExpressionNode(TokenType::Variable, "b");
             removeDoubleNot(input);
 
@@ -257,11 +257,11 @@ namespace testRemoveDoubleNot
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Or);
             input->left = new ExpressionNode(TokenType::Not);
-            input->left->left = new ExpressionNode(TokenType::Not);
-            input->left->left->left = new ExpressionNode(TokenType::Variable, "a");
+            input->left->right = new ExpressionNode(TokenType::Not);
+            input->left->right->right = new ExpressionNode(TokenType::Variable, "a");
             input->right = new ExpressionNode(TokenType::Not);
-            input->right->left = new ExpressionNode(TokenType::Not);
-            input->right->left->left = new ExpressionNode(TokenType::Variable, "b");
+            input->right->right = new ExpressionNode(TokenType::Not);
+            input->right->right->right = new ExpressionNode(TokenType::Variable, "b");
             removeDoubleNot(input);
 
             ExpressionNode* expected = new ExpressionNode(TokenType::Or);
@@ -282,11 +282,11 @@ namespace testRemoveDoubleNot
         {
             ExpressionNode* input = new ExpressionNode(TokenType::And);
             input->left = new ExpressionNode(TokenType::Not);
-            input->left->left = new ExpressionNode(TokenType::Not);
-            input->left->left->left = new ExpressionNode(TokenType::Variable, "a");
+            input->left->right = new ExpressionNode(TokenType::Not);
+            input->left->right->right = new ExpressionNode(TokenType::Variable, "a");
             input->right = new ExpressionNode(TokenType::Not);
-            input->right->left = new ExpressionNode(TokenType::Not);
-            input->right->left->left = new ExpressionNode(TokenType::Variable, "b");
+            input->right->right = new ExpressionNode(TokenType::Not);
+            input->right->right->right = new ExpressionNode(TokenType::Variable, "b");
             removeDoubleNot(input);
 
             ExpressionNode* expected = new ExpressionNode(TokenType::And);
@@ -307,11 +307,11 @@ namespace testRemoveDoubleNot
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Implication);
             input->left = new ExpressionNode(TokenType::Not);
-            input->left->left = new ExpressionNode(TokenType::Not);
-            input->left->left->left = new ExpressionNode(TokenType::Variable, "a");
+            input->left->right = new ExpressionNode(TokenType::Not);
+            input->left->right->right = new ExpressionNode(TokenType::Variable, "a");
             input->right = new ExpressionNode(TokenType::Not);
-            input->right->left = new ExpressionNode(TokenType::Not);
-            input->right->left->left = new ExpressionNode(TokenType::Variable, "b");
+            input->right->right = new ExpressionNode(TokenType::Not);
+            input->right->right->right = new ExpressionNode(TokenType::Variable, "b");
             removeDoubleNot(input);
 
             ExpressionNode* expected = new ExpressionNode(TokenType::Implication);
@@ -332,11 +332,11 @@ namespace testRemoveDoubleNot
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Equivalence);
             input->left = new ExpressionNode(TokenType::Not);
-            input->left->left = new ExpressionNode(TokenType::Not);
-            input->left->left->left = new ExpressionNode(TokenType::Variable, "a");
+            input->left->right = new ExpressionNode(TokenType::Not);
+            input->left->right->right = new ExpressionNode(TokenType::Variable, "a");
             input->right = new ExpressionNode(TokenType::Not);
-            input->right->left = new ExpressionNode(TokenType::Not);
-            input->right->left->left = new ExpressionNode(TokenType::Variable, "b");
+            input->right->right = new ExpressionNode(TokenType::Not);
+            input->right->right->right = new ExpressionNode(TokenType::Variable, "b");
             removeDoubleNot(input);
 
             ExpressionNode* expected = new ExpressionNode(TokenType::Equivalence);
@@ -381,12 +381,12 @@ namespace testRemoveDoubleNot
         TEST_METHOD(Test17_ComplexCase)
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Not);
-            input->left = new ExpressionNode(TokenType::Not);
-            input->left->left = new ExpressionNode(TokenType::Implication);
-            input->left->left->left = new ExpressionNode(TokenType::Variable, "a");
-            input->left->left->right = new ExpressionNode(TokenType::Not);
-            input->left->left->right->left = new ExpressionNode(TokenType::Not);
-            input->left->left->right->left->left = new ExpressionNode(TokenType::Variable, "b");
+            input->right = new ExpressionNode(TokenType::Not);
+            input->right->right = new ExpressionNode(TokenType::Implication);
+            input->right->right->left = new ExpressionNode(TokenType::Variable, "a");
+            input->right->right->right = new ExpressionNode(TokenType::Not);
+            input->right->right->right->right = new ExpressionNode(TokenType::Not);
+            input->right->right->right->right->right = new ExpressionNode(TokenType::Variable, "b");
             removeDoubleNot(input);
 
             ExpressionNode* expected = new ExpressionNode(TokenType::Implication);
