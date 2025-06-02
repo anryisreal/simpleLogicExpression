@@ -273,7 +273,63 @@ void removeDoubleNot(ExpressionNode* node) {
 }
 
 std::string expressionTreeToInfix(ExpressionNode* node) {
-	std::string result = "";
+    if (!node) return "";
 
-	return result;
+    // Карта приоритетов операций
+    static const std::map<TokenType, int> priority = {
+        {TokenType::Or, 1},
+        {TokenType::Implication, 2},
+        {TokenType::Equivalence, 3},
+        {TokenType::And, 4},
+        {TokenType::Not, 5}
+    };
+
+    // Для переменных
+    if (node->type == TokenType::Variable) {
+        return node->value;
+    }
+
+    // Для унарных операций (отрицание)
+    if (node->type == TokenType::Not) {
+        std::string rightExpr = expressionTreeToInfix(node->right);
+        // Добавляем скобки, если подвыражение сложное
+        if (node->right && node->right->type != TokenType::Variable &&
+            node->right->type != TokenType::Not) {
+            return "!(" + rightExpr + ")";
+        }
+        return "!" + rightExpr;
+    }
+
+    // Для бинарных операций
+    std::string leftExpr = expressionTreeToInfix(node->left);
+    std::string rightExpr = expressionTreeToInfix(node->right);
+
+    // Определяем оператор
+    std::string op;
+    switch (node->type) {
+    case TokenType::And: op = " & "; break;
+    case TokenType::Or: op = " || "; break;
+    case TokenType::Implication: op = " -> "; break;
+    case TokenType::Equivalence: op = " ~ "; break;
+    default: op = " ? "; break;
+    }
+
+    // Проверяем приоритеты для скобок (левый операнд)
+    if (node->left && priority.count(node->left->type)) {
+        if (priority.at(node->left->type) < priority.at(node->type)) {
+            leftExpr = "(" + leftExpr + ")";
+        }
+    }
+
+    // Проверяем приоритеты для скобок (правый операнд)
+    if (node->right && priority.count(node->right->type)) {
+        int rightPrio = priority.at(node->right->type);
+        int currPrio = priority.at(node->type);
+        if (rightPrio < currPrio ||
+            (rightPrio == currPrio && node->type == TokenType::Implication)) {
+            rightExpr = "(" + rightExpr + ")";
+        }
+    }
+
+    return leftExpr + op + rightExpr;
 }

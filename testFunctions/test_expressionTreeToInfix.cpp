@@ -37,7 +37,7 @@ namespace testExpressionTreeToInfix
         TEST_METHOD(Test2_Negation)
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Not);
-            input->left = new ExpressionNode(TokenType::Variable, "a");
+            input->right = new ExpressionNode(TokenType::Variable, "a");
             std::string result = expressionTreeToInfix(input);
             std::string expected = "!a";
 
@@ -413,10 +413,10 @@ namespace testExpressionTreeToInfix
         TEST_METHOD(Test19_NegationInsideAndOutsideOperator)
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Not);
-            input->left = new ExpressionNode(TokenType::And);
-            input->left->left = new ExpressionNode(TokenType::Variable, "a");
-            input->left->right = new ExpressionNode(TokenType::Not);
-            input->left->right->left = new ExpressionNode(TokenType::Variable, "b");
+            input->right = new ExpressionNode(TokenType::And);
+            input->right->left = new ExpressionNode(TokenType::Variable, "a");
+            input->right->right = new ExpressionNode(TokenType::Not);
+            input->right->right->right = new ExpressionNode(TokenType::Variable, "b");
             std::string result = expressionTreeToInfix(input);
             std::string expected = "!(a & !b)";
 
