@@ -166,7 +166,7 @@ namespace testExpressionTreeToInfix
             input->right->right->left = new ExpressionNode(TokenType::Variable, "b");
             input->right->right->right = new ExpressionNode(TokenType::Variable, "c");
             std::string result = expressionTreeToInfix(input);
-            std::string expected = "!(a || (b & c))";
+            std::string expected = "!(a || b & c)";
 
             result.erase(std::remove(result.begin(), result.end(), ' '), result.end());
             expected.erase(std::remove(expected.begin(), expected.end(), ' '), expected.end());
