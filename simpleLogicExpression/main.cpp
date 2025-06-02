@@ -195,65 +195,81 @@ void transformImplicationAndEquivalence(ExpressionNode* node) {
         node->right = newRight;
     }
 }
-
-bool simplifyExpression(ExpressionNode* node) {
-	return false;
-}
-
 bool simplifyExpression(ExpressionNode* node) {
     if (!node) return false;
 
     bool changed = false;
 
-    // Рекурсивно упрощаем поддеревья
+    // Сначала рекурсивно упрощаем поддеревья
     changed |= simplifyExpression(node->left);
     changed |= simplifyExpression(node->right);
 
-    // Применяем законы де Моргана
+    // Применяем первый закон де Моргана: !(A & B) → !A | !B
     if (node->type == TokenType::Not && node->right && node->right->type == TokenType::And) {
-        // !(A & B) → !A | !B
-        ExpressionNode* newNotLeft = new ExpressionNode(
-            TokenType::Not,
-            nullptr,
-            node->right->left
-        );
+        // Сохраняем оригинальные узлы
+        ExpressionNode* originalAnd = node->right;
+        ExpressionNode* leftOperand = originalAnd->left;
+        ExpressionNode* rightOperand = originalAnd->right;
 
-        ExpressionNode* newNotRight = new ExpressionNode(
-            TokenType::Not,
-            nullptr,
-            node->right->right
-        );
+        // Создаем новые узлы отрицания
+        ExpressionNode* newNotLeft = new ExpressionNode(TokenType::Not, nullptr, leftOperand);
+        ExpressionNode* newNotRight = new ExpressionNode(TokenType::Not, nullptr, rightOperand);
 
+        // Преобразуем текущий узел
         node->type = TokenType::Or;
         node->left = newNotLeft;
         node->right = newNotRight;
 
-        delete node->right; // Удаляем старый узел
+        // Удаляем старый узел And (но не его потомков - они теперь используются в новых узлах)
+        originalAnd->left = nullptr;
+        originalAnd->right = nullptr;
+        delete originalAnd;
+
         changed = true;
     }
+    // Применяем второй закон де Моргана: !(A | B) → !A & !B
     else if (node->type == TokenType::Not && node->right && node->right->type == TokenType::Or) {
-        // !(A | B) → !A & !B
-        ExpressionNode* newNotLeft = new ExpressionNode(
-            TokenType::Not,
-            nullptr,
-            node->right->left
-        );
+        ExpressionNode* originalOr = node->right;
+        ExpressionNode* leftOperand = originalOr->left;
+        ExpressionNode* rightOperand = originalOr->right;
 
-        ExpressionNode* newNotRight = new ExpressionNode(
-            TokenType::Not,
-            nullptr,
-            node->right->right
-        );
+        ExpressionNode* newNotLeft = new ExpressionNode(TokenType::Not, nullptr, leftOperand);
+        ExpressionNode* newNotRight = new ExpressionNode(TokenType::Not, nullptr, rightOperand);
 
         node->type = TokenType::And;
         node->left = newNotLeft;
         node->right = newNotRight;
 
-        delete node->right; // Удаляем старый узел
+        originalOr->left = nullptr;
+        originalOr->right = nullptr;
+        delete originalOr;
+
         changed = true;
     }
 
     return changed;
+}
+
+void removeDoubleNot(ExpressionNode* node) {
+    if (!node) return;
+
+    // Рекурсивно обрабатываем поддеревья
+    removeDoubleNot(node->left);
+    removeDoubleNot(node->right);
+
+    // Удаляем двойное отрицание
+    if (node->type == TokenType::Not && node->right && node->right->type == TokenType::Not) {
+        ExpressionNode* temp = node->right;
+        node->type = temp->right->type;
+        node->value = temp->right->value;
+        node->left = temp->right->left;
+        node->right = temp->right->right;
+
+        // Обнуляем указатели, чтобы избежать двойного удаления
+        temp->right->left = nullptr;
+        temp->right->right = nullptr;
+        delete temp;
+    }
 }
 
 std::string expressionTreeToInfix(ExpressionNode* node) {
