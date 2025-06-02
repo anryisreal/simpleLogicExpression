@@ -277,9 +277,9 @@ std::string expressionTreeToInfix(ExpressionNode* node) {
 
     // Карта приоритетов операций
     static const std::map<TokenType, int> priority = {
-        {TokenType::Or, 1},
+        {TokenType::Equivalence, 1},
         {TokenType::Implication, 2},
-        {TokenType::Equivalence, 3},
+        {TokenType::Or, 3},
         {TokenType::And, 4},
         {TokenType::Not, 5}
     };
