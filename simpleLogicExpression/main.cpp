@@ -200,26 +200,60 @@ bool simplifyExpression(ExpressionNode* node) {
 	return false;
 }
 
-void removeDoubleNot(ExpressionNode* node) {
-    if (!node) return;
+bool simplifyExpression(ExpressionNode* node) {
+    if (!node) return false;
 
-    // Рекурсивно обрабатываем поддеревья
-    removeDoubleNot(node->left);
-    removeDoubleNot(node->right);
+    bool changed = false;
 
-    // Удаляем двойное отрицание
-    if (node->type == TokenType::Not && node->right && node->right->type == TokenType::Not) {
-        ExpressionNode* temp = node->right;
-        node->type = temp->right->type;
-        node->value = temp->right->value;
-        node->left = temp->right->left;
-        node->right = temp->right->right;
+    // Рекурсивно упрощаем поддеревья
+    changed |= simplifyExpression(node->left);
+    changed |= simplifyExpression(node->right);
 
-        // Обнуляем указатели, чтобы избежать двойного удаления
-        temp->right->left = nullptr;
-        temp->right->right = nullptr;
-        delete temp;
+    // Применяем законы де Моргана
+    if (node->type == TokenType::Not && node->right && node->right->type == TokenType::And) {
+        // !(A & B) → !A | !B
+        ExpressionNode* newNotLeft = new ExpressionNode(
+            TokenType::Not,
+            nullptr,
+            node->right->left
+        );
+
+        ExpressionNode* newNotRight = new ExpressionNode(
+            TokenType::Not,
+            nullptr,
+            node->right->right
+        );
+
+        node->type = TokenType::Or;
+        node->left = newNotLeft;
+        node->right = newNotRight;
+
+        delete node->right; // Удаляем старый узел
+        changed = true;
     }
+    else if (node->type == TokenType::Not && node->right && node->right->type == TokenType::Or) {
+        // !(A | B) → !A & !B
+        ExpressionNode* newNotLeft = new ExpressionNode(
+            TokenType::Not,
+            nullptr,
+            node->right->left
+        );
+
+        ExpressionNode* newNotRight = new ExpressionNode(
+            TokenType::Not,
+            nullptr,
+            node->right->right
+        );
+
+        node->type = TokenType::And;
+        node->left = newNotLeft;
+        node->right = newNotRight;
+
+        delete node->right; // Удаляем старый узел
+        changed = true;
+    }
+
+    return changed;
 }
 
 std::string expressionTreeToInfix(ExpressionNode* node) {
