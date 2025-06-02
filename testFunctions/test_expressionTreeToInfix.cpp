@@ -160,11 +160,11 @@ namespace testExpressionTreeToInfix
         TEST_METHOD(Test8_NestedParentheses)
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Not);
-            input->left = new ExpressionNode(TokenType::Or);
-            input->left->left = new ExpressionNode(TokenType::Variable, "a");
-            input->left->right = new ExpressionNode(TokenType::And);
-            input->left->right->left = new ExpressionNode(TokenType::Variable, "b");
-            input->left->right->right = new ExpressionNode(TokenType::Variable, "c");
+            input->right = new ExpressionNode(TokenType::Or);
+            input->right->left = new ExpressionNode(TokenType::Variable, "a");
+            input->right->right = new ExpressionNode(TokenType::And);
+            input->right->right->left = new ExpressionNode(TokenType::Variable, "b");
+            input->right->right->right = new ExpressionNode(TokenType::Variable, "c");
             std::string result = expressionTreeToInfix(input);
             std::string expected = "!(a || (b & c))";
 
@@ -279,14 +279,14 @@ namespace testExpressionTreeToInfix
         TEST_METHOD(Test13_NestedNegation)
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Not);
-            input->left = new ExpressionNode(TokenType::Or);
-            input->left->left = new ExpressionNode(TokenType::Not);
-            input->left->left->left = new ExpressionNode(TokenType::And);
-            input->left->left->left->left = new ExpressionNode(TokenType::Variable, "a");
-            input->left->left->left->right = new ExpressionNode(TokenType::Variable, "b");
-            input->left->right = new ExpressionNode(TokenType::And);
-            input->left->right->left = new ExpressionNode(TokenType::Variable, "c");
-            input->left->right->right = new ExpressionNode(TokenType::Variable, "d");
+            input->right = new ExpressionNode(TokenType::Or);
+            input->right->left = new ExpressionNode(TokenType::Not);
+            input->right->left->right = new ExpressionNode(TokenType::And);
+            input->right->left->right->left = new ExpressionNode(TokenType::Variable, "a");
+            input->right->left->right->right = new ExpressionNode(TokenType::Variable, "b");
+            input->right->right = new ExpressionNode(TokenType::And);
+            input->right->right->left = new ExpressionNode(TokenType::Variable, "c");
+            input->right->right->right = new ExpressionNode(TokenType::Variable, "d");
             std::string result = expressionTreeToInfix(input);
             std::string expected = "!(!(a & b) || c & d)";
 
@@ -305,8 +305,8 @@ namespace testExpressionTreeToInfix
         TEST_METHOD(Test14_MultipleNegationsBeforeVariable)
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Not);
-            input->left = new ExpressionNode(TokenType::Not);
-            input->left->left = new ExpressionNode(TokenType::Variable, "a");
+            input->right = new ExpressionNode(TokenType::Not);
+            input->right->right = new ExpressionNode(TokenType::Variable, "a");
             std::string result = expressionTreeToInfix(input);
             std::string expected = "!!a";
 
@@ -325,10 +325,10 @@ namespace testExpressionTreeToInfix
         TEST_METHOD(Test15_MultipleNegationsBeforeOr)
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Not);
-            input->left = new ExpressionNode(TokenType::Not);
-            input->left->left = new ExpressionNode(TokenType::Or);
-            input->left->left->left = new ExpressionNode(TokenType::Variable, "a");
-            input->left->left->right = new ExpressionNode(TokenType::Variable, "b");
+            input->right = new ExpressionNode(TokenType::Not);
+            input->right->right = new ExpressionNode(TokenType::Or);
+            input->right->right->left = new ExpressionNode(TokenType::Variable, "a");
+            input->right->right->right = new ExpressionNode(TokenType::Variable, "b");
             std::string result = expressionTreeToInfix(input);
             std::string expected = "!!(a || b)";
 
@@ -347,10 +347,10 @@ namespace testExpressionTreeToInfix
         TEST_METHOD(Test16_MultipleNegationsBeforeAnd)
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Not);
-            input->left = new ExpressionNode(TokenType::Not);
-            input->left->left = new ExpressionNode(TokenType::And);
-            input->left->left->left = new ExpressionNode(TokenType::Variable, "a");
-            input->left->left->right = new ExpressionNode(TokenType::Variable, "b");
+            input->right = new ExpressionNode(TokenType::Not);
+            input->right->right = new ExpressionNode(TokenType::And);
+            input->right->right->left = new ExpressionNode(TokenType::Variable, "a");
+            input->right->right->right = new ExpressionNode(TokenType::Variable, "b");
             std::string result = expressionTreeToInfix(input);
             std::string expected = "!!(a & b)";
 
@@ -369,10 +369,10 @@ namespace testExpressionTreeToInfix
         TEST_METHOD(Test17_MultipleNegationsBeforeImplication)
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Not);
-            input->left = new ExpressionNode(TokenType::Not);
-            input->left->left = new ExpressionNode(TokenType::Implication);
-            input->left->left->left = new ExpressionNode(TokenType::Variable, "a");
-            input->left->left->right = new ExpressionNode(TokenType::Variable, "b");
+            input->right = new ExpressionNode(TokenType::Not);
+            input->right->right = new ExpressionNode(TokenType::Implication);
+            input->right->right->left = new ExpressionNode(TokenType::Variable, "a");
+            input->right->right->right = new ExpressionNode(TokenType::Variable, "b");
             std::string result = expressionTreeToInfix(input);
             std::string expected = "!!(a -> b)";
 
@@ -391,10 +391,10 @@ namespace testExpressionTreeToInfix
         TEST_METHOD(Test18_MultipleNegationsBeforeEquivalence)
         {
             ExpressionNode* input = new ExpressionNode(TokenType::Not);
-            input->left = new ExpressionNode(TokenType::Not);
-            input->left->left = new ExpressionNode(TokenType::Equivalence);
-            input->left->left->left = new ExpressionNode(TokenType::Variable, "a");
-            input->left->left->right = new ExpressionNode(TokenType::Variable, "b");
+            input->right = new ExpressionNode(TokenType::Not);
+            input->right->right = new ExpressionNode(TokenType::Equivalence);
+            input->right->right->left = new ExpressionNode(TokenType::Variable, "a");
+            input->right->right->right = new ExpressionNode(TokenType::Variable, "b");
             std::string result = expressionTreeToInfix(input);
             std::string expected = "!!(a ~ b)";
 
