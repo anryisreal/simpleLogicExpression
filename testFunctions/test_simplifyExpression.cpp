@@ -242,7 +242,7 @@ namespace testSimplifyExpression
 
         /**
         * @brief Тест 10: Второй закон для сложного выражения
-        * ¬((a ∨ b) ∧ c) → (¬a ∧ ¬b) ∨ ¬c
+        * !((a ∨ b) ∧ c) → !(a ∨ b) ∨ !c
         */
         TEST_METHOD(Test10_SecondLawForComplexExpression)
         {
@@ -254,10 +254,9 @@ namespace testSimplifyExpression
             input->right->right = new ExpressionNode(Variable, "c");
 
             ExpressionNode* expected = new ExpressionNode(Or);
-            expected->left = new ExpressionNode(And);
-            expected->left->left = new ExpressionNode(Not);
-            expected->left->left->right = new ExpressionNode(Variable, "a");
-            expected->left->right = new ExpressionNode(Not);
+            expected->left = new ExpressionNode(Not);
+            expected->left->right = new ExpressionNode(Or);
+            expected->left->right->left = new ExpressionNode(Variable, "a");
             expected->left->right->right = new ExpressionNode(Variable, "b");
             expected->right = new ExpressionNode(Not);
             expected->right->right = new ExpressionNode(Variable, "c");
@@ -272,7 +271,7 @@ namespace testSimplifyExpression
 
         /**
         * @brief Тест 11: Вложенные первые законы
-        * !(!(a ∧ b) ∧ c) → (!!a ∨ !!b) ∨ !c
+        * !(!(a ∧ b) ∧ c) → !(!a ∨ !b) ∨ !c
         */
         TEST_METHOD(Test11_NestedFirstLaws)
         {
@@ -285,11 +284,10 @@ namespace testSimplifyExpression
             input->right->right = new ExpressionNode(Variable, "c");
 
             ExpressionNode* expected = new ExpressionNode(Or);
-            expected->left = new ExpressionNode(Or);
-            expected->left->left = new ExpressionNode(Not);
-            expected->left->left->right = new ExpressionNode(Not);
-            expected->left->left->right->right = new ExpressionNode(Variable, "a");
-            expected->left->right = new ExpressionNode(Not);
+            expected->left = new ExpressionNode(Not);
+            expected->left->right = new ExpressionNode(Or);
+            expected->left->right->left = new ExpressionNode(Not);
+            expected->left->right->left->right = new ExpressionNode(Variable, "a");
             expected->left->right->right = new ExpressionNode(Not);
             expected->left->right->right->right = new ExpressionNode(Variable, "b");
             expected->right = new ExpressionNode(Not);
@@ -305,7 +303,7 @@ namespace testSimplifyExpression
 
         /**
          * @brief Тест 12: Вложенные вторые законы
-         * !(!(a ∨ b) ∨ c) → (!!a ∧ !!b) ∧ !c
+         * !(!(a ∨ b) ∨ c) → !(!a ∧ !b) ∧ !c
          */
         TEST_METHOD(Test12_NestedSecondLaws)
         {
@@ -318,11 +316,10 @@ namespace testSimplifyExpression
             input->right->right = new ExpressionNode(Variable, "c");
 
             ExpressionNode* expected = new ExpressionNode(And);
-            expected->left = new ExpressionNode(And);
-            expected->left->left = new ExpressionNode(Not);
-            expected->left->left->right = new ExpressionNode(Not);
-            expected->left->left->right->right = new ExpressionNode(Variable, "a");
-            expected->left->right = new ExpressionNode(Not);
+            expected->left = new ExpressionNode(Not);
+            expected->left->right = new ExpressionNode(And);
+            expected->left->right->left = new ExpressionNode(Not);
+            expected->left->right->left->right = new ExpressionNode(Variable, "a");
             expected->left->right->right = new ExpressionNode(Not);
             expected->left->right->right->right = new ExpressionNode(Variable, "b");
             expected->right = new ExpressionNode(Not);
@@ -338,7 +335,7 @@ namespace testSimplifyExpression
 
         /**
          * @brief Тест 13: Последовательные первые и вторые законы
-         * !(!(a ∨ b) ∧ !(c ∧ d)) → (a ∨ b) ∨ (c ∧ d)
+         * !(!(a ∨ b) ∧ !(c ∧ d)) → !(!a ∧ !b) ∨ !(!c ∨ !d)
          */
         TEST_METHOD(Test13_SequentialFirstAndSecondLaws)
         {
@@ -354,12 +351,19 @@ namespace testSimplifyExpression
             input->right->right->right->right = new ExpressionNode(Variable, "d");
 
             ExpressionNode* expected = new ExpressionNode(Or);
-            expected->left = new ExpressionNode(Or);
-            expected->left->left = new ExpressionNode(Variable, "a");
-            expected->left->right = new ExpressionNode(Variable, "b");
-            expected->right = new ExpressionNode(And);
-            expected->right->left = new ExpressionNode(Variable, "c");
-            expected->right->right = new ExpressionNode(Variable, "d");
+            expected->left = new ExpressionNode(Not);
+            expected->left->right = new ExpressionNode(And);
+            expected->left->right->left = new ExpressionNode(Not);
+            expected->left->right->left->right = new ExpressionNode(Variable, "a");
+            expected->left->right->right = new ExpressionNode(Not);
+            expected->left->right->right->right = new ExpressionNode(Variable, "b");
+
+            expected->right = new ExpressionNode(Not);
+            expected->right->right = new ExpressionNode(Or);
+            expected->right->right->left = new ExpressionNode(Not);
+            expected->right->right->left->right = new ExpressionNode(Variable, "c");
+            expected->right->right->right = new ExpressionNode(Not);
+            expected->right->right->right->right = new ExpressionNode(Variable, "d");
 
             bool changed = simplifyExpression(input);
             Assert::IsTrue(changed, L"Ожидалось изменение выражения");
