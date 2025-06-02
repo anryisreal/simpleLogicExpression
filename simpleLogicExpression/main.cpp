@@ -27,9 +27,79 @@ const std::map<std::string, TokenType> stringToTokenType = {
  * @param argv Массив аргументов (argv[1] - входной файл, argv[2] - выходной файл)
  * @return 0 при успешном завершении
  */
-int main() {
+int main(int argc, char* argv[]) {
+    // Проверяем количество аргументов командной строки
+    if (argc != 3) {
+        std::cerr << L"Использование: " << argv[0] << " <input file> <output file>" << std::endl;
+        return 1;
+    }
 
-	return 0;
+    std::set<Error> errorList;
+    std::string inputFile = argv[1];
+    std::string outputFile = argv[2];
+    std::string content;
+
+    // Чтение входного файла
+    try {
+        content = readFile(inputFile);
+    }
+    catch (const Error& e) {
+        e.message();
+        return 1;
+    }
+
+    // Токенизация входной строки
+    std::vector<Token> tokens = tokenize(content, errorList);
+
+    // Проверка на ошибки токенизации
+    if (!errorList.empty()) {
+        for (const auto& error : errorList) {
+            error.message();
+        }
+        return 1;
+    }
+
+    // Построение дерева выражения
+    ExpressionNode* exprTree = buildExpressionTree(tokens, errorList);
+
+    // Проверка на ошибки построения дерева
+    if (!errorList.empty()) {
+        for (const auto& error : errorList) {
+            error.message();
+        }
+        delete exprTree; // Освобождаем память
+        return 1;
+    }
+
+    // Преобразование импликации и эквивалентности
+    transformImplicationAndEquivalence(exprTree);
+
+    // Применение законов де Моргана до тех пор, пока есть изменения
+    bool changed;
+    do {
+        changed = simplifyExpression(exprTree);
+    } while (changed);
+
+    // Удаление двойных отрицаний
+    removeDoubleNot(exprTree);
+
+    // Формирование выходной строки
+    std::string result = expressionTreeToInfix(exprTree);
+
+    // Запись результата в выходной файл
+    try {
+        writeFile(outputFile, result);
+    }
+    catch (const Error& e) {
+        e.message();
+        delete exprTree; // Освобождаем память
+        return 1;
+    }
+
+    // Освобождение памяти
+    delete exprTree;
+
+    return 0;
 }
 
 /**
