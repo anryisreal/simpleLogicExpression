@@ -92,7 +92,6 @@ public:
      * Перечисление типов ошибок.
      */
     enum ErrorType {
-        noError,              /// Нет ошибки
         inputFile,            /// Ошибка входного файла
         outputFile,           /// Ошибка выходного файла
         invalidSeparator,     /// Некорректные разделители
@@ -105,7 +104,6 @@ public:
 
     static std::string getErrorTypeString(ErrorType type) {
         switch (type) {
-        case noError: return "noError";
         case inputFile: return "inputFile";
         case outputFile: return "outputFile";
         case invalidSeparator: return "invalidSeparator";
@@ -128,7 +126,34 @@ public:
      * @param pos Позиция ошибки (по умолчанию -1)
      */
     Error(ErrorType t, int pos = -1) : type(t), position(pos) {
-        /* Инициализация description в зависимости от типа ошибки */
+        switch (type) {
+        case inputFile:
+            description = "Неверно указан файл с входными данными. Возможно, файл не существует.";
+            break;
+        case outputFile:
+            description = "Неверно указан файл для выходных данных. Возможно, указанного расположения не существует или нет прав на запись.";
+            break;
+        case invalidSeparator:
+            description = "Некорректные разделители (позиция " + std::to_string(position) + ").";
+            break;
+        case missingOperation:
+            description = "Во входной строке пропущен знак операции между операндами (позиция " + std::to_string(position) + ").";
+            break;
+        case insufficientOperands:
+            description = "Во входной строке пропущен операнд для операции (позиция " + std::to_string(position) + ").";
+            break;
+        case invalidVariableName:
+            description = "Во входной строке имя переменной (позиция " + std::to_string(position) + ") некорректно. Имя переменной должно начинаться только с символа латинского алфавита.";
+            break;
+        case invalidVariableChar:
+            description = "Во входной строке имя переменной (позиция " + std::to_string(position) + ") некорректно. Имя переменно должно содержать только символы латинского алфавита и цифры.";
+            break;
+        case unsupportedOperation:
+            description = "Во входной строке указана неподдерживаемая логическая операция (позиция " + std::to_string(position) + ").";
+            break;
+        default:
+            description = "Неизвестная ошибка.";
+        }
     }
 
     /**
