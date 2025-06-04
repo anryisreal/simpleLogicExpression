@@ -1,14 +1,15 @@
-п»ї#include <iostream>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <map>
 #include <algorithm>
+#include <locale>
 #include "objects.h"
 #include "functions.h"
 
 /**
-* РЎРѕРѕС‚РІРµС‚СЃС‚РІРёРµ РјРµР¶РґСѓ СЃС‚СЂРѕРєРѕР№ Рё С‚РёРїРѕРј РѕРїРµСЂР°С†РёРё
+* Соответствие между строкой и типом операции
 */
 const std::map<std::string, TokenType> stringToTokenType = {
     {"!", TokenType::Not},
@@ -19,18 +20,20 @@ const std::map<std::string, TokenType> stringToTokenType = {
 };
 
 /**
- * Р“Р»Р°РІРЅР°СЏ С„СѓРЅРєС†РёСЏ РїСЂРѕРіСЂР°РјРјС‹.
+ * Главная функция программы.
  *
- * РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ Р°СЂРіСѓРјРµРЅС‚С‹ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё, РІС‹РїРѕР»РЅСЏРµС‚ С‡С‚РµРЅРёРµ РІС…РѕРґРЅРѕРіРѕ С„Р°Р№Р»Р°,
- * РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ Рё Р·Р°РїРёСЃСЊ СЂРµР·СѓР»СЊС‚Р°С‚Р° РІ РІС‹С…РѕРґРЅРѕР№ С„Р°Р№Р».
- * @param argc РљРѕР»РёС‡РµСЃС‚РІРѕ Р°СЂРіСѓРјРµРЅС‚РѕРІ
- * @param argv РњР°СЃСЃРёРІ Р°СЂРіСѓРјРµРЅС‚РѕРІ (argv[1] - РІС…РѕРґРЅРѕР№ С„Р°Р№Р», argv[2] - РІС‹С…РѕРґРЅРѕР№ С„Р°Р№Р»)
- * @return 0 РїСЂРё СѓСЃРїРµС€РЅРѕРј Р·Р°РІРµСЂС€РµРЅРёРё
+ * Обрабатывает аргументы командной строки, выполняет чтение входного файла,
+ * преобразование выражения и запись результата в выходной файл.
+ * @param argc Количество аргументов
+ * @param argv Массив аргументов (argv[1] - входной файл, argv[2] - выходной файл)
+ * @return 0 при успешном завершении
  */
 int main(int argc, char* argv[]) {
-    // РџСЂРѕРІРµСЂСЏРµРј РєРѕР»РёС‡РµСЃС‚РІРѕ Р°СЂРіСѓРјРµРЅС‚РѕРІ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё
+    setlocale(LC_ALL, "Russian");
+
+    // Проверяем количество аргументов командной строки
     if (argc != 3) {
-        std::cerr << L"РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ: " << argv[0] << " <input file> <output file>" << std::endl;
+        std::cerr << L"Использование: " << argv[0] << " <input file> <output file>" << std::endl;
         return 1;
     }
 
@@ -39,7 +42,7 @@ int main(int argc, char* argv[]) {
     std::string outputFile = argv[2];
     std::string content;
 
-    // Р§С‚РµРЅРёРµ РІС…РѕРґРЅРѕРіРѕ С„Р°Р№Р»Р°
+    // Чтение входного файла
     try {
         content = readFile(inputFile);
     }
@@ -48,10 +51,10 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // РўРѕРєРµРЅРёР·Р°С†РёСЏ РІС…РѕРґРЅРѕР№ СЃС‚СЂРѕРєРё
+    // Токенизация входной строки
     std::vector<Token> tokens = tokenize(content, errorList);
 
-    // РџСЂРѕРІРµСЂРєР° РЅР° РѕС€РёР±РєРё С‚РѕРєРµРЅРёР·Р°С†РёРё
+    // Проверка на ошибки токенизации
     if (!errorList.empty()) {
         for (const auto& error : errorList) {
             error.message();
@@ -59,82 +62,82 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // РџРѕСЃС‚СЂРѕРµРЅРёРµ РґРµСЂРµРІР° РІС‹СЂР°Р¶РµРЅРёСЏ
+    // Построение дерева выражения
     ExpressionNode* exprTree = buildExpressionTree(tokens, errorList);
 
-    // РџСЂРѕРІРµСЂРєР° РЅР° РѕС€РёР±РєРё РїРѕСЃС‚СЂРѕРµРЅРёСЏ РґРµСЂРµРІР°
+    // Проверка на ошибки построения дерева
     if (!errorList.empty()) {
         for (const auto& error : errorList) {
             error.message();
         }
-        delete exprTree; // РћСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
+        delete exprTree; // Освобождаем память
         return 1;
     }
 
-    // РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РёРјРїР»РёРєР°С†РёРё Рё СЌРєРІРёРІР°Р»РµРЅС‚РЅРѕСЃС‚Рё
+    // Преобразование импликации и эквивалентности
     transformImplicationAndEquivalence(exprTree);
 
-    // РџСЂРёРјРµРЅРµРЅРёРµ Р·Р°РєРѕРЅРѕРІ РґРµ РњРѕСЂРіР°РЅР° РґРѕ С‚РµС… РїРѕСЂ, РїРѕРєР° РµСЃС‚СЊ РёР·РјРµРЅРµРЅРёСЏ
+    // Применение законов де Моргана до тех пор, пока есть изменения
     bool changed;
     do {
         changed = simplifyExpression(exprTree);
     } while (changed);
 
-    // РЈРґР°Р»РµРЅРёРµ РґРІРѕР№РЅС‹С… РѕС‚СЂРёС†Р°РЅРёР№
+    // Удаление двойных отрицаний
     removeDoubleNot(exprTree);
 
-    // Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ РІС‹С…РѕРґРЅРѕР№ СЃС‚СЂРѕРєРё
+    // Формирование выходной строки
     std::string result = expressionTreeToInfix(exprTree);
 
-    // Р—Р°РїРёСЃСЊ СЂРµР·СѓР»СЊС‚Р°С‚Р° РІ РІС‹С…РѕРґРЅРѕР№ С„Р°Р№Р»
+    // Запись результата в выходной файл
     try {
         writeFile(outputFile, result);
     }
     catch (const Error& e) {
         e.message();
-        delete exprTree; // РћСЃРІРѕР±РѕР¶РґР°РµРј РїР°РјСЏС‚СЊ
+        delete exprTree; // Освобождаем память
         return 1;
     }
 
-    // РћСЃРІРѕР±РѕР¶РґРµРЅРёРµ РїР°РјСЏС‚Рё
+    // Освобождение памяти
     delete exprTree;
 
     return 0;
 }
 
 /**
-* Р¤СѓРЅРєС†Рё РґР»СЏ С‡С‚РµРЅРёСЏ РёР· С„Р°Р№Р»Р°
+* Функци для чтения из файла
 */
 std::string readFile(const std::string& filePath) {
 
-    std::ifstream file(filePath);	// РЎРѕР·РґР°РµРј РїРѕС‚РѕРє РґР»СЏ С‡С‚РµРЅРёСЏ РёР· С„Р°Р№Р»Р°
+    std::ifstream file(filePath);	// Создаем поток для чтения из файла
 
-	// Р’С‹Р±СЂРѕСЃ РёСЃРєР»СЋС‡РµРЅРёСЏ, РµСЃР»Рё С„Р°Р№Р» РЅРµ РѕС‚РєСЂС‹Р»СЃСЏ
+	// Выброс исключения, если файл не открылся
     if (!file.is_open()) {
         throw Error(Error::inputFile);
     }
     
-    std::string content;			// РЎС‡РёС‚С‹РІР°РµРјР°СЏ СЃС‚СЂРѕРєР° РёР· С„Р°Р№Р»Р°
-    std::getline(file, content);	// РЎС‡РёС‚С‹РІР°РЅРёРµ СЃС‚СЂРѕРєРё
-    file.close();					// Р—Р°РєСЂС‹С‚РёРµ С„Р°Р№Р»Р°
+    std::string content;			// Считываемая строка из файла
+    std::getline(file, content);	// Считывание строки
+    file.close();					// Закрытие файла
 
 	return content;
 }
 
 /**
-* Р¤СѓРЅРєС†РёСЏ РґР»СЏ Р·Р°РїРёСЃРё РІ С„Р°Р№Р»
+* Функция для записи в файл
 */
 void writeFile(const std::string& filePath, const std::string& content) {
 
-    std::ofstream file(filePath);  // РЎРѕР·РґР°РµРј РїРѕС‚РѕРє РґР»СЏ Р·Р°РїРёСЃРё РІ С„Р°Р№Р»
+    std::ofstream file(filePath);  // Создаем поток для записи в файл
 
-    // Р’С‹Р±СЂРѕСЃ РёСЃРєР»СЋС‡РµРЅРёСЏ, РµСЃР»Рё С„Р°Р№Р» РЅРµ РѕС‚РєСЂС‹Р»СЃСЏ
+    // Выброс исключения, если файл не открылся
     if (!file.is_open()) {
         throw Error(Error::outputFile);
     }
 
-    file << content;               // Р—Р°РїРёСЃСЊ РІ С„Р°Р№Р»
-    file.close();                  // Р—Р°РєСЂС‹С‚РёРµ С„Р°Р№Р»Р°
+    file << content;               // Запись в файл
+    file.close();                  // Закрытие файла
 }
 
 std::vector<Token> tokenize(const std::string& expression, std::set<Error>& errorList) {
@@ -146,14 +149,14 @@ std::vector<Token> tokenize(const std::string& expression, std::set<Error>& erro
     while (iss >> tokenStr) {
         position++;
 
-        // РџСЂРѕРІРµСЂРєР° РЅР° РѕРїРµСЂР°С†РёСЋ
+        // Проверка на операцию
         auto it = stringToTokenType.find(tokenStr);
         if (it != stringToTokenType.end()) {
             tokens.emplace_back(it->second, tokenStr, position);
             continue;
         }
 
-        // РџСЂРѕРІРµСЂРєР° РЅР° РїРµСЂРµРјРµРЅРЅСѓСЋ
+        // Проверка на переменную
         if (isalpha(tokenStr[0])) {
             bool valid = std::all_of(tokenStr.begin(), tokenStr.end(), [](char c) {
                 return isalnum(c);
@@ -168,13 +171,13 @@ std::vector<Token> tokenize(const std::string& expression, std::set<Error>& erro
             continue;
         }
 
-        // Р•СЃР»Рё С‚РѕРєРµРЅ РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ С†РёС„СЂС‹ РёР»Рё РЅРµРґРѕРїСѓСЃС‚РёРјРѕРіРѕ СЃРёРјРІРѕР»Р°
+        // Если токен начинается с цифры или недопустимого символа
         if (isdigit(tokenStr[0]) || !isalpha(tokenStr[0])) {
             errorList.insert(Error(Error::ErrorType::invalidVariableName, position));
             continue;
         }
 
-        // Р’СЃРµ РѕСЃС‚Р°Р»СЊРЅС‹Рµ СЃР»СѓС‡Р°Рё - РЅРµРїРѕРґРґРµСЂР¶РёРІР°РµРјР°СЏ РѕРїРµСЂР°С†РёСЏ
+        // Все остальные случаи - неподдерживаемая операция
         errorList.insert(Error(Error::ErrorType::unsupportedOperation, position));
     }
 
@@ -202,7 +205,7 @@ ExpressionNode* buildExpressionTree(const std::vector<Token>& tokens, std::set<E
             continue;
         }
 
-        // Р‘РёРЅР°СЂРЅС‹Рµ РѕРїРµСЂР°С†РёРё
+        // Бинарные операции
         if (stack.size() < 2) {
             errorList.insert(Error(Error::ErrorType::insufficientOperands, token.position));
             continue;
@@ -237,29 +240,29 @@ ExpressionNode* copyNode(ExpressionNode* node) {
 void transformImplicationAndEquivalence(ExpressionNode* node) {
     if (!node) return;
 
-    // Р РµРєСѓСЂСЃРёРІРЅРѕ РїСЂРµРѕР±СЂР°Р·СѓРµРј РїРѕРґРґРµСЂРµРІСЊСЏ
+    // Рекурсивно преобразуем поддеревья
     transformImplicationAndEquivalence(node->left);
     transformImplicationAndEquivalence(node->right);
 
-    // РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РёРјРїР»РёРєР°С†РёРё A > B РІ !A | B
+    // Преобразование импликации A > B в !A | B
     if (node->type == TokenType::Implication) {
         ExpressionNode* newNot = new ExpressionNode(TokenType::Not, nullptr, copyNode(node->left));
         node->type = TokenType::Or;
-        node->left = newNot; // node->right РѕСЃС‚Р°РµС‚СЃСЏ Р±РµР· РёР·РјРµРЅРµРЅРёР№
+        node->left = newNot; // node->right остается без изменений
         return;
     }
 
-    // РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СЌРєРІРёРІР°Р»РµРЅС‚РЅРѕСЃС‚Рё A ~ B РІ (A & B) | (!A & !B)
+    // Преобразование эквивалентности A ~ B в (A & B) | (!A & !B)
     if (node->type == TokenType::Equivalence) {
-        // РЎРѕР·РґР°РµРј Р»РµРІС‹Р№ СѓР·РµР» РєРѕРЅСЉСЋРЅРєС†РёРё (A & B)
+        // Создаем левый узел конъюнкции (A & B)
         ExpressionNode* newLeft = new ExpressionNode(TokenType::And, copyNode(node->left), copyNode(node->right));
 
-        // РЎРѕР·РґР°РµРј РїСЂР°РІС‹Р№ СѓР·РµР» РєРѕРЅСЉСЋРЅРєС†РёРё (!A & !B)
+        // Создаем правый узел конъюнкции (!A & !B)
         ExpressionNode* newRightL = new ExpressionNode(TokenType::Not, nullptr, copyNode(node->left));
         ExpressionNode* newRightR = new ExpressionNode(TokenType::Not, nullptr, copyNode(node->right));
         ExpressionNode* newRight = new ExpressionNode(TokenType::And, newRightL, newRightR);
 
-        // РћР±РЅРѕРІР»СЏРµРј С‚РµРєСѓС‰РёР№ СѓР·РµР»
+        // Обновляем текущий узел
         node->type = TokenType::Or;
         node->left = newLeft;
         node->right = newRight;
@@ -270,34 +273,34 @@ bool simplifyExpression(ExpressionNode* node) {
 
     bool changed = false;
 
-    // РЎРЅР°С‡Р°Р»Р° СЂРµРєСѓСЂСЃРёРІРЅРѕ СѓРїСЂРѕС‰Р°РµРј РїРѕРґРґРµСЂРµРІСЊСЏ
+    // Сначала рекурсивно упрощаем поддеревья
     changed |= simplifyExpression(node->left);
     changed |= simplifyExpression(node->right);
 
-    // РџСЂРёРјРµРЅСЏРµРј РїРµСЂРІС‹Р№ Р·Р°РєРѕРЅ РґРµ РњРѕСЂРіР°РЅР°: !(A & B) в†’ !A | !B
+    // Применяем первый закон де Моргана: !(A & B) ? !A | !B
     if (node->type == TokenType::Not && node->right && node->right->type == TokenType::And) {
-        // РЎРѕС…СЂР°РЅСЏРµРј РѕСЂРёРіРёРЅР°Р»СЊРЅС‹Рµ СѓР·Р»С‹
+        // Сохраняем оригинальные узлы
         ExpressionNode* originalAnd = node->right;
         ExpressionNode* leftOperand = originalAnd->left;
         ExpressionNode* rightOperand = originalAnd->right;
 
-        // РЎРѕР·РґР°РµРј РЅРѕРІС‹Рµ СѓР·Р»С‹ РѕС‚СЂРёС†Р°РЅРёСЏ
+        // Создаем новые узлы отрицания
         ExpressionNode* newNotLeft = new ExpressionNode(TokenType::Not, nullptr, leftOperand);
         ExpressionNode* newNotRight = new ExpressionNode(TokenType::Not, nullptr, rightOperand);
 
-        // РџСЂРµРѕР±СЂР°Р·СѓРµРј С‚РµРєСѓС‰РёР№ СѓР·РµР»
+        // Преобразуем текущий узел
         node->type = TokenType::Or;
         node->left = newNotLeft;
         node->right = newNotRight;
 
-        // РЈРґР°Р»СЏРµРј СЃС‚Р°СЂС‹Р№ СѓР·РµР» And (РЅРѕ РЅРµ РµРіРѕ РїРѕС‚РѕРјРєРѕРІ - РѕРЅРё С‚РµРїРµСЂСЊ РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ РІ РЅРѕРІС‹С… СѓР·Р»Р°С…)
+        // Удаляем старый узел And (но не его потомков - они теперь используются в новых узлах)
         originalAnd->left = nullptr;
         originalAnd->right = nullptr;
         delete originalAnd;
 
         changed = true;
     }
-    // РџСЂРёРјРµРЅСЏРµРј РІС‚РѕСЂРѕР№ Р·Р°РєРѕРЅ РґРµ РњРѕСЂРіР°РЅР°: !(A | B) в†’ !A & !B
+    // Применяем второй закон де Моргана: !(A | B) ? !A & !B
     else if (node->type == TokenType::Not && node->right && node->right->type == TokenType::Or) {
         ExpressionNode* originalOr = node->right;
         ExpressionNode* leftOperand = originalOr->left;
@@ -323,11 +326,11 @@ bool simplifyExpression(ExpressionNode* node) {
 void removeDoubleNot(ExpressionNode* node) {
     if (!node) return;
 
-    // Р РµРєСѓСЂСЃРёРІРЅРѕ РѕР±СЂР°Р±Р°С‚С‹РІР°РµРј РїРѕРґРґРµСЂРµРІСЊСЏ
+    // Рекурсивно обрабатываем поддеревья
     removeDoubleNot(node->left);
     removeDoubleNot(node->right);
 
-    // РЈРґР°Р»СЏРµРј РґРІРѕР№РЅРѕРµ РѕС‚СЂРёС†Р°РЅРёРµ
+    // Удаляем двойное отрицание
     if (node->type == TokenType::Not && node->right && node->right->type == TokenType::Not) {
         ExpressionNode* temp = node->right;
         node->type = temp->right->type;
@@ -335,7 +338,7 @@ void removeDoubleNot(ExpressionNode* node) {
         node->left = temp->right->left;
         node->right = temp->right->right;
 
-        // РћР±РЅСѓР»СЏРµРј СѓРєР°Р·Р°С‚РµР»Рё, С‡С‚РѕР±С‹ РёР·Р±РµР¶Р°С‚СЊ РґРІРѕР№РЅРѕРіРѕ СѓРґР°Р»РµРЅРёСЏ
+        // Обнуляем указатели, чтобы избежать двойного удаления
         temp->right->left = nullptr;
         temp->right->right = nullptr;
         delete temp;
@@ -345,7 +348,7 @@ void removeDoubleNot(ExpressionNode* node) {
 std::string expressionTreeToInfix(ExpressionNode* node) {
     if (!node) return "";
 
-    // РљР°СЂС‚Р° РїСЂРёРѕСЂРёС‚РµС‚РѕРІ РѕРїРµСЂР°С†РёР№
+    // Карта приоритетов операций
     static const std::map<TokenType, int> priority = {
         {TokenType::Equivalence, 1},
         {TokenType::Implication, 2},
@@ -354,15 +357,15 @@ std::string expressionTreeToInfix(ExpressionNode* node) {
         {TokenType::Not, 5}
     };
 
-    // Р”Р»СЏ РїРµСЂРµРјРµРЅРЅС‹С…
+    // Для переменных
     if (node->type == TokenType::Variable) {
         return node->value;
     }
 
-    // Р”Р»СЏ СѓРЅР°СЂРЅС‹С… РѕРїРµСЂР°С†РёР№ (РѕС‚СЂРёС†Р°РЅРёРµ)
+    // Для унарных операций (отрицание)
     if (node->type == TokenType::Not) {
         std::string rightExpr = expressionTreeToInfix(node->right);
-        // Р”РѕР±Р°РІР»СЏРµРј СЃРєРѕР±РєРё, РµСЃР»Рё РїРѕРґРІС‹СЂР°Р¶РµРЅРёРµ СЃР»РѕР¶РЅРѕРµ
+        // Добавляем скобки, если подвыражение сложное
         if (node->right && node->right->type != TokenType::Variable &&
             node->right->type != TokenType::Not) {
             return "!(" + rightExpr + ")";
@@ -370,11 +373,11 @@ std::string expressionTreeToInfix(ExpressionNode* node) {
         return "!" + rightExpr;
     }
 
-    // Р”Р»СЏ Р±РёРЅР°СЂРЅС‹С… РѕРїРµСЂР°С†РёР№
+    // Для бинарных операций
     std::string leftExpr = expressionTreeToInfix(node->left);
     std::string rightExpr = expressionTreeToInfix(node->right);
 
-    // РћРїСЂРµРґРµР»СЏРµРј РѕРїРµСЂР°С‚РѕСЂ
+    // Определяем оператор
     std::string op;
     switch (node->type) {
     case TokenType::And: op = " & "; break;
@@ -384,14 +387,14 @@ std::string expressionTreeToInfix(ExpressionNode* node) {
     default: op = " ? "; break;
     }
 
-    // РџСЂРѕРІРµСЂСЏРµРј РїСЂРёРѕСЂРёС‚РµС‚С‹ РґР»СЏ СЃРєРѕР±РѕРє (Р»РµРІС‹Р№ РѕРїРµСЂР°РЅРґ)
+    // Проверяем приоритеты для скобок (левый операнд)
     if (node->left && priority.count(node->left->type)) {
         if (priority.at(node->left->type) < priority.at(node->type)) {
             leftExpr = "(" + leftExpr + ")";
         }
     }
 
-    // РџСЂРѕРІРµСЂСЏРµРј РїСЂРёРѕСЂРёС‚РµС‚С‹ РґР»СЏ СЃРєРѕР±РѕРє (РїСЂР°РІС‹Р№ РѕРїРµСЂР°РЅРґ)
+    // Проверяем приоритеты для скобок (правый операнд)
     if (node->right && priority.count(node->right->type)) {
         int rightPrio = priority.at(node->right->type);
         int currPrio = priority.at(node->type);
