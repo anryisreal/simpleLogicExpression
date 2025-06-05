@@ -1,4 +1,24 @@
-﻿#include <iostream>
+﻿/**
+ * \mainpage Документация для программы "simpleLogicExpression"
+ *
+ * Программа предназначена для раскрытия скобок в логическом выражении по законам де Моргана и удаления двойного отрицания
+ * Программа разработана на языке C++ с использованием стандартных библиотек C++
+ * Программа должна получать два аргумента командной строки: имя входного файла и имя выходного файла в формате ".txt".
+ *
+ * Пример команды запуска программы:
+ * \code
+ * ./simpleLogicExpression.exe ./input.txt ./output.txt
+ * \endcode
+ *
+ * \section req Требования
+ * - Операционная система: Windows 7 или выше
+ *
+ * \author Pavel Andreyaschenko
+ * \date June 2025
+ * \version 1.0
+ */
+
+#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
