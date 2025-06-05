@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -9,8 +9,10 @@
 #include "functions.h"
 
 /**
-* ������������ ����� ������� � ����� ��������
-*/
+ * @brief Соответствие между строкой и типом операции.
+ *
+ * Карта, связывающая строковые представления логических операций с их типами в перечислении TokenType.
+ */
 const std::map<std::string, TokenType> stringToTokenType = {
     {"!", TokenType::Not},
     {"&", TokenType::And},
@@ -20,20 +22,20 @@ const std::map<std::string, TokenType> stringToTokenType = {
 };
 
 /**
- * ������� ������� ���������.
+ * @brief Главная функция программы.
  *
- * ������������ ��������� ��������� ������, ��������� ������ �������� �����,
- * �������������� ��������� � ������ ���������� � �������� ����.
- * @param argc ���������� ����������
- * @param argv ������ ���������� (argv[1] - ������� ����, argv[2] - �������� ����)
- * @return 0 ��� �������� ����������
+ * Обрабатывает аргументы командной строки, выполняет чтение входного файла,
+ * преобразование логического выражения и запись результата в выходной файл.
+ * @param argc Количество аргументов командной строки.
+ * @param argv Массив строк аргументов (argv[1] - путь к входному файлу, argv[2] - путь к выходному файлу).
+ * @return 0 при успешном выполнении, 1 при возникновении ошибок.
  */
 int main(int argc, char* argv[]) {
     setlocale(LC_ALL, "Russian");
 
-    // ��������� ���������� ���������� ��������� ������
+    // Проверяем количество аргументов командной строки
     if (argc != 3) {
-        std::cerr << L"�������������: " << argv[0] << " <input file> <output file>" << std::endl;
+        std::cerr << L"Использование: " << argv[0] << " <input file> <output file>" << std::endl;
         return 1;
     }
 
@@ -42,7 +44,7 @@ int main(int argc, char* argv[]) {
     std::string outputFile = argv[2];
     std::string content;
 
-    // ������ �������� �����
+    // Чтение входного файла
     try {
         content = readFile(inputFile);
     }
@@ -51,10 +53,10 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // ����������� ������� ������
+    // Токенизация входной строки
     std::vector<Token> tokens = tokenize(content, errorList);
 
-    // �������� �� ������ �����������
+    // Проверка на ошибки токенизации
     if (!errorList.empty()) {
         for (const auto& error : errorList) {
             error.message();
@@ -62,84 +64,101 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // ���������� ������ ���������
+    // Построение дерева выражения
     ExpressionNode* exprTree = buildExpressionTree(tokens, errorList);
 
-    // �������� �� ������ ���������� ������
+    // Проверка на ошибки построения дерева
     if (!errorList.empty()) {
         for (const auto& error : errorList) {
             error.message();
         }
-        delete exprTree; // ����������� ������
+        delete exprTree; // Освобождаем память
         return 1;
     }
 
-    // �������������� ���������� � ���������������
+    // Преобразование импликации и эквивалентности
     transformImplicationAndEquivalence(exprTree);
 
-    // ���������� ������� �� ������� �� ��� ���, ���� ���� ���������
+    // Применение законов де Моргана до тех пор, пока есть изменения
     bool changed;
     do {
         changed = simplifyExpression(exprTree);
     } while (changed);
 
-    // �������� ������� ���������
+    // Удаление двойных отрицаний
     removeDoubleNot(exprTree);
 
-    // ������������ �������� ������
+    // Формирование выходной строки
     std::string result = expressionTreeToInfix(exprTree);
 
-    // ������ ���������� � �������� ����
+    // Запись результата в выходной файл
     try {
         writeFile(outputFile, result);
     }
     catch (const Error& e) {
         e.message();
-        delete exprTree; // ����������� ������
+        delete exprTree; // Освобождаем память
         return 1;
     }
 
-    // ������������ ������
+    // Освобождение памяти
     delete exprTree;
 
     return 0;
 }
 
 /**
-* ������ ��� ������ �� �����
-*/
+ * @brief Читает содержимое файла в строку.
+ *
+ * Открывает файл по указанному пути и считывает его содержимое в строку.
+ * @param filePath Путь к входному файлу.
+ * @return Содержимое файла в виде строки.
+ * @throw Error с типом inputFile, если файл не удалось открыть.
+ */
 std::string readFile(const std::string& filePath) {
+    std::ifstream file(filePath); // Создаем поток для чтения из файла
 
-    std::ifstream file(filePath);	// ������� ����� ��� ������ �� �����
-
-	// ������ ����������, ���� ���� �� ��������
+    // Выброс исключения, если файл не открылся
     if (!file.is_open()) {
         throw Error(Error::inputFile);
     }
-    
-    std::string content;			// ����������� ������ �� �����
-    std::getline(file, content);	// ���������� ������
-    file.close();					// �������� �����
 
-	return content;
+    std::string content;           // Считываемая строка из файла
+    std::getline(file, content);   // Считывание строки
+    file.close();                  // Закрытие файла
+
+    return content;
 }
 
 /**
-* ������� ��� ������ � ����
-*/
+ * @brief Записывает строку в файл.
+ *
+ * Открывает файл по указанному пути и записывает в него переданную строку.
+ * @param filePath Путь к выходному файлу.
+ * @param content Строка для записи в файл.
+ * @throw Error с типом outputFile, если файл не удалось открыть.
+ */
 void writeFile(const std::string& filePath, const std::string& content) {
+    std::ofstream file(filePath);  // Создаем поток для записи в файл
 
-    std::ofstream file(filePath);  // ������� ����� ��� ������ � ����
-
-    // ������ ����������, ���� ���� �� ��������
+    // Выброс исключения, если файл не открылся
     if (!file.is_open()) {
         throw Error(Error::outputFile);
     }
 
-    file << content;               // ������ � ����
-    file.close();                  // �������� �����
+    file << content;               // Запись в файл
+    file.close();                  // Закрытие файла
 }
 
+/**
+ * @brief Разбивает строку на токены.
+ *
+ * Преобразует входную строку с логическим выражением в постфиксной записи в вектор токенов.
+ * Проверяет корректность токенов и добавляет ошибки в errorList при их обнаружении.
+ * @param expression Строка с логическим выражением в постфиксной записи.
+ * @param errorList Множество для хранения обнаруженных ошибок.
+ * @return Вектор токенов, представляющих входное выражение.
+ */
 std::vector<Token> tokenize(const std::string& expression, std::set<Error>& errorList) {
     std::vector<Token> tokens;
     std::istringstream iss(expression);
@@ -149,14 +168,14 @@ std::vector<Token> tokenize(const std::string& expression, std::set<Error>& erro
     while (iss >> tokenStr) {
         position++;
 
-        // �������� �� ��������
+        // Проверка на операцию
         auto it = stringToTokenType.find(tokenStr);
         if (it != stringToTokenType.end()) {
             tokens.emplace_back(it->second, tokenStr, position);
             continue;
         }
 
-        // �������� �� ����������
+        // Проверка на переменную
         if (isalpha(tokenStr[0])) {
             bool valid = std::all_of(tokenStr.begin(), tokenStr.end(), [](char c) {
                 return isalnum(c);
@@ -171,19 +190,28 @@ std::vector<Token> tokenize(const std::string& expression, std::set<Error>& erro
             continue;
         }
 
-        // ���� ����� ���������� � ����� ��� ������������� �������
+        // Если токен начинается с цифры или недопустимого символа
         if (isdigit(tokenStr[0]) || !isalpha(tokenStr[0])) {
             errorList.insert(Error(Error::ErrorType::invalidVariableName, position));
             continue;
         }
 
-        // ��� ��������� ������ - ���������������� ��������
+        // Все остальные случаи - неподдерживаемая операция
         errorList.insert(Error(Error::ErrorType::unsupportedOperation, position));
     }
 
     return tokens;
 }
 
+/**
+ * @brief Строит дерево выражения из вектора токенов.
+ *
+ * Создает бинарное дерево логического выражения на основе токенов в постфиксной записи.
+ * При обнаружении ошибок (например, недостаток операндов) добавляет их в errorList.
+ * @param tokens Вектор токенов в постфиксной записи.
+ * @param errorList Множество для хранения обнаруженных ошибок.
+ * @return Указатель на корень построенного дерева или nullptr при ошибке.
+ */
 ExpressionNode* buildExpressionTree(const std::vector<Token>& tokens, std::set<Error>& errorList) {
     std::vector<ExpressionNode*> stack;
 
@@ -205,7 +233,7 @@ ExpressionNode* buildExpressionTree(const std::vector<Token>& tokens, std::set<E
             continue;
         }
 
-        // �������� ��������
+        // Бинарные операции
         if (stack.size() < 2) {
             errorList.insert(Error(Error::ErrorType::insufficientOperands, token.position));
             continue;
@@ -226,6 +254,13 @@ ExpressionNode* buildExpressionTree(const std::vector<Token>& tokens, std::set<E
     return stack.back();
 }
 
+/**
+ * @brief Создает глубокую копию узла дерева.
+ *
+ * Рекурсивно копирует узел и все его поддеревья, создавая независимую копию.
+ * @param node Указатель на узел для копирования.
+ * @return Указатель на новый узел или nullptr, если входной узел равен nullptr.
+ */
 ExpressionNode* copyNode(ExpressionNode* node) {
     if (!node) return nullptr;
 
@@ -237,70 +272,86 @@ ExpressionNode* copyNode(ExpressionNode* node) {
     );
 }
 
+/**
+ * @brief Преобразует операции импликации и эквивалентности.
+ *
+ * Преобразует импликацию (A > B) в (!A | B) и эквивалентность (A ~ B) в ((A & B) | (!A & !B)).
+ * Рекурсивно обрабатывает все узлы дерева.
+ * @param node Указатель на корень дерева для преобразования.
+ */
 void transformImplicationAndEquivalence(ExpressionNode* node) {
     if (!node) return;
 
-    // ���������� ����������� ����������
+    // Рекурсивно преобразуем поддеревья
     transformImplicationAndEquivalence(node->left);
     transformImplicationAndEquivalence(node->right);
 
-    // �������������� ���������� A > B � !A | B
+    // Преобразование импликации A > B в !A | B
     if (node->type == TokenType::Implication) {
         ExpressionNode* newNot = new ExpressionNode(TokenType::Not, nullptr, copyNode(node->left));
         node->type = TokenType::Or;
-        node->left = newNot; // node->right �������� ��� ���������
+        node->left = newNot; // node->right остается без изменений
         return;
     }
 
-    // �������������� ��������������� A ~ B � (A & B) | (!A & !B)
+    // Преобразование эквивалентности A ~ B в (A & B) | (!A & !B)
     if (node->type == TokenType::Equivalence) {
-        // ������� ����� ���� ���������� (A & B)
+        // Создаем левый узел конъюнкции (A & B)
         ExpressionNode* newLeft = new ExpressionNode(TokenType::And, copyNode(node->left), copyNode(node->right));
 
-        // ������� ������ ���� ���������� (!A & !B)
+        // Создаем правый узел конъюнкции (!A & !B)
         ExpressionNode* newRightL = new ExpressionNode(TokenType::Not, nullptr, copyNode(node->left));
         ExpressionNode* newRightR = new ExpressionNode(TokenType::Not, nullptr, copyNode(node->right));
         ExpressionNode* newRight = new ExpressionNode(TokenType::And, newRightL, newRightR);
 
-        // ��������� ������� ����
+        // Обновляем текущий узел
         node->type = TokenType::Or;
         node->left = newLeft;
         node->right = newRight;
     }
 }
+
+/**
+ * @brief Применяет законы де Моргана для упрощения выражения.
+ *
+ * Преобразует выражения вида !(A & B) в !A | !B и !(A | B) в !A & !B.
+ * Рекурсивно обрабатывает поддеревья.
+ * @param node Указатель на корень дерева для упрощения.
+ * @return true, если были внесены изменения, иначе false.
+ */
 bool simplifyExpression(ExpressionNode* node) {
     if (!node) return false;
 
     bool changed = false;
 
-    // ������� ���������� �������� ����������
+    // Сначала рекурсивно упрощаем поддеревья
     changed |= simplifyExpression(node->left);
     changed |= simplifyExpression(node->right);
 
-    // ��������� ������ ����� �� �������: !(A & B) ? !A | !B
+    // Применяем первый закон де Моргана: !(A & B) → !A | !B
     if (node->type == TokenType::Not && node->right && node->right->type == TokenType::And) {
-        // ��������� ������������ ����
+        // Сохраняем оригинальные узлы
         ExpressionNode* originalAnd = node->right;
         ExpressionNode* leftOperand = originalAnd->left;
         ExpressionNode* rightOperand = originalAnd->right;
 
-        // ������� ����� ���� ���������
+        // Создаем новые узлы отрицания
         ExpressionNode* newNotLeft = new ExpressionNode(TokenType::Not, nullptr, leftOperand);
         ExpressionNode* newNotRight = new ExpressionNode(TokenType::Not, nullptr, rightOperand);
 
-        // ����������� ������� ����
+        // Преобразуем текущий узел
         node->type = TokenType::Or;
         node->left = newNotLeft;
         node->right = newNotRight;
 
-        // ������� ������ ���� And (�� �� ��� �������� - ��� ������ ������������ � ����� �����)
+        // Удаляем старый узел And (но не его потомков - они теперь используются в новых узлах)
         originalAnd->left = nullptr;
         originalAnd->right = nullptr;
         delete originalAnd;
 
         changed = true;
     }
-    // ��������� ������ ����� �� �������: !(A | B) ? !A & !B
+    // Применяем второй закон де Моргана: !(A | B) → !A & !B
     else if (node->type == TokenType::Not && node->right && node->right->type == TokenType::Or) {
         ExpressionNode* originalOr = node->right;
         ExpressionNode* leftOperand = originalOr->left;
@@ -323,14 +374,20 @@ bool simplifyExpression(ExpressionNode* node) {
     return changed;
 }
 
+/**
+ * @brief Удаляет двойные отрицания в дереве выражений.
+ *
+ * Преобразует выражения вида !!A в A, рекурсивно обрабатывая поддеревья.
+ * @param node Указатель на корень дерева для преобразования.
+ */
 void removeDoubleNot(ExpressionNode* node) {
     if (!node) return;
 
-    // ���������� ������������ ����������
+    // Рекурсивно обрабатываем поддеревья
     removeDoubleNot(node->left);
     removeDoubleNot(node->right);
 
-    // ������� ������� ���������
+    // Удаляем двойное отрицание
     if (node->type == TokenType::Not && node->right && node->right->type == TokenType::Not) {
         ExpressionNode* temp = node->right;
         node->type = temp->right->type;
@@ -338,17 +395,25 @@ void removeDoubleNot(ExpressionNode* node) {
         node->left = temp->right->left;
         node->right = temp->right->right;
 
-        // �������� ���������, ����� �������� �������� ��������
+        // Обнуляем указатели, чтобы избежать двойного удаления
         temp->right->left = nullptr;
         temp->right->right = nullptr;
         delete temp;
     }
 }
 
+/**
+ * @brief Преобразует дерево выражения в инфиксную строку.
+ *
+ * Формирует строковое представление логического выражения в инфиксной нотации,
+ * добавляя скобки с учетом приоритетов операций.
+ * @param node Указатель на корень дерева.
+ * @return Строковое представление выражения в инфиксной форме.
+ */
 std::string expressionTreeToInfix(ExpressionNode* node) {
     if (!node) return "";
 
-    // ����� ����������� ��������
+    // Карта приоритетов операций
     static const std::map<TokenType, int> priority = {
         {TokenType::Equivalence, 1},
         {TokenType::Implication, 2},
@@ -357,15 +422,15 @@ std::string expressionTreeToInfix(ExpressionNode* node) {
         {TokenType::Not, 5}
     };
 
-    // ��� ����������
+    // Для переменных
     if (node->type == TokenType::Variable) {
         return node->value;
     }
 
-    // ��� ������� �������� (���������)
+    // Для унарных операций (отрицание)
     if (node->type == TokenType::Not) {
         std::string rightExpr = expressionTreeToInfix(node->right);
-        // ��������� ������, ���� ������������ �������
+        // Добавляем скобки, если подвыражение сложное
         if (node->right && node->right->type != TokenType::Variable &&
             node->right->type != TokenType::Not) {
             return "!(" + rightExpr + ")";
@@ -373,11 +438,11 @@ std::string expressionTreeToInfix(ExpressionNode* node) {
         return "!" + rightExpr;
     }
 
-    // ��� �������� ��������
+    // Для бинарных операций
     std::string leftExpr = expressionTreeToInfix(node->left);
     std::string rightExpr = expressionTreeToInfix(node->right);
 
-    // ���������� ��������
+    // Определяем оператор
     std::string op;
     switch (node->type) {
     case TokenType::And: op = " & "; break;
@@ -387,14 +452,14 @@ std::string expressionTreeToInfix(ExpressionNode* node) {
     default: op = " ? "; break;
     }
 
-    // ��������� ���������� ��� ������ (����� �������)
+    // Проверяем приоритеты для скобок (левый операнд)
     if (node->left && priority.count(node->left->type)) {
         if (priority.at(node->left->type) < priority.at(node->type)) {
             leftExpr = "(" + leftExpr + ")";
         }
     }
 
-    // ��������� ���������� ��� ������ (������ �������)
+    // Проверяем приоритеты для скобок (правый операнд)
     if (node->right && priority.count(node->right->type)) {
         int rightPrio = priority.at(node->right->type);
         int currPrio = priority.at(node->type);
