@@ -267,7 +267,9 @@ ExpressionNode* buildExpressionTree(const std::vector<Token>& tokens, std::set<E
     }
 
     if (stack.size() != 1) {
-        errorList.insert(Error(Error::ErrorType::missingOperation, 0));
+        // Если стек содержит больше одного элемента, указываем позицию последнего токена
+        int errorPosition = tokens.empty() ? 0 : tokens.back().position;
+        errorList.insert(Error(Error::ErrorType::missingOperation, errorPosition));
         return nullptr;
     }
 
