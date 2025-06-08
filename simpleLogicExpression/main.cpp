@@ -210,13 +210,13 @@ std::vector<Token> tokenize(const std::string& expression, std::set<Error>& erro
             continue;
         }
 
-        // Если токен начинается с цифры или недопустимого символа
-        if (isdigit(tokenStr[0]) || !isalpha(tokenStr[0])) {
+        // Проверка на начало с цифры
+        if (isdigit(tokenStr[0])) {
             errorList.insert(Error(Error::ErrorType::invalidVariableName, position));
             continue;
         }
 
-        // Все остальные случаи - неподдерживаемая операция
+        // Все остальные случаи — неподдерживаемая операция
         errorList.insert(Error(Error::ErrorType::unsupportedOperation, position));
     }
 
