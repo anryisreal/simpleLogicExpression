@@ -10,9 +10,6 @@
  * ./simpleLogicExpression.exe ./input.txt ./output.txt
  * \endcode
  *
- * \section req Требования
- * - Операционная система: Windows 7 или выше
- *
  * \author Pavel Andreyaschenko
  * \date June 2025
  * \version 1.0
