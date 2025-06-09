@@ -27,7 +27,6 @@ EXCLUDE = doxygen_crawl.html
 
 GENERATE_RELATED_PAGES = NO
 
-LAYOUT_FILE = DoxygenLayout.xml
 
 #---------------------------------------------------------------------------
 # Project related configuration options

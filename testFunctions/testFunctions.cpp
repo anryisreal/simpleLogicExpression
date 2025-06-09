@@ -7,31 +7,31 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 /**
-* @brief Рекурсивно сравнивает два дерева выражений
-* @param expected Ожидаемое дерево
-* @param actual Фактическое дерево
-* @param path Текущий путь в дереве (для диагностики)
-* @return true если деревья идентичны, false в противном случае
+* @brief Р РµРєСѓСЂСЃРёРІРЅРѕ СЃСЂР°РІРЅРёРІР°РµС‚ РґРІР° РґРµСЂРµРІР° РІС‹СЂР°Р¶РµРЅРёР№
+* @param expected РћР¶РёРґР°РµРјРѕРµ РґРµСЂРµРІРѕ
+* @param actual Р¤Р°РєС‚РёС‡РµСЃРєРѕРµ РґРµСЂРµРІРѕ
+* @param path РўРµРєСѓС‰РёР№ РїСѓС‚СЊ РІ РґРµСЂРµРІРµ (РґР»СЏ РґРёР°РіРЅРѕСЃС‚РёРєРё)
+* @return true РµСЃР»Рё РґРµСЂРµРІСЊСЏ РёРґРµРЅС‚РёС‡РЅС‹, false РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ
 */
 bool compareExpressionTrees(const ExpressionNode* expected, const ExpressionNode* actual, const std::string& path = "root")
 {
     if (expected == nullptr && actual == nullptr) return true;
     if (expected == nullptr) {
-        Logger::WriteMessage(("Ошибка в узле: " + path + " - ожидался nullptr").c_str());
+        Logger::WriteMessage(("РћС€РёР±РєР° РІ СѓР·Р»Рµ: " + path + " - РѕР¶РёРґР°Р»СЃСЏ nullptr").c_str());
         return false;
     }
     if (actual == nullptr) {
-        Logger::WriteMessage(("Ошибка в узле: " + path + " - неожиданный nullptr").c_str());
+        Logger::WriteMessage(("РћС€РёР±РєР° РІ СѓР·Р»Рµ: " + path + " - РЅРµРѕР¶РёРґР°РЅРЅС‹Р№ nullptr").c_str());
         return false;
     }
 
     if (expected->type != actual->type) {
-        Logger::WriteMessage(("Ошибка в узле: " + path + " - тип узла не совпадает").c_str());
+        Logger::WriteMessage(("РћС€РёР±РєР° РІ СѓР·Р»Рµ: " + path + " - С‚РёРї СѓР·Р»Р° РЅРµ СЃРѕРІРїР°РґР°РµС‚").c_str());
         return false;
     }
 
     if (expected->value != actual->value) {
-        Logger::WriteMessage(("Ошибка в узле: " + path + " - значение не совпадает").c_str());
+        Logger::WriteMessage(("РћС€РёР±РєР° РІ СѓР·Р»Рµ: " + path + " - Р·РЅР°С‡РµРЅРёРµ РЅРµ СЃРѕРІРїР°РґР°РµС‚").c_str());
         return false;
     }
 
@@ -39,10 +39,10 @@ bool compareExpressionTrees(const ExpressionNode* expected, const ExpressionNode
 }
 
 /**
- * @brief Сравнивает два множества ошибок и выводит различия
- * @param expected Ожидаемое множество ошибок
- * @param actual Фактическое множество ошибок
- * @return true если множества идентичны, false в противном случае
+ * @brief РЎСЂР°РІРЅРёРІР°РµС‚ РґРІР° РјРЅРѕР¶РµСЃС‚РІР° РѕС€РёР±РѕРє Рё РІС‹РІРѕРґРёС‚ СЂР°Р·Р»РёС‡РёСЏ
+ * @param expected РћР¶РёРґР°РµРјРѕРµ РјРЅРѕР¶РµСЃС‚РІРѕ РѕС€РёР±РѕРє
+ * @param actual Р¤Р°РєС‚РёС‡РµСЃРєРѕРµ РјРЅРѕР¶РµСЃС‚РІРѕ РѕС€РёР±РѕРє
+ * @return true РµСЃР»Рё РјРЅРѕР¶РµСЃС‚РІР° РёРґРµРЅС‚РёС‡РЅС‹, false РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ
  */
 bool compareErrorSets(const std::set<Error>& expected, const std::set<Error>& actual)
 {
@@ -50,27 +50,27 @@ bool compareErrorSets(const std::set<Error>& expected, const std::set<Error>& ac
         return true;
     }
 
-    std::string message = "Ошибки не совпадают:\n";
+    std::string message = "РћС€РёР±РєРё РЅРµ СЃРѕРІРїР°РґР°СЋС‚:\n";
 
-    // Находим ошибки, которые ожидались, но отсутствуют в actual
+    // РќР°С…РѕРґРёРј РѕС€РёР±РєРё, РєРѕС‚РѕСЂС‹Рµ РѕР¶РёРґР°Р»РёСЃСЊ, РЅРѕ РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‚ РІ actual
     std::vector<Error> missingErrors;
     std::set_difference(expected.begin(), expected.end(), actual.begin(), actual.end(), std::back_inserter(missingErrors));
 
     if (!missingErrors.empty()) {
-        message += "Отсутствующие ошибки:\n";
+        message += "РћС‚СЃСѓС‚СЃС‚РІСѓСЋС‰РёРµ РѕС€РёР±РєРё:\n";
         for (const auto& error : missingErrors) {
-            message += "  - " + Error::getErrorTypeString(error.type) + " на позиции " + std::to_string(error.position) + "\n";
+            message += "  - " + Error::getErrorTypeString(error.type) + " РЅР° РїРѕР·РёС†РёРё " + std::to_string(error.position) + "\n";
         }
     }
 
-    // Находим ошибки, которые не ожидались, но присутствуют в actual
+    // РќР°С…РѕРґРёРј РѕС€РёР±РєРё, РєРѕС‚РѕСЂС‹Рµ РЅРµ РѕР¶РёРґР°Р»РёСЃСЊ, РЅРѕ РїСЂРёСЃСѓС‚СЃС‚РІСѓСЋС‚ РІ actual
     std::vector<Error> unexpectedErrors;
     std::set_difference(actual.begin(), actual.end(), expected.begin(), expected.end(), std::back_inserter(unexpectedErrors));
 
     if (!unexpectedErrors.empty()) {
-        message += "Неожиданные ошибки:\n";
+        message += "РќРµРѕР¶РёРґР°РЅРЅС‹Рµ РѕС€РёР±РєРё:\n";
         for (const auto& error : unexpectedErrors) {
-            message += "  + " + Error::getErrorTypeString(error.type) + " на позиции " + std::to_string(error.position) + "\n";
+            message += "  + " + Error::getErrorTypeString(error.type) + " РЅР° РїРѕР·РёС†РёРё " + std::to_string(error.position) + "\n";
         }
     }
 
@@ -79,49 +79,49 @@ bool compareErrorSets(const std::set<Error>& expected, const std::set<Error>& ac
 }
 
 /**
- * @brief Рекурсивно проверяет соответствие двух узлов и выводит путь при несоответствии
- * @param original Оригинальный узел
- * @param copied Скопированный узел
- * @param path Текущий путь в дереве (для сообщений об ошибках)
- * @return true если узлы идентичны, false в противном случае
+ * @brief Р РµРєСѓСЂСЃРёРІРЅРѕ РїСЂРѕРІРµСЂСЏРµС‚ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ РґРІСѓС… СѓР·Р»РѕРІ Рё РІС‹РІРѕРґРёС‚ РїСѓС‚СЊ РїСЂРё РЅРµСЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё
+ * @param original РћСЂРёРіРёРЅР°Р»СЊРЅС‹Р№ СѓР·РµР»
+ * @param copied РЎРєРѕРїРёСЂРѕРІР°РЅРЅС‹Р№ СѓР·РµР»
+ * @param path РўРµРєСѓС‰РёР№ РїСѓС‚СЊ РІ РґРµСЂРµРІРµ (РґР»СЏ СЃРѕРѕР±С‰РµРЅРёР№ РѕР± РѕС€РёР±РєР°С…)
+ * @return true РµСЃР»Рё СѓР·Р»С‹ РёРґРµРЅС‚РёС‡РЅС‹, false РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ
  */
 bool compareNodesRecursive(const ExpressionNode* original, const ExpressionNode* copied, const std::string& path = "node")
 {
-    // Проверка на nullptr
+    // РџСЂРѕРІРµСЂРєР° РЅР° nullptr
     if (original == nullptr && copied == nullptr) {
         return true;
     }
 
-    // Проверка на равенство указателей
+    // РџСЂРѕРІРµСЂРєР° РЅР° СЂР°РІРµРЅСЃС‚РІРѕ СѓРєР°Р·Р°С‚РµР»РµР№
     if (original == copied) {
         if (original != nullptr) {
-            Logger::WriteMessage(("Ошибка в узле: " + path + " (указатели на оригинал и копию совпадают)").c_str());
+            Logger::WriteMessage(("РћС€РёР±РєР° РІ СѓР·Р»Рµ: " + path + " (СѓРєР°Р·Р°С‚РµР»Рё РЅР° РѕСЂРёРіРёРЅР°Р» Рё РєРѕРїРёСЋ СЃРѕРІРїР°РґР°СЋС‚)").c_str());
         }
         return false;
     }
 
     if (original == nullptr) {
-        Logger::WriteMessage(("Ошибка в узле: " + path + " (оригинал null, но копия не null)").c_str());
+        Logger::WriteMessage(("РћС€РёР±РєР° РІ СѓР·Р»Рµ: " + path + " (РѕСЂРёРіРёРЅР°Р» null, РЅРѕ РєРѕРїРёСЏ РЅРµ null)").c_str());
         return false;
     }
 
     if (copied == nullptr) {
-        Logger::WriteMessage(("Ошибка в узле: " + path + " (копия null, но оригинал не null)").c_str());
+        Logger::WriteMessage(("РћС€РёР±РєР° РІ СѓР·Р»Рµ: " + path + " (РєРѕРїРёСЏ null, РЅРѕ РѕСЂРёРіРёРЅР°Р» РЅРµ null)").c_str());
         return false;
     }
 
-    // Проверка содержимого узлов
+    // РџСЂРѕРІРµСЂРєР° СЃРѕРґРµСЂР¶РёРјРѕРіРѕ СѓР·Р»РѕРІ
     if (original->type != copied->type) {
-        Logger::WriteMessage(("Ошибка в узле: " + path + " (тип не совпадает: оригинал " + std::to_string(static_cast<int>(original->type)) + ", копия " + std::to_string(static_cast<int>(copied->type)) + ")").c_str());
+        Logger::WriteMessage(("РћС€РёР±РєР° РІ СѓР·Р»Рµ: " + path + " (С‚РёРї РЅРµ СЃРѕРІРїР°РґР°РµС‚: РѕСЂРёРіРёРЅР°Р» " + std::to_string(static_cast<int>(original->type)) + ", РєРѕРїРёСЏ " + std::to_string(static_cast<int>(copied->type)) + ")").c_str());
         return false;
     }
 
     if (original->value != copied->value) {
-        Logger::WriteMessage(("Ошибка в узле: " + path + " (значение не совпадает: оригинал '" + original->value + "', копия '" + copied->value + "')").c_str());
+        Logger::WriteMessage(("РћС€РёР±РєР° РІ СѓР·Р»Рµ: " + path + " (Р·РЅР°С‡РµРЅРёРµ РЅРµ СЃРѕРІРїР°РґР°РµС‚: РѕСЂРёРіРёРЅР°Р» '" + original->value + "', РєРѕРїРёСЏ '" + copied->value + "')").c_str());
         return false;
     }
 
-    // Проверка поддеревьев
+    // РџСЂРѕРІРµСЂРєР° РїРѕРґРґРµСЂРµРІСЊРµРІ
     bool leftValid = compareNodesRecursive(original->left, copied->left, path + "-left");
     bool rightValid = compareNodesRecursive(original->right, copied->right, path + "-right");
 
@@ -129,12 +129,12 @@ bool compareNodesRecursive(const ExpressionNode* original, const ExpressionNode*
 }
 
 /**
- * @brief Проверяет, что два узла идентичны, включая все поддеревья
- * @param original Оригинальный узел
- * @param copied Скопированный узел
+ * @brief РџСЂРѕРІРµСЂСЏРµС‚, С‡С‚Рѕ РґРІР° СѓР·Р»Р° РёРґРµРЅС‚РёС‡РЅС‹, РІРєР»СЋС‡Р°СЏ РІСЃРµ РїРѕРґРґРµСЂРµРІСЊСЏ
+ * @param original РћСЂРёРіРёРЅР°Р»СЊРЅС‹Р№ СѓР·РµР»
+ * @param copied РЎРєРѕРїРёСЂРѕРІР°РЅРЅС‹Р№ СѓР·РµР»
  */
 void AssertNodesEqual(const ExpressionNode* original, const ExpressionNode* copied)
 {
     bool result = compareNodesRecursive(original, copied);
-    Assert::IsTrue(result, L"Узлы не идентичны. Проверьте вывод для деталей.");
+    Assert::IsTrue(result, L"РЈР·Р»С‹ РЅРµ РёРґРµРЅС‚РёС‡РЅС‹. РџСЂРѕРІРµСЂСЊС‚Рµ РІС‹РІРѕРґ РґР»СЏ РґРµС‚Р°Р»РµР№.");
 }
