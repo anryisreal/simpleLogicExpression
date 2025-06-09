@@ -1,3 +1,8 @@
+/**
+ * @file testFunctions.h
+ * @brief Заголовки дополнительных функций для тестирования.
+ */
+
 #pragma once
 #include "../simpleLogicExpression/functions.h"
 #include "../simpleLogicExpression/objects.h"

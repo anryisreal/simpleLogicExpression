@@ -1,4 +1,9 @@
-﻿#pragma once
+﻿/**
+ * @file functions.h
+ * @brief Заголовки для всех функций программы.
+ */
+
+#pragma once
 #include <string>
 #include <vector>
 #include <set>

@@ -1,4 +1,9 @@
-﻿#include "pch.h"
+﻿/**
+ * @file test_simplifyExpression.cpp
+ * @brief Юнит-тесты для применения законов Де-Моргана к логическому выражению.
+ */
+
+#include "pch.h"
 #include "CppUnitTest.h"
 #include "../simpleLogicExpression/functions.h"
 #include "../simpleLogicExpression/objects.h"

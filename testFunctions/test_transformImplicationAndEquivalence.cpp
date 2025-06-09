@@ -1,4 +1,9 @@
-﻿#include "pch.h"
+﻿/**
+ * @file test_transformImplicationAndEquivalence.cpp
+ * @brief Юнит-тесты для упрощения импликацияя и эквиваленции.
+ */
+
+#include "pch.h"
 #include "CppUnitTest.h"
 #include "../simpleLogicExpression/functions.h"
 #include "../simpleLogicExpression/objects.h"

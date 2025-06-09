@@ -1,4 +1,8 @@
-// -*- coding: utf-8 -*-
+/**
+ * @file objects.h
+ * @brief Обьекты и структуры данных для программы.
+ */
+
 #include <string>
 #include <iostream>
 #pragma once

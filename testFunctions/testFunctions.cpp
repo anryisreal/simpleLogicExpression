@@ -1,3 +1,8 @@
+/**
+ * @file testFunctions.cpp
+ * @brief Реализация дополнительных функций для тестирования.
+ */
+
 #include "pch.h"
 #include <algorithm>
 #include "CppUnitTest.h"
