@@ -16,7 +16,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 * @param [in, out] path Текущий путь в дереве (для диагностики)
 * @return true если деревья идентичны, false в противном случае
 */
-bool compareExpressionTrees(const ExpressionNode* expected, const ExpressionNode* actual, const std::string& path = "root");
+bool compareExpressionTrees(const ExpressionNode* expected, const ExpressionNode* actual, const std::wstring& path = L"root");
 
 /**
  * @brief Сравнивает два множества ошибок и выводит различия
@@ -33,7 +33,7 @@ bool compareErrorSets(const std::set<Error>& expected, const std::set<Error>& ac
  * @param [in, out] path Текущий путь в дереве (для сообщений об ошибках)
  * @return true если узлы идентичны, false в противном случае
  */
-bool compareNodesRecursive(const ExpressionNode* original, const ExpressionNode* copied, const std::string& path = "node");
+bool compareNodesRecursive(const ExpressionNode* original, const ExpressionNode* copied, const std::wstring& path = L"node");
 
 /**
  * @brief Проверяет, что два узла идентичны, включая все поддеревья

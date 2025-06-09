@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 
     // Проверяем количество аргументов командной строки
     if (argc != 3) {
-        std::wcerr << L"Использование: " << argv[0] << " <input file> <output file>" << std::endl;
+        std::wcerr << L"Ошибка входных параметров, использование: " << argv[0] << " <input file> <output file>" << std::endl;
         return 1;
     }
 

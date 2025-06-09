@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file testFunctions.cpp
  * @brief Реализация дополнительных функций для тестирования.
  */
@@ -18,29 +18,30 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 * @param [in, out] path Текущий путь в дереве (для диагностики)
 * @return true если деревья идентичны, false в противном случае
 */
-bool compareExpressionTrees(const ExpressionNode* expected, const ExpressionNode* actual, const std::string& path = "root")
+bool compareExpressionTrees(const ExpressionNode* expected, const ExpressionNode* actual, const std::wstring& path = L"root")
 {
     if (expected == nullptr && actual == nullptr) return true;
     if (expected == nullptr) {
-        Logger::WriteMessage(("Ошибка в узле: " + path + " - ожидался nullptr").c_str());
+        Logger::WriteMessage((L"Ошибка в узле: " + path + L" - ожидался nullptr").c_str());
         return false;
     }
     if (actual == nullptr) {
-        Logger::WriteMessage(("Ошибка в узле: " + path + " - неожиданный nullptr").c_str());
+        Logger::WriteMessage((L"Ошибка в узле: " + path + L" - неожиданный nullptr").c_str());
         return false;
     }
 
     if (expected->type != actual->type) {
-        Logger::WriteMessage(("Ошибка в узле: " + path + " - тип узла не совпадает").c_str());
+        Logger::WriteMessage((L"Ошибка в узле: " + path + L" - тип узла не совпадает").c_str());
         return false;
     }
 
     if (expected->value != actual->value) {
-        Logger::WriteMessage(("Ошибка в узле: " + path + " - значение не совпадает").c_str());
+        Logger::WriteMessage((L"Ошибка в узле: " + path + L" - значение не совпадает").c_str());
         return false;
     }
 
-    return compareExpressionTrees(expected->left, actual->left, path + "-left") && compareExpressionTrees(expected->right, actual->right, path + "-right");
+    return compareExpressionTrees(expected->left, actual->left, path + L"-left") &&
+        compareExpressionTrees(expected->right, actual->right, path + L"-right");
 }
 
 /**
@@ -55,16 +56,17 @@ bool compareErrorSets(const std::set<Error>& expected, const std::set<Error>& ac
         return true;
     }
 
-    std::string message = "Ошибки не совпадают:\n";
+    std::wstring message = L"Ошибки не совпадают:\n";
 
     // Находим ошибки, которые ожидались, но отсутствуют в actual
     std::vector<Error> missingErrors;
     std::set_difference(expected.begin(), expected.end(), actual.begin(), actual.end(), std::back_inserter(missingErrors));
 
     if (!missingErrors.empty()) {
-        message += "Отсутствующие ошибки:\n";
+        message += L"Отсутствующие ошибки:\n";
         for (const auto& error : missingErrors) {
-            message += "  - " + Error::getErrorTypeString(error.type) + " на позиции " + std::to_string(error.position) + "\n";
+            message += L"  - " + std::wstring(Error::getErrorTypeString(error.type).begin(), Error::getErrorTypeString(error.type).end()) +
+                L" на позиции " + std::to_wstring(error.position) + L"\n";
         }
     }
 
@@ -73,9 +75,10 @@ bool compareErrorSets(const std::set<Error>& expected, const std::set<Error>& ac
     std::set_difference(actual.begin(), actual.end(), expected.begin(), expected.end(), std::back_inserter(unexpectedErrors));
 
     if (!unexpectedErrors.empty()) {
-        message += "Неожиданные ошибки:\n";
+        message += L"Неожиданные ошибки:\n";
         for (const auto& error : unexpectedErrors) {
-            message += "  + " + Error::getErrorTypeString(error.type) + " на позиции " + std::to_string(error.position) + "\n";
+            message += L"  + " + std::wstring(Error::getErrorTypeString(error.type).begin(), Error::getErrorTypeString(error.type).end()) +
+                L" на позиции " + std::to_wstring(error.position) + L"\n";
         }
     }
 
@@ -90,7 +93,7 @@ bool compareErrorSets(const std::set<Error>& expected, const std::set<Error>& ac
  * @param [in, out] path Текущий путь в дереве (для сообщений об ошибках)
  * @return true если узлы идентичны, false в противном случае
  */
-bool compareNodesRecursive(const ExpressionNode* original, const ExpressionNode* copied, const std::string& path = "node")
+bool compareNodesRecursive(const ExpressionNode* original, const ExpressionNode* copied, const std::wstring& path = L"node")
 {
     // Проверка на nullptr
     if (original == nullptr && copied == nullptr) {
@@ -100,35 +103,37 @@ bool compareNodesRecursive(const ExpressionNode* original, const ExpressionNode*
     // Проверка на равенство указателей
     if (original == copied) {
         if (original != nullptr) {
-            Logger::WriteMessage(("Ошибка в узле: " + path + " (указатели на оригинал и копию совпадают)").c_str());
+            Logger::WriteMessage((L"Ошибка в узле: " + path + L" (указатели на оригинал и копию совпадают)").c_str());
         }
         return false;
     }
 
     if (original == nullptr) {
-        Logger::WriteMessage(("Ошибка в узле: " + path + " (оригинал null, но копия не null)").c_str());
+        Logger::WriteMessage((L"Ошибка в узле: " + path + L" (оригинал null, но копия не null)").c_str());
         return false;
     }
 
     if (copied == nullptr) {
-        Logger::WriteMessage(("Ошибка в узле: " + path + " (копия null, но оригинал не null)").c_str());
+        Logger::WriteMessage((L"Ошибка в узле: " + path + L" (копия null, но оригинал не null)").c_str());
         return false;
     }
 
     // Проверка содержимого узлов
     if (original->type != copied->type) {
-        Logger::WriteMessage(("Ошибка в узле: " + path + " (тип не совпадает: оригинал " + std::to_string(static_cast<int>(original->type)) + ", копия " + std::to_string(static_cast<int>(copied->type)) + ")").c_str());
+        Logger::WriteMessage((L"Ошибка в узле: " + path + L" (тип не совпадает: оригинал " + std::to_wstring(static_cast<int>(original->type)) +
+            L", копия " + std::to_wstring(static_cast<int>(copied->type)) + L")").c_str());
         return false;
     }
 
     if (original->value != copied->value) {
-        Logger::WriteMessage(("Ошибка в узле: " + path + " (значение не совпадает: оригинал '" + original->value + "', копия '" + copied->value + "')").c_str());
+        Logger::WriteMessage((L"Ошибка в узле: " + path + L" (значение не совпадает: оригинал '" + std::wstring(original->value.begin(), original->value.end()) +
+            L"', копия '" + std::wstring(copied->value.begin(), copied->value.end()) + L"')").c_str());
         return false;
     }
 
     // Проверка поддеревьев
-    bool leftValid = compareNodesRecursive(original->left, copied->left, path + "-left");
-    bool rightValid = compareNodesRecursive(original->right, copied->right, path + "-right");
+    bool leftValid = compareNodesRecursive(original->left, copied->left, path + L"-left");
+    bool rightValid = compareNodesRecursive(original->right, copied->right, path + L"-right");
 
     return leftValid && rightValid;
 }
