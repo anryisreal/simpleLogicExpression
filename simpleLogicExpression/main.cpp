@@ -53,11 +53,13 @@ const std::map<std::string, TokenType> stringToTokenType = {
  * @return 0 при успешном выполнении, 1 при возникновении ошибок.
  */
 int main(int argc, char* argv[]) {
-    setlocale(LC_ALL, "Russian");
+    std::locale::global(std::locale(""));
+    std::wcout.imbue(std::locale(""));
+    setlocale(LC_ALL, ".UTF8");
 
     // Проверяем количество аргументов командной строки
     if (argc != 3) {
-        std::cerr << L"Использование: " << argv[0] << " <input file> <output file>" << std::endl;
+        std::wcerr << L"Использование: " << argv[0] << " <input file> <output file>" << std::endl;
         return 1;
     }
 

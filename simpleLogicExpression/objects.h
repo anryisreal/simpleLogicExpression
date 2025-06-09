@@ -3,6 +3,7 @@
  * @brief Обьекты и структуры данных для программы.
  */
 
+// -*- coding: utf-8 -*-
 #include <string>
 #include <iostream>
 #pragma once
@@ -189,7 +190,7 @@ public:
      * Выводит описание ошибки в стандартный поток вывода.
      */
     void message() const {
-        std::cout << description.c_str() << std::endl;
+        std::wcout << description.c_str() << std::endl;
     }
 
     /**
