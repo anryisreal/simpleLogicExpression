@@ -128,7 +128,7 @@ int main(int argc, char* argv[]) {
  * @brief Читает содержимое файла в строку.
  *
  * Открывает файл по указанному пути и считывает его содержимое в строку.
- * @param filePath Путь к входному файлу.
+ * @param [in] filePath Путь к входному файлу.
  * @return Содержимое файла в виде строки.
  * @throw Error с типом inputFile, если файл не удалось открыть.
  */
@@ -151,8 +151,8 @@ std::string readFile(const std::string& filePath) {
  * @brief Записывает строку в файл.
  *
  * Открывает файл по указанному пути и записывает в него переданную строку.
- * @param filePath Путь к выходному файлу.
- * @param content Строка для записи в файл.
+ * @param [in] filePath Путь к выходному файлу.
+ * @param [in] content Строка для записи в файл.
  * @throw Error с типом outputFile, если файл не удалось открыть.
  */
 void writeFile(const std::string& filePath, const std::string& content) {
@@ -172,8 +172,8 @@ void writeFile(const std::string& filePath, const std::string& content) {
  *
  * Преобразует входную строку с логическим выражением в постфиксной записи в вектор токенов.
  * Проверяет корректность токенов и добавляет ошибки в errorList при их обнаружении.
- * @param expression Строка с логическим выражением в постфиксной записи.
- * @param errorList Множество для хранения обнаруженных ошибок.
+ * @param [in] expression Строка с логическим выражением в постфиксной записи.
+ * @param [in,out] errorList Множество для хранения обнаруженных ошибок.
  * @return Вектор токенов, представляющих входное выражение.
  */
 std::vector<Token> tokenize(const std::string& expression, std::set<Error>& errorList) {
@@ -225,8 +225,8 @@ std::vector<Token> tokenize(const std::string& expression, std::set<Error>& erro
  *
  * Создает бинарное дерево логического выражения на основе токенов в постфиксной записи.
  * При обнаружении ошибок (например, недостаток операндов) добавляет их в errorList.
- * @param tokens Вектор токенов в постфиксной записи.
- * @param errorList Множество для хранения обнаруженных ошибок.
+ * @param [in] tokens Вектор токенов в постфиксной записи.
+ * @param [in,out] errorList Множество для хранения обнаруженных ошибок.
  * @return Указатель на корень построенного дерева или nullptr при ошибке.
  */
 ExpressionNode* buildExpressionTree(const std::vector<Token>& tokens, std::set<Error>& errorList) {
@@ -277,7 +277,7 @@ ExpressionNode* buildExpressionTree(const std::vector<Token>& tokens, std::set<E
  * @brief Создает глубокую копию узла дерева.
  *
  * Рекурсивно копирует узел и все его поддеревья, создавая независимую копию.
- * @param node Указатель на узел для копирования.
+ * @param [in] node Указатель на узел для копирования.
  * @return Указатель на новый узел или nullptr, если входной узел равен nullptr.
  */
 ExpressionNode* copyNode(ExpressionNode* node) {
@@ -296,7 +296,7 @@ ExpressionNode* copyNode(ExpressionNode* node) {
  *
  * Преобразует импликацию (A > B) в (!A | B) и эквивалентность (A ~ B) в ((A & B) | (!A & !B)).
  * Рекурсивно обрабатывает все узлы дерева.
- * @param node Указатель на корень дерева для преобразования.
+ * @param [in,out] node Указатель на корень дерева для преобразования.
  */
 void transformImplicationAndEquivalence(ExpressionNode* node) {
     if (!node) return;
@@ -331,11 +331,11 @@ void transformImplicationAndEquivalence(ExpressionNode* node) {
 }
 
 /**
- * @brief Применяет законы де Моргана для упрощения выражения.
+ * @brief Применяет законы де Моргана.
  *
  * Преобразует выражения вида !(A & B) в !A | !B и !(A | B) в !A & !B.
  * Рекурсивно обрабатывает поддеревья.
- * @param node Указатель на корень дерева для упрощения.
+ * @param [in,out] node Указатель на корень дерева для упрощения.
  * @return true, если были внесены изменения, иначе false.
  */
 bool simplifyExpression(ExpressionNode* node) {
@@ -394,10 +394,10 @@ bool simplifyExpression(ExpressionNode* node) {
 }
 
 /**
- * @brief Удаляет двойные отрицания в дереве выражений.
+ * @brief Удаляет двойные отрицания.
  *
  * Преобразует выражения вида !!A в A, рекурсивно обрабатывая поддеревья.
- * @param node Указатель на корень дерева для преобразования.
+ * @param [in,out] node Указатель на корень дерева для преобразования.
  */
 void removeDoubleNot(ExpressionNode* node) {
     if (!node) return;
@@ -426,7 +426,7 @@ void removeDoubleNot(ExpressionNode* node) {
  *
  * Формирует строковое представление логического выражения в инфиксной нотации,
  * добавляя скобки с учетом приоритетов операций.
- * @param node Указатель на корень дерева.
+ * @param [in] node Указатель на корень дерева.
  * @return Строковое представление выражения в инфиксной форме.
  */
 std::string expressionTreeToInfix(ExpressionNode* node) {
