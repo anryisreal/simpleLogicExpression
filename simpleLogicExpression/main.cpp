@@ -238,10 +238,12 @@ std::vector<Token> tokenize(const std::string& expression, std::set<Error>& erro
  */
 ExpressionNode* buildExpressionTree(const std::vector<Token>& tokens, std::set<Error>& errorList) {
     std::vector<ExpressionNode*> stack;
+    int lastOperandPosition = 0; // Для отслеживания позиции последнего операнда
 
     for (const auto& token : tokens) {
         if (token.type == TokenType::Variable) {
             stack.push_back(new ExpressionNode(token.type, token.value));
+            lastOperandPosition = token.position; // Обновляем позицию последнего операнда
             continue;
         }
 
@@ -271,8 +273,11 @@ ExpressionNode* buildExpressionTree(const std::vector<Token>& tokens, std::set<E
     }
 
     if (stack.size() != 1) {
-        // Если стек содержит больше одного элемента, указываем позицию последнего токена
-        int errorPosition = tokens.empty() ? 0 : tokens.back().position;
+        // Если стек содержит больше одного элемента, указываем позицию после последнего операнда
+        int errorPosition = lastOperandPosition;
+        if (stack.empty()) {
+            errorPosition = tokens.empty() ? 0 : tokens.back().position;
+        }
         errorList.insert(Error(Error::ErrorType::missingOperation, errorPosition));
         return nullptr;
     }
