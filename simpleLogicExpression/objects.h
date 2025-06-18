@@ -118,7 +118,8 @@ public:
         insufficientOperands, ///< Недостаточно операндов для операции.
         invalidVariableName,  ///< Некорректное имя переменной.
         invalidVariableChar,  ///< Некорректный символ в имени переменной.
-        unsupportedOperation  ///< Неподдерживаемая логическая операция.
+        unsupportedOperation, ///< Неподдерживаемая логическая операция.
+        emptyFile             ///< Отсутствует выражение во входном файле.
     };
 
     /**
@@ -138,6 +139,7 @@ public:
         case invalidVariableName: return "invalidVariableName";
         case invalidVariableChar: return "invalidVariableChar";
         case unsupportedOperation: return "unsupportedOperation";
+        case emptyFile:            return "emptyFile";
         default: return "Неизвестная ошибка";
         }
     }
@@ -178,6 +180,9 @@ public:
             break;
         case unsupportedOperation:
             description = "Во входной строке указана неподдерживаемая логическая операция (позиция " + std::to_string(position) + ").";
+            break;
+        case emptyFile:
+            description = "Отсутствует выражение во входном файле.";
             break;
         default:
             description = "Неизвестная ошибка.";

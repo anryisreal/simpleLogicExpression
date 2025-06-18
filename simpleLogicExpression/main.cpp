@@ -227,6 +227,11 @@ std::vector<Token> tokenize(const std::string& expression, std::set<Error>& erro
         errorList.insert(Error(Error::ErrorType::unsupportedOperation, position));
     }
 
+    // Проверка на отсутствие токенов
+    if (tokens.empty() && errorList.empty()) {
+        errorList.insert(Error(Error::ErrorType::emptyFile));
+    }
+
     return tokens;
 }
 
