@@ -100,6 +100,9 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    // Сохранение первоначального выражения
+    std::string inputStr = expressionTreeToInfix(exprTree);
+
     // Преобразование импликации и эквивалентности
     transformImplicationAndEquivalence(exprTree);
 
@@ -117,7 +120,7 @@ int main(int argc, char* argv[]) {
 
     // Запись результата в выходной файл
     try {
-        writeFile(outputFile, result);
+        writeFile(outputFile, inputStr + '\n' + result);
     }
     catch (const Error& e) {
         e.message();
