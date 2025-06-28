@@ -110,8 +110,9 @@ int main(int argc, char* argv[]) {
     transformImplicationAndEquivalence(exprTree);
 
     // Применение законов де Моргана до тех пор, пока есть изменения
-    bool changed = false;
+    bool changed;
     do {
+        changed = false;
         simplifyExpression(exprTree, changed);
     } while (changed);
 
@@ -364,8 +365,6 @@ void transformImplicationAndEquivalence(ExpressionNode* node) {
 bool simplifyExpression(ExpressionNode* node, bool& changed) {
     if (!node) return false;
 
-    changed = false;
-
     // Сначала рекурсивно упрощаем поддеревья
     if (node->left) {
         changed |= simplifyExpression(node->left, changed);
@@ -420,6 +419,7 @@ bool simplifyExpression(ExpressionNode* node, bool& changed) {
         }
     }
 
+    return changed;
 }
 /**
  * @brief Удаляет двойные отрицания.
