@@ -20,6 +20,9 @@
  * \version 1.0
  */
 
+#include <functional>
+#include <unordered_set>
+#include <stack>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -364,55 +367,61 @@ bool simplifyExpression(ExpressionNode* node) {
     bool changed = false;
 
     // Сначала рекурсивно упрощаем поддеревья
-    changed |= simplifyExpression(node->left);
-    changed |= simplifyExpression(node->right);
-
-    // Применяем первый закон де Моргана: !(A & B) → !A | !B
-    if (node->type == TokenType::Not && node->right && node->right->type == TokenType::And) {
-        // Сохраняем оригинальные узлы
-        ExpressionNode* originalAnd = node->right;
-        ExpressionNode* leftOperand = originalAnd->left;
-        ExpressionNode* rightOperand = originalAnd->right;
-
-        // Создаем новые узлы отрицания
-        ExpressionNode* newNotLeft = new ExpressionNode(TokenType::Not, nullptr, leftOperand);
-        ExpressionNode* newNotRight = new ExpressionNode(TokenType::Not, nullptr, rightOperand);
-
-        // Преобразуем текущий узел
-        node->type = TokenType::Or;
-        node->left = newNotLeft;
-        node->right = newNotRight;
-
-        // Удаляем старый узел And (но не его потомков - они теперь используются в новых узлах)
-        originalAnd->left = nullptr;
-        originalAnd->right = nullptr;
-        delete originalAnd;
-
-        changed = true;
+    if (node->left) {
+        changed |= simplifyExpression(node->left);
     }
-    // Применяем второй закон де Моргана: !(A | B) → !A & !B
-    else if (node->type == TokenType::Not && node->right && node->right->type == TokenType::Or) {
-        ExpressionNode* originalOr = node->right;
-        ExpressionNode* leftOperand = originalOr->left;
-        ExpressionNode* rightOperand = originalOr->right;
+    if (node->right) {
+        changed |= simplifyExpression(node->right);
+    }
 
-        ExpressionNode* newNotLeft = new ExpressionNode(TokenType::Not, nullptr, leftOperand);
-        ExpressionNode* newNotRight = new ExpressionNode(TokenType::Not, nullptr, rightOperand);
+    // Применяем законы де Моргана к текущему узлу
+    if (node->type == TokenType::Not && node->right) {
+        // Первый закон де Моргана: !(A & B) → !A | !B
+        if (node->right->type == TokenType::And) {
+            ExpressionNode* originalAnd = node->right;
+            ExpressionNode* leftOperand = originalAnd->left;
+            ExpressionNode* rightOperand = originalAnd->right;
 
-        node->type = TokenType::And;
-        node->left = newNotLeft;
-        node->right = newNotRight;
+            // Создаем новые узлы отрицания
+            ExpressionNode* newNotLeft = new ExpressionNode(TokenType::Not, nullptr, leftOperand);
+            ExpressionNode* newNotRight = new ExpressionNode(TokenType::Not, nullptr, rightOperand);
 
-        originalOr->left = nullptr;
-        originalOr->right = nullptr;
-        delete originalOr;
+            // Преобразуем текущий узел в дизъюнкцию
+            node->type = TokenType::Or;
+            node->left = newNotLeft;
+            node->right = newNotRight;
 
-        changed = true;
+            // Удаляем старый узел And (но не его потомков)
+            originalAnd->left = nullptr;
+            originalAnd->right = nullptr;
+            delete originalAnd;
+
+            changed = true;
+        }
+        // Второй закон де Моргана: !(A | B) → !A & !B
+        else if (node->right->type == TokenType::Or) {
+            ExpressionNode* originalOr = node->right;
+            ExpressionNode* leftOperand = originalOr->left;
+            ExpressionNode* rightOperand = originalOr->right;
+
+            ExpressionNode* newNotLeft = new ExpressionNode(TokenType::Not, nullptr, leftOperand);
+            ExpressionNode* newNotRight = new ExpressionNode(TokenType::Not, nullptr, rightOperand);
+
+            // Преобразуем текущий узел в конъюнкцию
+            node->type = TokenType::And;
+            node->left = newNotLeft;
+            node->right = newNotRight;
+
+            originalOr->left = nullptr;
+            originalOr->right = nullptr;
+            delete originalOr;
+
+            changed = true;
+        }
     }
 
     return changed;
 }
-
 /**
  * @brief Удаляет двойные отрицания.
  *
@@ -422,22 +431,41 @@ bool simplifyExpression(ExpressionNode* node) {
 void removeDoubleNot(ExpressionNode* node) {
     if (!node) return;
 
-    // Рекурсивно обрабатываем поддеревья
-    removeDoubleNot(node->left);
-    removeDoubleNot(node->right);
+    std::stack<std::pair<ExpressionNode*, bool>> stack; // Пара: узел, обработан ли
+    stack.push({ node, false });
 
-    // Удаляем двойное отрицание
-    if (node->type == TokenType::Not && node->right && node->right->type == TokenType::Not) {
-        ExpressionNode* temp = node->right;
-        node->type = temp->right->type;
-        node->value = temp->right->value;
-        node->left = temp->right->left;
-        node->right = temp->right->right;
+    while (!stack.empty()) {
+        ExpressionNode* current = stack.top().first;
+        bool processed = stack.top().second;
+        stack.pop();
 
-        // Обнуляем указатели, чтобы избежать двойного удаления
-        temp->right->left = nullptr;
-        temp->right->right = nullptr;
-        delete temp;
+        if (!current) continue;
+
+        if (!processed) {
+            // Помечаем как обработанный и добавляем поддеревья
+            stack.push({ current, true });
+            if (current->right) stack.push({ current->right, false });
+            if (current->left) stack.push({ current->left, false });
+        }
+        else {
+            // Проверяем и удаляем двойное отрицание
+            if (current->type == TokenType::Not && current->right && current->right->type == TokenType::Not) {
+                ExpressionNode* temp = current->right;
+                if (temp && temp->right) { // Проверяем валидность
+                    ExpressionNode* inner = temp->right;
+                    if (inner) {
+                        current->type = inner->type;
+                        current->value = inner->value;
+                        current->left = inner->left;
+                        current->right = inner->right;
+
+                        inner->left = nullptr;
+                        inner->right = nullptr;
+                        delete temp; // Удаляем только внешний узел
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -452,7 +480,6 @@ void removeDoubleNot(ExpressionNode* node) {
 std::string expressionTreeToInfix(ExpressionNode* node) {
     if (!node) return "";
 
-    // Карта приоритетов операций
     static const std::map<TokenType, int> priority = {
         {TokenType::Equivalence, 1},
         {TokenType::Implication, 2},
@@ -461,52 +488,37 @@ std::string expressionTreeToInfix(ExpressionNode* node) {
         {TokenType::Not, 5}
     };
 
-    // Для переменных
+    std::stringstream ss;
+
     if (node->type == TokenType::Variable) {
-        return node->value;
+        ss << node->value;
     }
+    else if (node->type == TokenType::Not) {
+        ss << "!";
+        bool needParens = node->right && node->right->type != TokenType::Variable && node->right->type != TokenType::Not;
+        ss << (needParens ? "(" : "") << expressionTreeToInfix(node->right) << (needParens ? ")" : "");
+    }
+    else {
+        bool needLeftParens = node->left && priority.count(node->left->type) && priority.at(node->left->type) < priority.at(node->type);
+        bool needRightParens = node->right && priority.count(node->right->type) && (priority.at(node->right->type) < priority.at(node->type) ||
+            (priority.at(node->right->type) == priority.at(node->type) && node->type == TokenType::Implication));
 
-    // Для унарных операций (отрицание)
-    if (node->type == TokenType::Not) {
-        std::string rightExpr = expressionTreeToInfix(node->right);
-        // Добавляем скобки, если подвыражение сложное
-        if (node->right && node->right->type != TokenType::Variable &&
-            node->right->type != TokenType::Not) {
-            return "!(" + rightExpr + ")";
+        if (needLeftParens) ss << "(";
+        ss << expressionTreeToInfix(node->left);
+        if (needLeftParens) ss << ")";
+
+        switch (node->type) {
+        case TokenType::And: ss << " & "; break;
+        case TokenType::Or: ss << " || "; break;
+        case TokenType::Implication: ss << " -> "; break;
+        case TokenType::Equivalence: ss << " ~ "; break;
+        default: break;
         }
-        return "!" + rightExpr;
+
+        if (needRightParens) ss << "(";
+        ss << expressionTreeToInfix(node->right);
+        if (needRightParens) ss << ")";
     }
 
-    // Для бинарных операций
-    std::string leftExpr = expressionTreeToInfix(node->left);
-    std::string rightExpr = expressionTreeToInfix(node->right);
-
-    // Определяем оператор
-    std::string op;
-    switch (node->type) {
-    case TokenType::And: op = " & "; break;
-    case TokenType::Or: op = " || "; break;
-    case TokenType::Implication: op = " -> "; break;
-    case TokenType::Equivalence: op = " ~ "; break;
-    default: op = " ? "; break;
-    }
-
-    // Проверяем приоритеты для скобок (левый операнд)
-    if (node->left && priority.count(node->left->type)) {
-        if (priority.at(node->left->type) < priority.at(node->type)) {
-            leftExpr = "(" + leftExpr + ")";
-        }
-    }
-
-    // Проверяем приоритеты для скобок (правый операнд)
-    if (node->right && priority.count(node->right->type)) {
-        int rightPrio = priority.at(node->right->type);
-        int currPrio = priority.at(node->type);
-        if (rightPrio < currPrio ||
-            (rightPrio == currPrio && node->type == TokenType::Implication)) {
-            rightExpr = "(" + rightExpr + ")";
-        }
-    }
-
-    return leftExpr + op + rightExpr;
+    return ss.str();
 }
