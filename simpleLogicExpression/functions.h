@@ -77,7 +77,7 @@ void transformImplicationAndEquivalence(ExpressionNode* node);
  * @param [in,out] node Указатель на корень дерева для упрощения.
  * @return true, если были внесены изменения, иначе false.
  */
-bool simplifyExpression(ExpressionNode* node);
+bool simplifyExpression(ExpressionNode* node, bool& changed);
 
 /**
  * @brief Удаляет двойные отрицания.
